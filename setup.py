@@ -20,9 +20,7 @@ setup(
     packages=find_packages(),
     install_requires=['requests', 'tabulate', 'stix'],
     long_description=read('README.rst'),
-    classifiers=[
-        'Development Status :: 1 - Beta'
-    ],
+    classifiers=[],
     entry_points={
         'console_scripts': [
             'pt-info = passivetotal.cli.info:main',
@@ -36,5 +34,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     keywords=['threats', 'research', 'analysis'],
-    download_url='https://github.com/passivetotal/python_api/tarball/1.0.0'
+    download_url='https://github.com/passivetotal/python_api/archive/master.zip'
 )

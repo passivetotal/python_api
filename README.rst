@@ -1,6 +1,27 @@
 PassiveTotal
 ============
 
+Build Status
+------------
+
+.. image:: https://img.shields.io/pypi/dm/passivetotal.svg
+    :target: https://pypi.python.org/pypi/passivetotal/
+
+.. image:: https://img.shields.io/pypi/v/passivetotal.svg
+   :target: https://pypi.python.org/pypi/passivetotal
+
+.. image:: https://img.shields.io/badge/passivetotal-2.7-blue.svg
+    :target: https://pypi.python.org/pypi/passivetotal/
+
+.. image:: https://img.shields.io/pypi/l/passivetotal.svg
+    :target: https://pypi.python.org/pypi/passivetotal/
+
+.. image:: https://readthedocs.org/projects/passivetotal/badge/?version=latest
+    :target: https://readthedocs.org/projects/passivetotal/?badge=latest
+
+Introduction
+------------
+
 *Python client for RiskIQ's PassiveTotal API services*
 
 **passivetotal** provides a Python client library implementation into RiskIQ API
@@ -34,7 +55,7 @@ From the downloaded source distribution::
 
 Or from PyPI::
 
-    $ pip install passivetotal
+    $ pip install passivetotal [--upgrade]
 
 The package depends on the Python Requests_ library.
 If Requests is not installed, it will be installed as a dependency.
@@ -102,3 +123,11 @@ Every sub-command has further help options:::
 All commands will have the ``--format`` option to return raw responses in a number
 of different formats, which often contain more information than present in the
 default, human readable format.
+
+Documentation
+-------------
+
+For more information you can find documentation in the 'docs' directory, check
+the Github wiki, or readthedocs_.
+
+.. _readthedocs: https://passivetotal.readthedocs.org
