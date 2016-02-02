@@ -5,9 +5,14 @@ __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
 import json
-import httplib
+import sys
 import requests
 from passivetotal.config import Config
+
+py_v2 = (sys.version_info[0] == 2)
+py_v3 = (sys.version_info[0] == 3)
+if py_v2:
+    import httplib
 
 # import logging
 # logging.basicConfig(level=logging.DEBUG)

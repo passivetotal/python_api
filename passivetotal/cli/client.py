@@ -4,6 +4,7 @@ __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
 import sys
+
 from argparse import ArgumentParser
 from passivetotal.common.utilities import prune_args
 from passivetotal.common.utilities import to_bool
@@ -274,7 +275,7 @@ def main():
 
     output = write_output(data, args)
     for item in output:
-        print item + "\n"
+        print(item + "\n")
 
 if __name__ == '__main__':
     main()
