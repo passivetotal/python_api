@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 import os
-from ez_setup import use_setuptools
-use_setuptools()
-
 from setuptools import setup, find_packages
 
 
@@ -11,14 +8,14 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='1.0.0',
+    version='1.0.1',
     description='Client for the PassiveTotal REST API',
     url="https://github.com/passivetotal/python_api",
     author="Research Team, passivetotal",
     author_email="admin@passivetotal.org",
     license="GPLv2",
     packages=find_packages(),
-    install_requires=['requests', 'tabulate', 'stix'],
+    install_requires=['requests', 'tabulate', 'stix', 'ez_setup'],
     long_description=read('README.rst'),
     classifiers=[],
     entry_points={

@@ -4,6 +4,9 @@ PassiveTotal
 Build Status
 ------------
 
+.. image:: https://travis-ci.org/passivetotal/python_api.svg
+    :target: https://travis-ci.org/passivetotal/python_api
+
 .. image:: https://img.shields.io/pypi/dm/passivetotal.svg
     :target: https://pypi.python.org/pypi/passivetotal/
 

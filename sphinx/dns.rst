@@ -23,6 +23,7 @@ DnsResponse
 -----------
 .. autoclass:: passivetotal.libs.dns.DnsResponse
     :members:
+    :undoc-members:
     :show-inheritance:
 
 DnsRecord
