@@ -240,7 +240,7 @@ def main():
     action.add_argument('--set-tags', action="store_true",
                         help="Set tag values")
     action.add_argument('--classification', choices=['malicious',
-                        'non_malicious', 'suspicious', 'unknown'],
+                        'non-malicious', 'suspicious', 'unknown'],
                         help="Classification to apply to the query")
     action.add_argument('--monitor', choices=['true', 'false'],
                         help="Read or write a monitor value")
