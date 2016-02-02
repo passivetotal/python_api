@@ -31,7 +31,7 @@ class DnsRequest(Client):
     def get_passive_dns(self, **kwargs):
         """Get passive DNS data based on a query value.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-DNS-GetDnsPassiveQuery
 
         :param str query: Query value to use when making the request for data
         :param str start: Starting period for record filtering
@@ -45,7 +45,7 @@ class DnsRequest(Client):
     def get_unique_resolutions(self, **kwargs):
         """Get unique resolutions from passive DNS.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-DNS-GetDnsPassiveUniqueQuery
 
         :param str query: Query value to use when making the request for data
         :param str start: Starting period for record filtering

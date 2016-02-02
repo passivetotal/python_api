@@ -18,7 +18,7 @@ class AccountClient(Client):
     def get_account_details(self):
         """Get details about the requesting account.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccount
 
         :return: Dict of account data
         """
@@ -27,7 +27,7 @@ class AccountClient(Client):
     def get_account_history(self):
         """Get history from the requesting account.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountHistory
 
         :return: Dict of history data
         """
@@ -36,7 +36,7 @@ class AccountClient(Client):
     def get_account_notifications(self):
         """Get notifications from the requesting account.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountNotifications
 
         :return: Dict of notifications data
         """
@@ -45,7 +45,7 @@ class AccountClient(Client):
     def get_account_sources(self):
         """Get sources from the requesting account.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountSourcesSource
 
         :return: Dict of source data
         """
@@ -54,7 +54,7 @@ class AccountClient(Client):
     def get_account_organization(self):
         """Get organization data from the requesting account.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountOrganization
 
         :return: Dict of organization data
         """
@@ -63,7 +63,7 @@ class AccountClient(Client):
     def get_account_organization_teamstream(self):
         """Get organization teamstream from the requesting account.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountOrganizationTeamstream
 
         :return: Dict of organization teamstream data
         """

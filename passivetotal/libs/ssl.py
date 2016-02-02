@@ -26,7 +26,7 @@ class SslRequest(Client):
     def get_ssl_certificate_details(self, **kwargs):
         """Get SSL certificate details based on query value.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetSslCertificateQuery
 
         :param str query: SHA-1 or IP address
         :param str compact_record: Return the record in a compact format
@@ -37,7 +37,7 @@ class SslRequest(Client):
     def get_ssl_certificate_history(self, **kwargs):
         """Search SSL certificate history.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetSslCertificateHistoryQuery
 
         :param str query: SHA-1 or IP address
         :param str compact_record: Return the record in a compact format
@@ -50,7 +50,7 @@ class SslRequest(Client):
     def search_ssl_certificate_by_field(self, **kwargs):
         """Search SSL certificate details based on query value and field.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetSslCertificateSearchQueryField
 
         :param str query: Query value to use when making the request for data
         :param str compact_record: Return the record in a compact format
