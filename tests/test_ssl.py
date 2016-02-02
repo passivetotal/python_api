@@ -1,6 +1,7 @@
 import pytest
 from mock import patch
 import unittest
+from future.utils import iteritems
 
 from conf import fake_request
 from passivetotal.libs.ssl import SslRequest
@@ -46,7 +47,7 @@ class SslTestCase(unittest.TestCase):
         response = self.client.get_ssl_certificate_details(**payload)
         wrapped = SslResponse(response)
 
-        for key, value in response.iteritems():
+        for key, value in iteritems(response):
             assert (getattr(wrapped, key)) == value
 
     def test_ssl_certificate_search(self):

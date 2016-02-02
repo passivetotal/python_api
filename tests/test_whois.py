@@ -1,6 +1,7 @@
 import pytest
 from mock import patch
 import unittest
+from future.utils import iteritems
 
 from conf import fake_request
 from passivetotal.libs.whois import WhoisRequest
@@ -45,7 +46,7 @@ class WhoisTestCase(unittest.TestCase):
         response = self.client.get_whois_details(**payload)
         wrapped = WhoisResponse(response)
 
-        for key, value in response.iteritems():
+        for key, value in iteritems(response):
             assert (getattr(wrapped, key)) == value
 
     def test_whois_search(self):
