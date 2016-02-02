@@ -4,9 +4,9 @@ Each dataset library supports a number of different output formats. These are ac
 
 Text
 ----
-pt-client pdns --query passivetotal.org --sources=riskiq --format=text
-
 .. code-block:: text
+
+    pt-client pdns --query passivetotal.org --sources=riskiq --format=text
 
     [*] Query: passivetotal.org
     [*] First Seen: 2014-04-16 02:12:09
@@ -21,9 +21,9 @@ pt-client pdns --query passivetotal.org --sources=riskiq --format=text
 
 Table
 -----
-pt-client pdns --query passivetotal.org --sources=riskiq --format=table
-
 .. code-block:: text
+
+    pt-client pdns --query passivetotal.org --sources=riskiq --format=table
 
     firstSeen            lastSeen             recordHash                                                        resolve          source
     -------------------  -------------------  ----------------------------------------------------------------  ---------------  --------
@@ -34,9 +34,9 @@ pt-client pdns --query passivetotal.org --sources=riskiq --format=table
 
 CSV
 ---
-pt-client pdns --query passivetotal.org --sources=riskiq --format=csv
-
 .. code-block:: text
+
+    pt-client pdns --query passivetotal.org --sources=riskiq --format=csv
 
     firstSeen, lastSeen, recordHash, resolve, source
     2016-01-05 01:39:57, 2016-02-02 04:15:02, e3a9bb4ab8e324b0878c6399c93f2ee4cb1ddf048e5b0851668f5ff402f7bbe4, 54.153.123.93, riskiq
@@ -46,9 +46,9 @@ pt-client pdns --query passivetotal.org --sources=riskiq --format=csv
 
 STIX
 ----
-pt-client pdns --query passivetotal.org --sources=riskiq --format=stix
-
 .. code-block:: text
+
+    pt-client pdns --query passivetotal.org --sources=riskiq --format=stix
 
     <stix:STIX_Package
             xmlns:AddressObj="http://cybox.mitre.org/objects#AddressObject-2"
@@ -83,9 +83,9 @@ pt-client pdns --query passivetotal.org --sources=riskiq --format=stix
 
 JSON
 ----
-pt-client pdns --query passivetotal.org --sources=riskiq --format=json
-
 .. code-block:: text
+
+    pt-client pdns --query passivetotal.org --sources=riskiq --format=json
 
     {
         "totalRecords": 26,
@@ -108,9 +108,9 @@ pt-client pdns --query passivetotal.org --sources=riskiq --format=json
 
 XML
 ---
-pt-client pdns --query passivetotal.org --sources=riskiq --format=xml
-
 .. code-block:: text
+
+    pt-client pdns --query passivetotal.org --sources=riskiq --format=xml
 
     <?xml version="1.0" encoding="UTF-8"?>
     <root>
