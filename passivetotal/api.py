@@ -8,9 +8,6 @@ import json
 import requests
 from passivetotal.config import Config
 
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
-
 
 class Client(object):
 
