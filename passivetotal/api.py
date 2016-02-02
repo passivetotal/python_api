@@ -5,14 +5,8 @@ __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
 import json
-import sys
 import requests
 from passivetotal.config import Config
-
-py_v2 = (sys.version_info[0] == 2)
-py_v3 = (sys.version_info[0] == 3)
-if py_v2:
-    import httplib
 
 # import logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -82,21 +76,6 @@ class Client(object):
             else:
                 api_url += "/".join(url_args)
         return api_url
-
-    def _dump_requests(self):
-        """Dump requests being made."""
-        self._old_send = httplib.HTTPConnection.send
-        old_send = self._old_send
-
-        def new_send(self, data):
-            print(data)
-            return old_send(self, data)
-
-        httplib.HTTPConnection.send = new_send
-
-    def _undump_requests(self):
-        """Reload request details."""
-        httplib.HTTPConnection.send = self._old_send
 
     def _json(self, response):
         """JSON response from server.
