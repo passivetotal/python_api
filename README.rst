@@ -6,11 +6,11 @@ PassiveTotal
 **passivetotal** provides a Python client library implementation into RiskIQ API
 services. The library currently provides support for the following services:
 
-- Passive DNS queries
-- Blacklist URL search
-- Blacklist Incident URL search
-- ZList download
-- Crawler *Landing Page* submission
+- Passive DNS queries and filters
+- WHOIS queries (search and details)
+- SSL Certificates (search and details)
+- Account configuration
+- Site actions (tagging, classifying, etc.)
 
 Command-line scripts
 --------------------
