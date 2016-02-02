@@ -20,21 +20,18 @@ SSL certificates are availble in three different ways with the PassiveTotal clie
 
 SslRequest
 ----------
-
 .. autoclass:: passivetotal.libs.ssl.SslRequest
     :members:
     :show-inheritance:
 
-SslHistoryReponse
------------------
-
-.. autoclass:: passivetotal.libs.ssl.SslHistoryReponse
+SslHistoryResponse
+------------------
+.. autoclass:: passivetotal.libs.ssl.SslHistoryResponse
     :members:
     :show-inheritance:
 
 HistoryRecord
 -------------
-
 .. autoclass:: passivetotal.libs.ssl.HistoryRecord
     :members:
     :show-inheritance:

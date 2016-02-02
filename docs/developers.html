@@ -50,10 +50,10 @@
 3
 4
 5</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsClient</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsUniqueResult</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisClient</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisResult</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsRequest</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsUniqueResponse</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisRequest</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisResponse</span>
 </pre></div>
 </td></tr></table></div>
 <p>Next, we want to grab the IP address from the user directly as an argument on the command line, then look up all the unique domain names that have associated with it.</p>
@@ -118,27 +118,27 @@
 21
 22
 23</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsClient</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsUniqueResult</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisClient</span>
-<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisResult</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsRequest</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.dns</span> <span class="kn">import</span> <span class="n">DnsUniqueResponse</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisRequest</span>
+<span class="kn">from</span> <span class="nn">passivetotal.libs.whois</span> <span class="kn">import</span> <span class="n">WhoisResponse</span>
 
 <span class="n">query</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="c"># look up the unique resolutions</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">DnsClient</span><span class="o">.</span><span class="n">from_config</span><span class="p">()</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">DnsRequest</span><span class="o">.</span><span class="n">from_config</span><span class="p">()</span>
 <span class="n">raw_results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_unique_resolutions</span><span class="p">(</span>
     <span class="n">query</span><span class="o">=</span><span class="n">query</span>
 <span class="p">)</span>
 
-<span class="n">loaded</span> <span class="o">=</span> <span class="n">DnsUniqueResult</span><span class="p">(</span><span class="n">raw_results</span><span class="p">)</span>
+<span class="n">loaded</span> <span class="o">=</span> <span class="n">DnsUniqueResponse</span><span class="p">(</span><span class="n">raw_results</span><span class="p">)</span>
 
-<span class="n">whois_client</span> <span class="o">=</span> <span class="n">WhoisClient</span><span class="o">.</span><span class="n">from_config</span><span class="p">()</span>
+<span class="n">whois_client</span> <span class="o">=</span> <span class="n">WhoisRequest</span><span class="o">.</span><span class="n">from_config</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">loaded</span><span class="o">.</span><span class="n">get_records</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]:</span>
     <span class="n">raw_whois</span> <span class="o">=</span> <span class="n">whois_client</span><span class="o">.</span><span class="n">get_whois_details</span><span class="p">(</span>
         <span class="n">query</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">resolve</span>
     <span class="p">)</span>
-    <span class="n">whois</span> <span class="o">=</span> <span class="n">WhoisResult</span><span class="p">(</span><span class="n">raw_whois</span><span class="p">)</span>
+    <span class="n">whois</span> <span class="o">=</span> <span class="n">WhoisResponse</span><span class="p">(</span><span class="n">raw_whois</span><span class="p">)</span>
     <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">resolve</span><span class="p">,</span> <span class="n">whois</span><span class="o">.</span><span class="n">contactEmail</span>
 </pre></div>
 </td></tr></table></div>

@@ -21,28 +21,24 @@ Passive DNS results come in two primary flavors, full results and unique results
 
 DnsResponse
 -----------
-
 .. autoclass:: passivetotal.libs.dns.DnsResponse
     :members:
     :show-inheritance:
 
 DnsRecord
 ---------
-
 .. autoclass:: passivetotal.libs.dns.DnsRecord
     :members:
     :show-inheritance:
 
 DnsUniqueResponse
 -----------------
-
 .. autoclass:: passivetotal.libs.dns.DnsUniqueResponse
     :members:
     :show-inheritance:
 
 UniqueDnsRecord
 ---------------
-
 .. autoclass:: passivetotal.libs.dns.UniqueDnsRecord
     :members:
     :show-inheritance:

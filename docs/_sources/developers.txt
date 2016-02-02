@@ -14,10 +14,10 @@ For this tool, we are going to need a few system libraries, the DNS and WHOIS li
     :linenos:
 
     import sys
-    from passivetotal.libs.dns import DnsClient
-    from passivetotal.libs.dns import DnsUniqueResult
-    from passivetotal.libs.whois import WhoisClient
-    from passivetotal.libs.whois import WhoisResult
+    from passivetotal.libs.dns import DnsRequest
+    from passivetotal.libs.dns import DnsUniqueResponse
+    from passivetotal.libs.whois import WhoisRequest
+    from passivetotal.libs.whois import WhoisResponse
 
 Next, we want to grab the IP address from the user directly as an argument on the command line, then look up all the unique domain names that have associated with it.
 
@@ -54,27 +54,27 @@ Well, that was easy. The full copy of the code should look like the following:
     :linenos:
 
     import sys
-    from passivetotal.libs.dns import DnsClient
-    from passivetotal.libs.dns import DnsUniqueResult
-    from passivetotal.libs.whois import WhoisClient
-    from passivetotal.libs.whois import WhoisResult
+    from passivetotal.libs.dns import DnsRequest
+    from passivetotal.libs.dns import DnsUniqueResponse
+    from passivetotal.libs.whois import WhoisRequest
+    from passivetotal.libs.whois import WhoisResponse
 
     query = sys.argv[1]
 
     # look up the unique resolutions
-    client = DnsClient.from_config()
+    client = DnsRequest.from_config()
     raw_results = client.get_unique_resolutions(
         query=query
     )
 
-    loaded = DnsUniqueResult(raw_results)
+    loaded = DnsUniqueResponse(raw_results)
 
-    whois_client = WhoisClient.from_config()
+    whois_client = WhoisRequest.from_config()
     for record in loaded.get_records()[:3]:
         raw_whois = whois_client.get_whois_details(
             query=record.resolve
         )
-        whois = WhoisResult(raw_whois)
+        whois = WhoisResponse(raw_whois)
         print record.resolve, whois.contactEmail
 
 If you wanted, you could begin extending this script more or cleaning it up a bit by placing some of the lookups inside of functon calls. Additionally, we could constrain the user input to only accepting IP addresses. Our library comes with some helpful utilities and checking if a value is an IP address is one of them.

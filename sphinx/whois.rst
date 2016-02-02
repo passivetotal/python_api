@@ -20,14 +20,12 @@ WHOIS is availble in two different ways with the PassiveTotal client. Users can 
 
 WhoisRequest
 ------------
-
 .. autoclass:: passivetotal.libs.whois.WhoisRequest
     :members:
     :show-inheritance:
 
 WhoisResponse
 -------------
-
 .. autoclass:: passivetotal.libs.whois.WhoisResponse
     :members:
     :show-inheritance:
