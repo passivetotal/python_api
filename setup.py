@@ -15,7 +15,8 @@ setup(
     author_email="admin@passivetotal.org",
     license="GPLv2",
     packages=find_packages(),
-    install_requires=['requests', 'tabulate', 'stix', 'ez_setup'],
+    install_requires=['requests', 'tabulate', 'stix', 'ez_setup', 'lxml',
+                      'cybox', 'python-dateutil', 'dicttoxml'],
     long_description=read('README.rst'),
     classifiers=[],
     entry_points={
