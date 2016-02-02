@@ -110,7 +110,7 @@ class Client(object):
         #     del url_params['timeout']
         # else:
         #     timeout = Client.TIMEOUT
-        url_params.update({'api_key': self.api_key})
+        # url_params.update({'api_key': self.api_key})
         kwargs = {'headers': self.headers, 'params': url_params,
                   'timeout': Client.TIMEOUT, 'verify': True,
                   'auth': (self.username, self.api_key)}
@@ -132,7 +132,7 @@ class Client(object):
         :return: response deserialized from JSON
         """
         api_url = self._endpoint(endpoint, action, *url_args)
-        data.update({'api_key': self.api_key})
+        # data.update({'api_key': self.api_key})
         data = json.dumps(data)
         kwargs = {'headers': self.headers, 'params': url_params,
                   'verify': True, 'data': data,

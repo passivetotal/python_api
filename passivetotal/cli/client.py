@@ -178,6 +178,9 @@ def write_output(results, arguments):
             tmp = SslHistoryResponse.process(results)
             data = [getattr(tmp, arguments.format)]
 
+    else:
+        return [str(results)]
+
     return data
 
 
@@ -254,6 +257,7 @@ def main():
                         help="Output as JSON")
 
     args, unknown = parser.parse_known_args()
+    data = None
 
     try:
         if args.cmd == 'pdns':
