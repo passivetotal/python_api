@@ -1,0 +1,11 @@
+# Python
+*.pyc
+# Editor
+*\.sw[a-z]
+# Setuptools 'develop' target
+passivetotal.egg-info/
+build/
+dist/
+setuptools-*
+venv/
+libpassivetotal.egg-info/

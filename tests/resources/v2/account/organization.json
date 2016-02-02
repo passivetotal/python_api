@@ -1,0 +1,15 @@
+{
+    "activeMembers": ["jdoe@passivetotal.org"],
+    "status": "enterprise",
+    "name": "PassiveTotal",
+    "lastActive": "2016-01-12 11:45:34",
+    "acceptableDomains": ["passivetotal.org"],
+    "searchQuota": "500",
+    "registered": "2015-01-23 13:14:38",
+    "watchQuota": "40",
+    "active": true,
+    "admins": ["admin@passivetotal.org"],
+    "inactiveMembers": ["notauser@passivetotal.org"],
+    "seats": 9,
+    "id": "passivetotal"
+}

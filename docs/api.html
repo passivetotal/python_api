@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Wrappers &mdash; PassiveTotal 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PassiveTotal 2.0.0 documentation" href="index.html" />
+    <link rel="next" title="DNS Results" href="dns.html" />
+    <link rel="prev" title="Developers" href="developers.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="api-wrappers">
+<h1>API Wrappers<a class="headerlink" href="#api-wrappers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-passivetotal.api">
+<span id="base-client"></span><h2>Base Client<a class="headerlink" href="#module-passivetotal.api" title="Permalink to this headline">¶</a></h2>
+<p>PassiveTotal API Interface.</p>
+<dl class="class">
+<dt id="passivetotal.api.Client">
+<em class="property">class </em><code class="descclassname">passivetotal.api.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>username</em>, <em>api_key</em>, <em>server='api.passivetotal.org'</em>, <em>version='v2'</em>, <em>http_proxy=None</em>, <em>https_proxy=None</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base client that all data sources will inherit from.</p>
+<dl class="method">
+<dt id="passivetotal.api.Client._dump_requests">
+<code class="descname">_dump_requests</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client._dump_requests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump requests being made.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.api.Client._endpoint">
+<code class="descname">_endpoint</code><span class="sig-paren">(</span><em>endpoint</em>, <em>action</em>, <em>*url_args</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client._endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the URL for the action.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>endpoint</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The controller</li>
+<li><strong>action</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The action provided by the controller</li>
+<li><strong>url_args</strong> &#8211; Additional endpoints(for endpoints that take part of
+the url as option)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Full URL for the requested action</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.api.Client._get">
+<code class="descname">_get</code><span class="sig-paren">(</span><em>endpoint</em>, <em>action</em>, <em>*url_args</em>, <em>**url_params</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client._get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request API Endpoint - for GET methods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>endpoint</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Endpoint</li>
+<li><strong>action</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Endpoint Action</li>
+<li><strong>url_args</strong> &#8211; Additional endpoints(for endpoints that take part of
+the url as option)</li>
+<li><strong>url_params</strong> &#8211; Parameters to pass to url, typically query string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">response deserialized from JSON</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.api.Client._json">
+<code class="descname">_json</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client._json" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON response from server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>response</strong> &#8211; Response from the server</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Throws ValueError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">from requests&#8217; response.json() error</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">response deserialized from JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.api.Client._send_data">
+<code class="descname">_send_data</code><span class="sig-paren">(</span><em>method</em>, <em>endpoint</em>, <em>action</em>, <em>data</em>, <em>*url_args</em>, <em>**url_params</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client._send_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit to API Endpoint - for DELETE, PUT, POST methods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Method to use for the request</li>
+<li><strong>endpoint</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Endpoint</li>
+<li><strong>action</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Endpoint Action</li>
+<li><strong>url_args</strong> &#8211; Additional endpoints(for endpoints that take part of
+the url as option)</li>
+<li><strong>url_params</strong> &#8211; Parameters to pass to url, typically query string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">response deserialized from JSON</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.api.Client._undump_requests">
+<code class="descname">_undump_requests</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client._undump_requests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload request details.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="passivetotal.api.Client.from_config">
+<em class="property">classmethod </em><code class="descname">from_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to return back a loaded instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dns-request">
+<h2>DNS Request<a class="headerlink" href="#dns-request" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.dns.DnsRequest">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.dns.</code><code class="descname">DnsRequest</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
+<p>Client to interface with the DNS calls from the PassiveTotal API.</p>
+<dl class="method">
+<dt id="passivetotal.libs.dns.DnsRequest.get_passive_dns">
+<code class="descname">get_passive_dns</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsRequest.get_passive_dns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get passive DNS data based on a query value.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>start</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Starting period for record filtering</li>
+<li><strong>end</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Ending period for record filtering</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Timeout to apply to source queries</li>
+<li><strong>sources</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; List of sources to use for the query</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of passive DNS results</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.dns.DnsRequest.get_unique_resolutions">
+<code class="descname">get_unique_resolutions</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsRequest.get_unique_resolutions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get unique resolutions from passive DNS.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>start</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Starting period for record filtering</li>
+<li><strong>end</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Ending period for record filtering</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Timeout to apply to source queries</li>
+<li><strong>sources</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; List of sources to use for the query</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of passive DNS unique resolutions</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="whois-request">
+<h2>WHOIS Request<a class="headerlink" href="#whois-request" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.whois.WhoisRequest">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.whois.</code><code class="descname">WhoisRequest</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
+<p>Client to interface with the WHOIS calls from the PassiveTotal API.</p>
+<dl class="method">
+<dt id="passivetotal.libs.whois.WhoisRequest.get_whois_details">
+<code class="descname">get_whois_details</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.get_whois_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get WHOIS details based on query value.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WHOIS details for the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.whois.WhoisRequest.search_whois_by_field">
+<code class="descname">search_whois_by_field</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.search_whois_by_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search WHOIS details based on query value and field.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+<li><strong>field</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Field to run the query against</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WHOIS records matching the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ssl-request">
+<h2>SSL Request<a class="headerlink" href="#ssl-request" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.ssl.SslRequest">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.ssl.</code><code class="descname">SslRequest</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
+<p>Client to interface with the SSL calls from the PassiveTotal API.</p>
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslRequest.get_ssl_certificate_details">
+<code class="descname">get_ssl_certificate_details</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslRequest.get_ssl_certificate_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get SSL certificate details based on query value.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; SHA-1 or IP address</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SSL certificate details for the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslRequest.get_ssl_certificate_history">
+<code class="descname">get_ssl_certificate_history</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslRequest.get_ssl_certificate_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search SSL certificate history.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; SHA-1 or IP address</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+<li><strong>field</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Field to run the query against</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Type of search to conduct</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WHOIS records matching the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslRequest.search_ssl_certificate_by_field">
+<code class="descname">search_ssl_certificate_by_field</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslRequest.search_ssl_certificate_by_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search SSL certificate details based on query value and field.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+<li><strong>field</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Field to run the query against</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Type of search to conduct</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SSL certificates matching the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="actions-request">
+<h2>Actions Request<a class="headerlink" href="#actions-request" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Wrappers</a><ul>
+<li><a class="reference internal" href="#module-passivetotal.api">Base Client</a></li>
+<li><a class="reference internal" href="#dns-request">DNS Request</a></li>
+<li><a class="reference internal" href="#whois-request">WHOIS Request</a></li>
+<li><a class="reference internal" href="#ssl-request">SSL Request</a></li>
+<li><a class="reference internal" href="#actions-request">Actions Request</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="developers.html" title="previous chapter">Developers</a></li>
+      <li>Next: <a href="dns.html" title="next chapter">DNS Results</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Brandon Dixon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/api.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

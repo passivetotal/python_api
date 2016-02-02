@@ -1,0 +1,19 @@
+{
+    "teamstream": [{
+        "username": "jdoe@passivetotal.org",
+        "additional": {},
+        "focus": "passivetotal.org",
+        "source": "api",
+        "context": "non_malicious",
+        "dt": "2016-01-13 11:18:39",
+        "type": "classify"
+    }, {
+        "username": "notauser@passivetotal.org",
+        "additional": {},
+        "focus": "www.riskiq.net",
+        "source": "web",
+        "context": 100,
+        "dt": "2015-11-23 15:16:51",
+        "type": "search"
+    }]
+}

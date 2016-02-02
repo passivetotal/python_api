@@ -1,0 +1,531 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Primary Results &mdash; PassiveTotal 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PassiveTotal 2.0.0 documentation" href="index.html" />
+    <link rel="prev" title="API Wrappers" href="api.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="primary-results">
+<h1>Primary Results<a class="headerlink" href="#primary-results" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dns">
+<h2>DNS<a class="headerlink" href="#dns" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.dns.DnsResult">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.dns.</code><code class="descname">DnsResult</code><span class="sig-paren">(</span><em>results</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Result object to ease interaction with data.</p>
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsResult.csv">
+<code class="descname">csv</code><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as CSV.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String of formatted data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.dns.DnsResult.get_days_until_now">
+<code class="descname">get_days_until_now</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.get_days_until_now" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the amount of days from last seen until today.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nunber of days until now</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.dns.DnsResult.get_observed_days">
+<code class="descname">get_observed_days</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.get_observed_days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the amount of days observed for the query period.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Nunber of observed days</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.dns.DnsResult.get_source_variety">
+<code class="descname">get_source_variety</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.get_source_variety" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the contribution count for each source for the results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict of sources and their counts based on data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsResult.json">
+<code class="descname">json</code><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as JSON.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Loaded JSON results</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="passivetotal.libs.dns.DnsResult.process">
+<em class="property">classmethod </em><code class="descname">process</code><span class="sig-paren">(</span><em>inferred</em>, <em>results</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process results and return a loaded instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>inferred</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) &#8211; Instance of the class itself</li>
+<li><strong>record</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Record to use for loading</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Instance of the loaded class</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsResult.stix">
+<code class="descname">stix</code><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.stix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as STIX.</p>
+<p>STIX is highly subjective and difficult to format without getting more
+data from the user. Passive DNS results are formtted into a STIX
+watchlist with descriptions and other details about the record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">STIX formatted watchlist</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsResult.table">
+<code class="descname">table</code><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Table of formatted data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsResult.text">
+<code class="descname">text</code><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String of formatted data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsResult.xml">
+<code class="descname">xml</code><a class="headerlink" href="#passivetotal.libs.dns.DnsResult.xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as XML.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">XML formatted results</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="passivetotal.libs.dns.DnsUniqueResult">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.dns.</code><code class="descname">DnsUniqueResult</code><span class="sig-paren">(</span><em>results</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Result object to ease interaction with data.</p>
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.csv">
+<code class="descname">csv</code><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as CSV.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String of formatted data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.json">
+<code class="descname">json</code><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as JSON.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Loaded JSON results</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.process">
+<em class="property">classmethod </em><code class="descname">process</code><span class="sig-paren">(</span><em>inferred</em>, <em>results</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process results and return a loaded instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>inferred</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><em>object</em></a>) &#8211; Instance of the class itself</li>
+<li><strong>record</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Record to use for loading</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Instance of the loaded class</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.stix">
+<code class="descname">stix</code><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.stix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as STIX.</p>
+<p>STIX is highly subjective and difficult to format without getting more
+data from the user. Passive DNS results are formtted into a STIX
+watchlist with descriptions and other details about the record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">STIX formatted watchlist</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.table">
+<code class="descname">table</code><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Table of formatted data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.text">
+<code class="descname">text</code><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as text.</p>
+<p>Data shown in the text output is not full-featured and contains only
+content deemed to be most useful to the end-user. For full data output,
+use JSON or XML outputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String of formatted data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="passivetotal.libs.dns.DnsUniqueResult.xml">
+<code class="descname">xml</code><a class="headerlink" href="#passivetotal.libs.dns.DnsUniqueResult.xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as XML.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">XML formatted results</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="whois-client">
+<h2>WHOIS Client<a class="headerlink" href="#whois-client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.whois.WhoisClient">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.whois.</code><code class="descname">WhoisClient</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api.html#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
+<p>Client to interface with the WHOIS calls from the PassiveTotal API.</p>
+<dl class="method">
+<dt id="passivetotal.libs.whois.WhoisClient.get_whois_details">
+<code class="descname">get_whois_details</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisClient.get_whois_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get WHOIS details based on query value.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WHOIS details for the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.whois.WhoisClient.search_whois_by_field">
+<code class="descname">search_whois_by_field</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisClient.search_whois_by_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search WHOIS details based on query value and field.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+<li><strong>field</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Field to run the query against</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WHOIS records matching the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ssl-client">
+<h2>SSL Client<a class="headerlink" href="#ssl-client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.ssl.SslClient">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.ssl.</code><code class="descname">SslClient</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api.html#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
+<p>Client to interface with the SSL calls from the PassiveTotal API.</p>
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslClient.get_ssl_certificate_details">
+<code class="descname">get_ssl_certificate_details</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslClient.get_ssl_certificate_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get SSL certificate details based on query value.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; SHA-1 or IP address</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SSL certificate details for the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslClient.get_ssl_certificate_history">
+<code class="descname">get_ssl_certificate_history</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslClient.get_ssl_certificate_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search SSL certificate history.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; SHA-1 or IP address</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+<li><strong>field</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Field to run the query against</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Type of search to conduct</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WHOIS records matching the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslClient.search_ssl_certificate_by_field">
+<code class="descname">search_ssl_certificate_by_field</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslClient.search_ssl_certificate_by_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search SSL certificate details based on query value and field.</p>
+<p>Reference:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Query value to use when making the request for data</li>
+<li><strong>compact_record</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the record in a compact format</li>
+<li><strong>field</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Field to run the query against</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Type of search to conduct</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SSL certificates matching the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="actions-client">
+<h2>Actions Client<a class="headerlink" href="#actions-client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="passivetotal.libs.actions.ActionsClient">
+<em class="property">class </em><code class="descclassname">passivetotal.libs.actions.</code><code class="descname">ActionsClient</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.actions.ActionsClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api.html#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
+<p>Client to interface with the Actions calls from the PassiveTotal API.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Primary Results</a><ul>
+<li><a class="reference internal" href="#dns">DNS</a></li>
+<li><a class="reference internal" href="#whois-client">WHOIS Client</a></li>
+<li><a class="reference internal" href="#ssl-client">SSL Client</a></li>
+<li><a class="reference internal" href="#actions-client">Actions Client</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="api.html" title="previous chapter">API Wrappers</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/results.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Brandon Dixon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/results.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

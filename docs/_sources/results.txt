@@ -1,0 +1,35 @@
+Primary Results
+===============
+
+
+DNS
+---
+
+.. autoclass:: passivetotal.libs.dns.DnsResult
+    :members:
+    :show-inheritance:
+
+.. autoclass:: passivetotal.libs.dns.DnsUniqueResult
+    :members:
+    :show-inheritance:
+
+WHOIS Client
+------------
+
+.. autoclass:: passivetotal.libs.whois.WhoisClient
+    :members:
+    :show-inheritance:
+
+SSL Client
+------------
+
+.. autoclass:: passivetotal.libs.ssl.SslClient
+    :members:
+    :show-inheritance:
+
+Actions Client
+------------
+
+.. autoclass:: passivetotal.libs.actions.ActionsClient
+    :members:
+    :show-inheritance:

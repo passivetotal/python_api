@@ -1,0 +1,46 @@
+{ "results": [{
+    "contactEmail": "proxy4655031@1and1-private-registration.com",
+    "domain": "passivetotal.org",
+    "billing": {},
+    "zone": {},
+    "nameServers": ["NS1.DIGITALOCEAN.COM", "NS2.DIGITALOCEAN.COM", "NS3.DIGITALOCEAN.COM"],
+    "registered": "1968-04-03",
+    "lastLoadedAt": "1968-04-03",
+    "whoisServer": "whois.publicinterestregistry.net",
+    "registryUpdatedAt": "1968-04-03",
+    "admin": {
+        "city": "Chesterbrook",
+        "name": "Oneandone Private Registration",
+        "country": "UNITED STATES",
+        "telephone": "18772064254",
+        "state": "PA",
+        "street": "701 Lee Road Suite 300|ATTN  passivetotal.org",
+        "postalCode": "19087",
+        "organization": "1&1 Internet Inc. - www.1and1.com",
+        "email": "proxy4655031@1and1-private-registration.com"
+    },
+    "expiresAt": "1968-04-03",
+    "registrar": "1 & 1 Internet AG (R73-LROR)",
+    "tech": {
+        "city": "Chesterbrook",
+        "name": "Oneandone Private Registration",
+        "country": "UNITED STATES",
+        "telephone": "18772064254",
+        "state": "PA",
+        "street": "701 Lee Road Suite 300|ATTN  passivetotal.org",
+        "postalCode": "19087",
+        "organization": "1&1 Internet Inc. - www.1and1.com",
+        "email": "proxy4655031@1and1-private-registration.com"
+    },
+    "registrant": {
+        "city": "Chesterbrook",
+        "name": "Oneandone Private Registration",
+        "country": "UNITED STATES",
+        "telephone": "18772064254",
+        "state": "PA",
+        "street": "701 Lee Road Suite 300|ATTN  passivetotal.org",
+        "postalCode": "19087",
+        "organization": "1&1 Internet Inc. - www.1and1.com",
+        "email": "proxy4655031@1and1-private-registration.com"
+    }
+}]}

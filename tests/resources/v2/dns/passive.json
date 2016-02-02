@@ -1,0 +1,24 @@
+{
+    "records": [{
+        "recordHash": "6d24bc7754af023afeaaa05ac689ac36e96656aa6519ba435b301b14916b27d3",
+        "resolve": "54.153.123.93",
+        "value": "passivetotal.org",
+        "source": ["riskiq"],
+        "lastSeen": "1968-04-03 18:00:01",
+        "collected": "1968-04-03 10:04:22",
+        "firstSeen": "1968-04-03 00:00:02"
+    }, {
+        "recordHash": "3b2128b35c22e3bc8b14f9ba4d29bd1f085dad66488f01a9b2d69b051b917fbc",
+        "resolve": "52.8.228.23",
+        "value": "passivetotal.org",
+        "source": ["riskiq"],
+        "lastSeen": "1968-04-03 18:00:01",
+        "collected": "1968-04-03 10:04:22",
+        "firstSeen": "1968-04-03 00:00:02"
+    }],
+    "queryValue": "passivetotal.org",
+    "firstSeen": "1968-04-03 02:12:09",
+    "totalRecords": 9,
+    "pager": {},
+    "lastSeen": "1968-04-03 18:00:01"
+}

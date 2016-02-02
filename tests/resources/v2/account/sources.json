@@ -1,0 +1,11 @@
+{
+    "sources": [{
+        "active": false,
+        "source": "riskiq",
+        "configuration": {
+            "token_secret": "",
+            "token_key": "",
+            "settings": {}
+        }
+    }]
+}
