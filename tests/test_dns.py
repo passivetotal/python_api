@@ -35,7 +35,6 @@ class DnsTestCase(unittest.TestCase):
         wrapped = DnsResponse(response)
         assert (wrapped.queryValue) == 'passivetotal.org'
         assert (wrapped.get_records().pop(0).recordHash) == '6d24bc7754af023afeaaa05ac689ac36e96656aa6519ba435b301b14916b27d3'
-        assert (wrapped.get_days_until_now()) == 17470
         assert (wrapped.get_observed_days()) == 0
         assert (len(wrapped.get_source_variety().keys())) == 1
 

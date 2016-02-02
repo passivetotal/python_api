@@ -36,9 +36,6 @@ class WhoisTestCase(unittest.TestCase):
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_whois_details(**payload)
         wrapped = WhoisResponse(response)
-        assert (wrapped.get_days_since_registration()) == 17470
-        assert (wrapped.get_days_since_updated()) == 17470
-        assert (wrapped.get_days_until_expiration()) == 17470
         for item in self.formats:
             assert (getattr(wrapped, item))
 
