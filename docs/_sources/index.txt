@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    introduction
+   outputs
    developers
    api
    dns

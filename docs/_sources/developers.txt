@@ -1,5 +1,5 @@
-Developers
-==========
+Writing Tools
+=============
 
 This client library was built with developers in mind. Our goal was to provide our clients with an easy way to use PassiveTotal data inside their own tools or organizations. Below is a walkthrough of building a simple tool to output WHOIS emails for a list of passive DNS domains. Additionally, check out our source code for "pt-client" in order to see how we used the libraries available to you to build our CLI tool.
 

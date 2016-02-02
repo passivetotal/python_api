@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Output Formats &mdash; PassiveTotal 2.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="PassiveTotal 2.0.0 documentation" href="index.html"/>
+        <link rel="next" title="Writing Tools" href="developers.html"/>
+        <link rel="prev" title="Introduction" href="introduction.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> PassiveTotal
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#library-organization">Library Organization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Output Formats</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#text">Text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table">Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#csv">CSV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stix">STIX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#json">JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xml">XML</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Writing Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#building-a-simple-tool">Building a Simple Tool</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Wrappers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-passivetotal.api">Base Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#dns-request">DNS Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#whois-request">WHOIS Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ssl-request">SSL Request</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dns.html">DNS Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dns.html#dnsresponse">DnsResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dns.html#dnsrecord">DnsRecord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dns.html#dnsuniqueresponse">DnsUniqueResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dns.html#uniquednsrecord">UniqueDnsRecord</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="whois.html">WHOIS Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="whois.html#whoisrequest">WhoisRequest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="whois.html#whoisresponse">WhoisResponse</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssl.html#sslrequest">SslRequest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssl.html#sslhistoryresponse">SslHistoryResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssl.html#historyrecord">HistoryRecord</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">PassiveTotal</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Output Formats</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/outputs.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="output-formats">
+<h1>Output Formats<a class="headerlink" href="#output-formats" title="Permalink to this headline">¶</a></h1>
+<p>Each dataset library supports a number of different output formats. These are accessible inside of the command line tools using the &#8220;&#8211;format&#8221; switch, but can also be accessed when developing your own tools. At the time of writing this documentation, many of the dataset libraries support the following formats: XML, JSON, STIX, text, table, and CSV. Our goal was to remove the trouble of formatting all the data yourself and instead focusing on doing your own research.</p>
+<div class="section" id="text">
+<h2>Text<a class="headerlink" href="#text" title="Permalink to this headline">¶</a></h2>
+<p>pt-client pdns &#8211;query passivetotal.org &#8211;sources=riskiq &#8211;format=text</p>
+<div class="highlight-text"><div class="highlight"><pre>[*] Query: passivetotal.org
+[*] First Seen: 2014-04-16 02:12:09
+[*] Last Seen: 2016-01-29 21:15:02
+[*] Total Records: 26
+[*] Records:
+=&gt; First Seen           Last Seen               Resolution      Sources
+=&gt; 2016-01-05 01:39:57  2016-01-29 21:15:02     54.153.123.93   riskiq
+=&gt; 2016-01-05 00:00:02  2016-01-25 17:00:01     52.8.228.23     riskiq
+=&gt; 2016-01-05 01:39:57  2016-01-25 09:07:41     54.153.123.93   riskiq
+=&gt; 2016-01-05 00:00:02  2016-01-24 17:00:01     52.8.228.23     riskiq
+</pre></div>
+</div>
+</div>
+<div class="section" id="table">
+<h2>Table<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h2>
+<p>pt-client pdns &#8211;query passivetotal.org &#8211;sources=riskiq &#8211;format=table</p>
+<div class="highlight-text"><div class="highlight"><pre>firstSeen            lastSeen             recordHash                                                        resolve          source
+-------------------  -------------------  ----------------------------------------------------------------  ---------------  --------
+2016-01-05 01:39:57  2016-01-29 21:15:02  d19d3cb8026c07e84791d883dd98483b66640b9fc42b74196597a6b85c22bb18  54.153.123.93    riskiq
+2016-01-05 00:00:02  2016-01-25 17:00:01  28cdf5e5bed46f8f73d9cc91b87eb33bbd2ab7977cd63f9472826b3f99c1a2ad  52.8.228.23      riskiq
+2016-01-05 01:39:57  2016-01-25 09:07:41  09e08ff92cfa093c4455ba2abccb1ac30053b763e13673dacc6c9db90c152c41  54.153.123.93    riskiq
+2016-01-05 00:00:02  2016-01-24 17:00:01  0474c83de81c3b25cff311d4924608e16a2228e55d9edd70da94fa661afde000  52.8.228.23      riskiq
+</pre></div>
+</div>
+</div>
+<div class="section" id="csv">
+<h2>CSV<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h2>
+<p>pt-client pdns &#8211;query passivetotal.org &#8211;sources=riskiq &#8211;format=csv</p>
+<div class="highlight-text"><div class="highlight"><pre>firstSeen, lastSeen, recordHash, resolve, source
+2016-01-05 01:39:57, 2016-02-02 04:15:02, e3a9bb4ab8e324b0878c6399c93f2ee4cb1ddf048e5b0851668f5ff402f7bbe4, 54.153.123.93, riskiq
+2016-01-05 00:00:02, 2016-01-25 17:00:01, 28cdf5e5bed46f8f73d9cc91b87eb33bbd2ab7977cd63f9472826b3f99c1a2ad, 52.8.228.23, riskiq
+2016-01-05 00:00:02, 2016-01-25 17:00:01, 11f8f6ef801ef8c2ccc368b948392916384ebd5285928f7960782a7133a5df85, 54.153.123.93, riskiq, passivetotal.org
+2016-01-05 00:00:02, 2016-01-25 17:00:01, 28cdf5e5bed46f8f73d9cc91b87eb33bbd2ab7977cd63f9472826b3f99c1a2ad, 52.8.228.23, riskiq
+</pre></div>
+</div>
+</div>
+<div class="section" id="stix">
+<h2>STIX<a class="headerlink" href="#stix" title="Permalink to this headline">¶</a></h2>
+<p>pt-client pdns &#8211;query passivetotal.org &#8211;sources=riskiq &#8211;format=stix</p>
+<div class="highlight-text"><div class="highlight"><pre>&lt;stix:STIX_Package
+        xmlns:AddressObj=&quot;http://cybox.mitre.org/objects#AddressObject-2&quot;
+        xmlns:cybox=&quot;http://cybox.mitre.org/cybox-2&quot;
+        xmlns:cyboxCommon=&quot;http://cybox.mitre.org/common-2&quot;
+        xmlns:cyboxVocabs=&quot;http://cybox.mitre.org/default_vocabularies-2&quot;
+        xmlns:example=&quot;http://example.com&quot;
+        xmlns:indicator=&quot;http://stix.mitre.org/Indicator-2&quot;
+        xmlns:stix=&quot;http://stix.mitre.org/stix-1&quot;
+        xmlns:stixCommon=&quot;http://stix.mitre.org/common-1&quot;
+        xmlns:stixVocabs=&quot;http://stix.mitre.org/default_vocabularies-1&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; id=&quot;example:Package-bf7c0664-5ec1-4ed9-b53b-985c8e952195&quot; version=&quot;1.2&quot;&gt;
+    &lt;stix:STIX_Header&gt;
+        &lt;stix:Description&gt;Passive DNS resolutions associated with passivetotal.org during the time periods of  2014-04-16 02:12:09 - 2016-01-29 21:15:02&lt;/stix:Description&gt;
+    &lt;/stix:STIX_Header&gt;
+    &lt;stix:Indicators&gt;
+        &lt;stix:Indicator id=&quot;example:indicator-f839a8fe-6fbc-4f08-aa0e-e11656406100&quot; timestamp=&quot;2016-02-02T06:06:53.894284+00:00&quot; xsi:type=&#39;indicator:IndicatorType&#39;&gt;
+            &lt;indicator:Title&gt;Observed from 2016-01-05 01:39:57 - 2016-01-29 21:15:02&lt;/indicator:Title&gt;
+            &lt;indicator:Type xsi:type=&quot;stixVocabs:IndicatorTypeVocab-1.1&quot;&gt;IP Watchlist&lt;/indicator:Type&gt;
+            &lt;indicator:Description&gt;Passive DNS data collected and aggregated from PassiveTotal services.&lt;/indicator:Description&gt;
+            &lt;indicator:Short_Description&gt;Resolution observed by riskiq.&lt;/indicator:Short_Description&gt;
+            &lt;indicator:Observable id=&quot;example:Observable-44341837-418a-4e24-b1ab-13fafd86ccd8&quot;&gt;
+                &lt;cybox:Object id=&quot;example:Address-6e8fe132-bf88-4d25-bb55-6044d96c128a&quot;&gt;
+                    &lt;cybox:Properties xsi:type=&quot;AddressObj:AddressObjectType&quot; category=&quot;ipv4-addr&quot;&gt;
+                        &lt;AddressObj:Address_Value condition=&quot;Equals&quot;&gt;54.153.123.93&lt;/AddressObj:Address_Value&gt;
+                    &lt;/cybox:Properties&gt;
+                &lt;/cybox:Object&gt;
+            &lt;/indicator:Observable&gt;
+        &lt;/stix:Indicator&gt;
+    &lt;/stix:Indicators&gt;
+&lt;/stix:STIX_Package&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="json">
+<h2>JSON<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h2>
+<p>pt-client pdns &#8211;query passivetotal.org &#8211;sources=riskiq &#8211;format=json</p>
+<div class="highlight-text"><div class="highlight"><pre>{
+    &quot;totalRecords&quot;: 26,
+    &quot;records&quot;: [
+        {
+            &quot;source&quot;: [
+                &quot;riskiq&quot;
+            ],
+            &quot;resolve&quot;: &quot;107.170.89.121&quot;,
+            &quot;lastSeen&quot;: &quot;2014-04-16 02:12:09&quot;,
+            &quot;firstSeen&quot;: &quot;2014-04-16 02:12:09&quot;,
+            &quot;recordHash&quot;: &quot;ebad20bf05d81e2e5e9075ee4d3b93d663f7a7e492792d0ac1c2cdaa49a78711&quot;
+        }
+    ],
+    &quot;lastSeen&quot;: &quot;2016-01-29 21:15:02&quot;,
+    &quot;pager&quot;: null,
+    &quot;firstSeen&quot;: &quot;2014-04-16 02:12:09&quot;,
+    &quot;queryValue&quot;: &quot;passivetotal.org&quot;
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="xml">
+<h2>XML<a class="headerlink" href="#xml" title="Permalink to this headline">¶</a></h2>
+<p>pt-client pdns &#8211;query passivetotal.org &#8211;sources=riskiq &#8211;format=xml</p>
+<div class="highlight-text"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;root&gt;
+    &lt;totalRecords type=&quot;int&quot;&gt;26&lt;/totalRecords&gt;
+    &lt;records type=&quot;list&quot;&gt;
+        &lt;item type=&quot;dict&quot;&gt;
+            &lt;source type=&quot;list&quot;&gt;
+                &lt;item type=&quot;str&quot;&gt;riskiq&lt;/item&gt;
+            &lt;/source&gt;
+            &lt;resolve type=&quot;str&quot;&gt;54.153.123.93&lt;/resolve&gt;
+            &lt;lastSeen type=&quot;str&quot;&gt;2016-01-29 21:15:02&lt;/lastSeen&gt;
+            &lt;firstSeen type=&quot;str&quot;&gt;2016-01-05 01:39:57&lt;/firstSeen&gt;
+            &lt;recordHash type=&quot;str&quot;&gt;d19d3cb8026c07e84791d883dd98483b66640b9fc42b74196597a6b85c22bb18&lt;/recordHash&gt;
+        &lt;/item&gt;
+    &lt;/records&gt;
+    &lt;lastSeen type=&quot;str&quot;&gt;2016-01-29 21:15:02&lt;/lastSeen&gt;
+    &lt;pager type=&quot;null&quot;/&gt;
+    &lt;firstSeen type=&quot;str&quot;&gt;2014-04-16 02:12:09&lt;/firstSeen&gt;
+    &lt;queryValue type=&quot;str&quot;&gt;passivetotal.org&lt;/queryValue&gt;
+&lt;/root&gt;
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="developers.html" class="btn btn-neutral float-right" title="Writing Tools" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral" title="Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Brandon Dixon.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

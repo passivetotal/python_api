@@ -202,9 +202,9 @@ class DnsResponse(Response):
         :return: String of formatted data
         """
         output = ''
-        output += "[*] Query: %s\n" % self.query_value
-        output += "[*] First Seen: %s\n" % self.first_seen
-        output += "[*] Last Seen: %s\n" % self.last_seen
+        output += "[*] Query: %s\n" % self.queryValue
+        output += "[*] First Seen: %s\n" % self.firstSeen
+        output += "[*] Last Seen: %s\n" % self.lastSeen
         output += "[*] Total Records: %d\n" % len(self.records)
         output += "[*] Records:\n"
         output += "=> First Seen\t\tLast Seen\t\tResolution\tSources\n"
@@ -255,9 +255,9 @@ class DnsResponse(Response):
         stix_header = STIXHeader()
         stix_header.description = "Passive DNS resolutions associated" \
                                   " with %s during the time periods of " \
-                                  " %s - %s" % (self.query_value,
-                                                self.first_seen,
-                                                self.last_seen)
+                                  " %s - %s" % (self.queryValue,
+                                                self.firstSeen,
+                                                self.lastSeen)
         stix_package.stix_header = stix_header
         for record in self._records:
             indicator = Indicator(
@@ -363,7 +363,7 @@ class DnsUniqueResponse(Response):
         :return: String of formatted data
         """
         output = ''
-        output += "[*] Query: %s\n" % self.query_value
+        output += "[*] Query: %s\n" % self.queryValue
         output += "[*] Total Records: %d\n" % len(self.records)
         output += "[*] Records:\n"
         output += "=> Resolution\t\tFrequency\n"

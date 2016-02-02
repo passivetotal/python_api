@@ -1,6 +1,5 @@
 Introduction
 ============
-
 In order to use the PassiveTotal libraries, you must have a PassiveTotal account. Registration is free and can be done before installation by going to https://www.passivetotal.org/register. Once verified, you will be able to access your account settings and begin running queries.
 
 Quick Start
@@ -25,7 +24,6 @@ The PassiveTotal library provides several different ways to interact with data. 
 
 Library Organization
 --------------------
-
 This library is organized in such a way that users can pick and choose the data they wish to interact with. Each primary data type we reference in our API and CLI tool is available for individual use. In fact, our CLI tool is built on the same libraries exposed to you!
 
 Each data type has an API abstraction that will get the raw data from the API and a corresponding results class that can load the results into a Python object. Loading results into the result objects provide you with flexible ways to interact and export the result data.
