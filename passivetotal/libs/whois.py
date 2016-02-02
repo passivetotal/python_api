@@ -4,8 +4,8 @@
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
-import datetime
 from tabulate import tabulate
+import datetime
 # custom
 from passivetotal.api import Client
 from passivetotal.response import Response

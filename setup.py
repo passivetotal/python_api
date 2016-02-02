@@ -16,7 +16,7 @@ setup(
     license="GPLv2",
     packages=find_packages(),
     install_requires=['requests', 'tabulate', 'stix', 'ez_setup', 'lxml',
-                      'cybox', 'python-dateutil', 'dicttoxml'],
+                      'cybox', 'python-dateutil', 'dicttoxml', 'future'],
     long_description=read('README.rst'),
     classifiers=[],
     entry_points={

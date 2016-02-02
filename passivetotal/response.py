@@ -4,6 +4,7 @@
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
+from future.utils import iteritems
 import datetime
 import dicttoxml
 import json
@@ -36,7 +37,7 @@ class Response(object):
 
     def _boost_properties(self):
         """Make first-class keys attributes of the object."""
-        for key, value in self._results.iteritems():
+        for key, value in iteritems(self._results):
             setattr(self, key, value)
 
     def _load_time(self, time_period, date_format):

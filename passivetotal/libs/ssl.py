@@ -4,6 +4,7 @@
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
+from future.utils import iteritems
 from tabulate import tabulate
 from passivetotal.api import Client
 from passivetotal.response import Response
@@ -182,7 +183,7 @@ class HistoryRecord(object):
 
     def _boost_properties(self):
         """Make first-class keys attributes of the object."""
-        for key, value in self._record.iteritems():
+        for key, value in iteritems(self._record):
             setattr(self, key, value)
 
     @classmethod

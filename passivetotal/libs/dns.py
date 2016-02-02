@@ -6,18 +6,24 @@ __version__ = '1.0.0'
 
 import collections
 import datetime
-from cybox.objects.address_object import Address
-from cybox.objects.domain_name_object import DomainName
-from stix.core import STIXHeader
-from stix.core import STIXPackage
-from stix.indicator import Indicator
+from future.utils import iteritems
 from tabulate import tabulate
+import sys
 # custom
 from passivetotal.api import Client
 from passivetotal.response import Response
 from passivetotal.common.utilities import is_ip
 # exceptions
 from passivetotal.common.exceptions import INVALID_VALUE_TYPE
+
+python2 = (sys.version_info[0] == 2)
+python3 = (sys.version_info[0] == 3)
+if python2:
+    from stix.core import STIXHeader
+    from stix.core import STIXPackage
+    from stix.indicator import Indicator
+    from cybox.objects.address_object import Address
+    from cybox.objects.domain_name_object import DomainName
 
 
 class DnsRequest(Client):
@@ -69,7 +75,7 @@ class DnsRecord(object):
         if type(record) != dict:
             raise INVALID_VALUE_TYPE("Record must be of type dict")
         self._record = record
-        for key, value in self._record.iteritems():
+        for key, value in iteritems(self._record):
             setattr(self, key, value)
 
     @classmethod
@@ -251,6 +257,9 @@ class DnsResponse(Response):
 
         :return: STIX formatted watchlist
         """
+        if python3:
+            raise RuntimeError("STIX is not supported when using Python 3 due to dependency libraries.")
+
         stix_package = STIXPackage()
         stix_header = STIXHeader()
         stix_header.description = "Passive DNS resolutions associated" \
@@ -400,6 +409,9 @@ class DnsUniqueResponse(Response):
 
         :return: STIX formatted watchlist
         """
+        if python3:
+            raise RuntimeError("STIX is not supported when using Python 3 due to dependency libraries.")
+
         stix_package = STIXPackage()
         stix_header = STIXHeader()
         stix_header.description = "Passive DNS resolutions associated" \
