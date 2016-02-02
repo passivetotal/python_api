@@ -1,4 +1,5 @@
 cybox==2.1.0.12
+dicttoxml
 ez-setup==0.9
 lxml==3.5.0
 passivetotal==1.0.2
