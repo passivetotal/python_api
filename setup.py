@@ -13,7 +13,7 @@ setup(
     name='passivetotal',
     version='1.0.0',
     description='Client for the PassiveTotal REST API',
-    url="https://github.com/passivetotal/python_client",
+    url="https://github.com/passivetotal/python_api",
     keywords='passivetotal API REST',
     author="Research Team, passivetotal",
     author_email="admin@passivetotal.org",
@@ -36,4 +36,6 @@ setup(
     },
     include_package_data=True,
     zip_safe=False,
+    keywords=['threats', 'research', 'analysis'],
+    download_url='https://github.com/passivetotal/python_api/tarball/1.0.0'
 )
