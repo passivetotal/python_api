@@ -43,7 +43,7 @@ class SslRequest(Client):
         :param str compact_record: Return the record in a compact format
         :param str field: Field to run the query against
         :param str type: Type of search to conduct
-        :return: WHOIS records matching the query
+        :return: SSL certificates records matching the query
         """
         return self._get('ssl-certificate', 'history', **kwargs)
 

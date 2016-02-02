@@ -51,9 +51,9 @@ class SslTestCase(unittest.TestCase):
 
     def test_ssl_certificate_search(self):
         """Test getting a SSL certificate search."""
-        payload = {'query': 'www.passivetotal.org', 'field': 'subject_commonName'}
+        payload = {'query': 'www.passivetotal.org', 'field': 'subjectCommonName'}
         response = self.client.search_ssl_certificate_by_field(**payload)
-        assert (response['results'][0]['serialNumber']) == '19322308692400755425805651738750646013'
+        assert (response['results'][0]['serialNumber']) == '2317683628587350290823564500811277499'
 
     def test_ssl_certificate_search_bad_field(self):
         """Test sending a bad field in a search."""
@@ -75,10 +75,10 @@ class SslTestCase(unittest.TestCase):
 
     def test_process_ssl_certificate_search(self):
         """Test processing search results."""
-        payload = {'query': 'www.passivetotal.org', 'field': 'subject_commonName'}
+        payload = {'query': 'www.passivetotal.org', 'field': 'subjectCommonName'}
         response = self.client.search_ssl_certificate_by_field(**payload)
         results = SslSearchResponse(response)
-        assert (results.get_records()[0].serialNumber) == '19322308692400755425805651738750646013'
+        assert (results.get_records()[0].serialNumber) == '2317683628587350290823564500811277499'
 
     def test_process_ssl_certificate_history(self):
         """Test processing search results."""
