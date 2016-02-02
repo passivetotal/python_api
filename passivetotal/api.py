@@ -112,7 +112,7 @@ class Client(object):
         #     timeout = Client.TIMEOUT
         url_params.update({'api_key': self.api_key})
         kwargs = {'headers': self.headers, 'params': url_params,
-                  'timeout': Client.TIMEOUT, 'verify': False,
+                  'timeout': Client.TIMEOUT, 'verify': True,
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies
