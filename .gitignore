@@ -9,3 +9,4 @@ dist/
 setuptools-*
 venv/
 libpassivetotal.egg-info/
+.pypirc
