@@ -86,7 +86,6 @@ class GenericResponse(Response):
         """Process the data."""
         self._records = list()
         for record in self.results:
-            print record
             wrapped = GeneticRecord.process(record)
             self._records.append(wrapped)
 
