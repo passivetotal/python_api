@@ -9,6 +9,8 @@ from argparse import ArgumentParser
 from passivetotal.common.utilities import prune_args
 from passivetotal.common.utilities import to_bool
 from passivetotal.common.utilities import valid_date
+from passivetotal.libs.attributes import AttributeRequest
+from passivetotal.libs.attributes import AttributeResponse
 from passivetotal.libs.actions import ActionsClient
 from passivetotal.libs.dns import DnsRequest
 from passivetotal.libs.dns import DnsResponse
@@ -36,6 +38,22 @@ def call_dns(args):
         data = client.get_unique_resolutions(**pruned)
     else:
         data = client.get_passive_dns(**pruned)
+
+    return data
+
+
+def call_attribute(args):
+    """Abstract call to attribute-based queries."""
+    client = AttributeRequest.from_config()
+    pruned = prune_args(
+        query=args.query,
+        type=args.type
+    )
+
+    if args.type == 'tracker':
+        data = client.get_host_attribute_trackers(**pruned)
+    else:
+        data = client.get_host_attribute_components(**pruned)
 
     return data
 
@@ -178,6 +196,12 @@ def write_output(results, arguments):
             tmp = SslHistoryResponse.process(results)
             data = [getattr(tmp, arguments.format)]
 
+    elif arguments.cmd == 'attribute':
+        if not arguments.format:
+            arguments.format = 'table'
+        tmp = AttributeResponse.process(results)
+        data = [getattr(tmp, arguments.format)]
+
     else:
         return [str(results)]
 
@@ -229,6 +253,15 @@ def main():
                                           'stix', 'table', 'xml'],
                      help="Format of the output from the query")
 
+    attribute = subs.add_parser('attribute', help="Query host attribute data")
+    attribute.add_argument('--query', '-q', required=True,
+                           help="Query for a domain or IP address")
+    attribute.add_argument('--type', '-t', choices=['tracker', 'component'],
+                           help="Query tracker data or component data",
+                           required=True)
+    attribute.add_argument('--format', choices=['json', 'csv', 'table', 'xml'],
+                           help="Format of the output from the query")
+
     action = subs.add_parser('action', help="Query and input feedback")
     action.add_argument('--query', '-q', required=True,
                         help="Domain, IP address, Email, SSL certificate")
@@ -268,6 +301,8 @@ def main():
             data = call_ssl(args)
         elif args.cmd == 'action':
             data = call_actions(args)
+        elif args.cmd == 'attribute':
+            data = call_attribute(args)
         else:
             parser.print_usage()
             sys.exit(1)

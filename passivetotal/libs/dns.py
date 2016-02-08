@@ -136,7 +136,7 @@ class DnsResponse(Response):
     def _process_records(self):
         """Process the passive DNS data."""
         self._records = list()
-        for record in self.records:
+        for record in self.results:
             wrapped = DnsRecord.process(record)
             self._records.append(wrapped)
 

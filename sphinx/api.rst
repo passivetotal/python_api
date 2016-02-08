@@ -24,3 +24,21 @@ SSL Request
 .. autoclass:: passivetotal.libs.ssl.SslRequest
     :members:
     :show-inheritance:
+
+Actions Request
+---------------
+.. autoclass:: passivetotal.libs.actions.ActionsClient
+    :members:
+    :show-inheritance:
+
+Attribute Request
+-----------------
+.. autoclass:: passivetotal.libs.attributes.AttributeRequest
+    :members:
+    :show-inheritance:
+
+Enrichment Request
+------------------
+.. autoclass:: passivetotal.libs.enrichment.EnrichmentRequest
+    :members:
+    :show-inheritance:

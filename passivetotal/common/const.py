@@ -1,4 +1,4 @@
-WHOIS_VALID_FIELDS = ['domain', 'email', 'name', 'organization'
+WHOIS_VALID_FIELDS = ['domain', 'email', 'name', 'organization',
                       'address', 'phone', 'nameserver']
 WHOIS_SECTIONS = ['admin', 'tech', 'registrant']
 WHOIS_SECTION_FIELDS = ['section', 'query', 'city', 'country', 'email', 'name',

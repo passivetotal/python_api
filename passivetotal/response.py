@@ -8,20 +8,28 @@ from future.utils import iteritems
 import datetime
 import dicttoxml
 import json
-
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
+import logging
+import sys
 
 
 class Response(object):
 
     """Base client that all response clients will inherit from."""
 
-    def __init__(self, response):
+    def __init__(self, response, **kwargs):
         """Initial loading of the client.
 
         :param str api_key: API key from PassiveTotal.org
         """
+        self.logger = logging.getLogger('pt-base-response')
+        self.logger.setLevel('INFO')
+        shandler = logging.StreamHandler(sys.stdout)
+        fmtr = logging.Formatter('\033[1;32m%(levelname)-5s %(module)s:%(funcName)s():%(lineno)d %(asctime)s\033[0m| %(message)s')
+        shandler.setFormatter(fmtr)
+        self.logger.addHandler(shandler)
+        if 'debug' in kwargs:
+            self.logger.setLevel('DEBUG')
+        self.logger.debug("Results: %s" % str(response))
         self._results = response
         self._boost_properties()
 
@@ -38,6 +46,7 @@ class Response(object):
     def _boost_properties(self):
         """Make first-class keys attributes of the object."""
         for key, value in iteritems(self._results):
+            self.logger.debug("Property: %s, %s" % (key, value))
             setattr(self, key, value)
 
     def _load_time(self, time_period, date_format):

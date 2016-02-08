@@ -1,4 +1,3 @@
-import logging
 import pytest
 import unittest
 from mock import patch
@@ -8,8 +7,6 @@ from conf import fake_request
 from passivetotal.libs.actions import ActionsClient
 from passivetotal.common.exceptions import MISSING_FIELD
 from passivetotal.common.exceptions import INVALID_VALUE_TYPE
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class ActionsTestCase(unittest.TestCase):
@@ -26,12 +23,6 @@ class ActionsTestCase(unittest.TestCase):
     def teardown_class(self):
         self.patch_get.stop()
         self.patch_set.stop()
-
-    def test_enrichment(self):
-        """Test various actions for enrichment."""
-        payload = {'query': 'passivetotal.org'}
-        response = self.client.get_metadata(**payload)
-        assert(response['value'])
 
     def test_dynamic_dns(self):
         """Test various actions for dynamic DNS."""

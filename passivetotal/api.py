@@ -18,7 +18,8 @@ class Client(object):
     TIMEOUT = 30
 
     def __init__(self, username, api_key, server=DEFAULT_SERVER,
-                 version=DEFAULT_VERSION, http_proxy=None, https_proxy=None):
+                 version=DEFAULT_VERSION, http_proxy=None, https_proxy=None,
+                 verify=True):
         """Initial loading of the client.
 
         :param str api_key: API key from PassiveTotal.org
@@ -39,6 +40,9 @@ class Client(object):
             self.proxies['http'] = http_proxy
         if https_proxy:
             self.proxies['https'] = https_proxy
+        self.verify = verify
+        if '127.0.0.1' in server:
+            self.verify = False
 
     @classmethod
     def from_config(cls):
@@ -105,14 +109,8 @@ class Client(object):
         :return: response deserialized from JSON
         """
         api_url = self._endpoint(endpoint, action, *url_args)
-        # if 'timeout' in url_params:
-        #     timeout = url_params['timeout']
-        #     del url_params['timeout']
-        # else:
-        #     timeout = Client.TIMEOUT
-        # url_params.update({'api_key': self.api_key})
         kwargs = {'headers': self.headers, 'params': url_params,
-                  'timeout': Client.TIMEOUT, 'verify': True,
+                  'timeout': Client.TIMEOUT, 'verify': self.verify,
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies
@@ -132,10 +130,9 @@ class Client(object):
         :return: response deserialized from JSON
         """
         api_url = self._endpoint(endpoint, action, *url_args)
-        # data.update({'api_key': self.api_key})
         data = json.dumps(data)
         kwargs = {'headers': self.headers, 'params': url_params,
-                  'verify': True, 'data': data,
+                  'verify': self.verify, 'data': data,
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies

@@ -1,10 +1,10 @@
 {
     "primaryDomain": "passivetotal.org",
     "tags": ["security"],
-    "dynamic": false,
-    "value": "passivetotal.org",
+    "dynamicDns": false,
+    "queryValue": "passivetotal.org",
     "subdomains": [],
     "tld": ".org",
-    "ever_compromised": false,
-    "type": "domain"
+    "everCompromised": false,
+    "queryType": "domain"
 }
