@@ -36,3 +36,9 @@ Attribute Request
 .. autoclass:: passivetotal.libs.attributes.AttributeRequest
     :members:
     :show-inheritance:
+
+Enrichment Request
+------------------
+.. autoclass:: passivetotal.libs.enrichment.EnrichmentRequest
+    :members:
+    :show-inheritance:
