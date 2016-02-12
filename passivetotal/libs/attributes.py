@@ -103,11 +103,11 @@ class AttributeResponse(Response):
         :return: String of formatted data
         """
         output = ''
-        first_item = self.records[0]
+        first_item = self.results[0]
         ordered = collections.OrderedDict(sorted(first_item.items()))
         fields = ordered.keys()
         output += ', '.join(fields) + "\n"
-        for record in self.records:
+        for record in self.results:
             ordered = collections.OrderedDict(sorted(record.items()))
             ordered = ordered.values()
             output += ', '.join(ordered) + "\n"
@@ -121,11 +121,11 @@ class AttributeResponse(Response):
 
         :return: Table of formatted data
         """
-        first_item = self.records[0]
+        first_item = self.results[0]
         ordered = collections.OrderedDict(sorted(first_item.items()))
         headers = ordered.keys()
         records = []
-        for record in self.records:
+        for record in self.results:
             ordered = collections.OrderedDict(sorted(record.items()))
             ordered = ordered.values()
             records.append(ordered)

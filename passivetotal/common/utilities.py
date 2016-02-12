@@ -1,5 +1,7 @@
 import argparse
 import datetime
+import json
+import os
 import socket
 
 
@@ -50,3 +52,33 @@ def valid_date(input_date):
     except ValueError:
         msg = "Not a valid date: '{0}'.".format(input_date)
         raise argparse.ArgumentTypeError(msg)
+
+
+def fake_request(*args, **kwargs):
+    """Fake a URL request by fetching results locally.
+
+    This is a help function to be used with the patch module in order to
+    simulate responses from the API. Generally, you would use this when you
+    want to test a tool locally or don't have the internet. Simply placing
+    the following above your code will ensure it runs.
+
+    from mock import patch
+    from passivetotal.common.utilities import fake_request
+    patcher = patch('passivetotal.api.Client._get', fake_request)
+    patcher.start()
+
+    :return: Dict of JSON simulating an API call
+    """
+    arguments = list(args)
+    if type(arguments[-1]) == dict:
+        arguments.pop()
+        arguments.pop(0)
+    arguments[0] = 'v2'
+    url_path = '/'.join(arguments)
+    if arguments[-1] == '':
+        url_path = url_path.rstrip('/')
+
+    resource_file = os.path.normpath('tests/resources/%s.json' % url_path)
+    response = open(resource_file, mode='rb')
+    raw_data = response.read().decode('utf-8')
+    return json.loads(raw_data)

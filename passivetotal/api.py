@@ -5,7 +5,9 @@ __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
 import json
+import logging
 import requests
+import sys
 from passivetotal.config import Config
 
 
@@ -19,7 +21,7 @@ class Client(object):
 
     def __init__(self, username, api_key, server=DEFAULT_SERVER,
                  version=DEFAULT_VERSION, http_proxy=None, https_proxy=None,
-                 verify=True):
+                 verify=True, debug=False):
         """Initial loading of the client.
 
         :param str api_key: API key from PassiveTotal.org
@@ -28,6 +30,13 @@ class Client(object):
         :param str http_proxy: HTTP proxy to use (optional)
         :param str https_proxy: HTTPS proxy to use (optional)
         """
+        self.logger = logging.getLogger('pt-base-request')
+        self.logger.setLevel('INFO')
+        shandler = logging.StreamHandler(sys.stdout)
+        fmtr = logging.Formatter('\033[1;32m%(levelname)-5s %(module)s:%(funcName)s():%(lineno)d %(asctime)s\033[0m| %(message)s')
+        shandler.setFormatter(fmtr)
+        self.logger.addHandler(shandler)
+
         self.api_base = 'https://%s/%s' % (server, version)
         self.username = username
         self.api_key = api_key
@@ -57,6 +66,12 @@ class Client(object):
             https_proxy=config.get('https_proxy'),
         )
         return client
+
+    def set_debug(self, status):
+        if status:
+            self.logger.setLevel('DEBUG')
+        else:
+            self.logger.setLevel('INFO')
 
     def _endpoint(self, endpoint, action, *url_args):
         """Return the URL for the action.
@@ -114,6 +129,7 @@ class Client(object):
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies
+        self.logger.debug("Requesting: %s, %s" % (api_url, str(kwargs)))
         response = requests.get(api_url, **kwargs)
         return self._json(response)
 
