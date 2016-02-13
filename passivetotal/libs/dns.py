@@ -184,13 +184,13 @@ class DnsResponse(Response):
         :return: String of formatted data
         """
         output = ''
-        first_item = self.records[0]
+        first_item = self.results[0]
         if 'collected' in first_item:
             del first_item['collected']
         ordered = collections.OrderedDict(sorted(first_item.items()))
         fields = ordered.keys()
         output += ', '.join(fields) + "\n"
-        for record in self.records:
+        for record in self.results:
             if 'collected' in record:
                 del record['collected']
             ordered = collections.OrderedDict(sorted(record.items()))
@@ -211,7 +211,7 @@ class DnsResponse(Response):
         output += "[*] Query: %s\n" % self.queryValue
         output += "[*] First Seen: %s\n" % self.firstSeen
         output += "[*] Last Seen: %s\n" % self.lastSeen
-        output += "[*] Total Records: %d\n" % len(self.records)
+        output += "[*] Total Records: %d\n" % len(self.results)
         output += "[*] Records:\n"
         output += "=> First Seen\t\tLast Seen\t\tResolution\tSources\n"
         for record in self._records:
@@ -230,13 +230,13 @@ class DnsResponse(Response):
 
         :return: Table of formatted data
         """
-        first_item = self.records[0]
+        first_item = self.results[0]
         if 'collected' in first_item:
             del first_item['collected']
         ordered = collections.OrderedDict(sorted(first_item.items()))
         headers = ordered.keys()
         records = []
-        for record in self.records:
+        for record in self.results:
             if 'collected' in record:
                 del record['collected']
             ordered = collections.OrderedDict(sorted(record.items()))
@@ -373,7 +373,7 @@ class DnsUniqueResponse(Response):
         """
         output = ''
         output += "[*] Query: %s\n" % self.queryValue
-        output += "[*] Total Records: %d\n" % len(self.records)
+        output += "[*] Total Records: %d\n" % len(self.results)
         output += "[*] Records:\n"
         output += "=> Resolution\t\tFrequency\n"
         for record in self._records:
