@@ -183,6 +183,8 @@ class DnsResponse(Response):
 
         :return: String of formatted data
         """
+        if len(self.results) == 0:
+            return "No results were found"
         output = ''
         first_item = self.results[0]
         if 'collected' in first_item:
@@ -230,6 +232,8 @@ class DnsResponse(Response):
 
         :return: Table of formatted data
         """
+        if len(self.results) == 0:
+            return "No results were found"
         first_item = self.results[0]
         if 'collected' in first_item:
             del first_item['collected']

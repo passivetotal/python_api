@@ -102,6 +102,8 @@ class AttributeResponse(Response):
 
         :return: String of formatted data
         """
+        if len(self.results) == 0:
+            return "No results were found"
         output = ''
         first_item = self.results[0]
         ordered = collections.OrderedDict(sorted(first_item.items()))
@@ -121,6 +123,8 @@ class AttributeResponse(Response):
 
         :return: Table of formatted data
         """
+        if len(self.results) == 0:
+            return "No results were found"
         first_item = self.results[0]
         ordered = collections.OrderedDict(sorted(first_item.items()))
         headers = ordered.keys()
