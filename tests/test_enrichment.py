@@ -43,3 +43,21 @@ class EnrichmentTestCase(unittest.TestCase):
         record = wrapped.get_records().pop(0)
         assert (record.source) == 'RiskIQ'
         assert (record.sourceUrl) == "https://www.riskiq.com/blog/riskiq-labs/post/a-brief-encounter-with-slempo"
+
+    def test_malware(self):
+        """Test processing malware."""
+        payload = {'query': 'noorno.com'}
+        response = self.client.get_malware(**payload)
+        wrapped = GenericResponse(response)
+        assert (response['results'])
+        record = wrapped.get_records().pop(0)
+        assert (record.source) == 'Threatexpert'
+        assert (record.sample) == "7ebf1e2d0c89b1c8124275688c9e8e98"
+
+    def test_subdomains(self):
+        """Test processing subdomains."""
+        payload = {'query': '*.passivetotal.org'}
+        response = self.client.get_subdomains(**payload)
+        wrapped = GenericResponse(response)
+        assert (wrapped.queryValue) == '*.passivetotal.org'
+        assert ('www' in wrapped.subdomains)

@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='1.0.16',
+    version='1.0.17',
     description='Client for the PassiveTotal REST API',
     url="https://github.com/passivetotal/python_api",
     author="Research Team, passivetotal",

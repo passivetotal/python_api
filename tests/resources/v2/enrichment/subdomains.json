@@ -1,0 +1,4 @@
+{
+    "queryValue": "*.passivetotal.org",
+    "subdomains": ["www", "nutmeg-beta", "app", "api", "certs", "n1", "n5", "n6"]
+}

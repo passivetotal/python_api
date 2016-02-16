@@ -41,6 +41,16 @@ class EnrichmentRequest(Client):
         """
         return self._get('enrichment', 'osint', **kwargs)
 
+    def get_malware(self, **kwargs):
+        """Get malware data for a value.
+
+        Reference:
+
+        :param query: Value to search for in malware
+        :return: Dict of results
+        """
+        return self._get('enrichment', 'malware', **kwargs)
+
     def get_subdomains(self, **kwargs):
         """Get listing of subdomains for a given query.
 
