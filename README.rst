@@ -78,8 +78,8 @@ At any time, the current API configuration parameters can be queried using the s
 
 Configuration parameters are stored in **$HOME/.config/passivetotal/api_config.json**.
 
-Updgrades
----------
+Upgrades
+--------
 
 Our libraries support Python 3 through futures. On certain platforms, this causes issues when doing upgrades of the library. When performing an update, use the following:
 
