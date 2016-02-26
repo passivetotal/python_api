@@ -11,7 +11,6 @@ __version__ = '1.0.0'
 __description__ = "Convert passive DNS results into multiple formats"
 __keywords__ = ['formats', 'pdns', 'sharing', 'analysis']
 
-import os
 import sys
 # import the DNS libraries from PassiveTotal
 from passivetotal.libs.dns import DnsRequest

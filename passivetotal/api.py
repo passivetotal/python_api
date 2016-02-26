@@ -21,7 +21,7 @@ class Client(object):
 
     def __init__(self, username, api_key, server=DEFAULT_SERVER,
                  version=DEFAULT_VERSION, http_proxy=None, https_proxy=None,
-                 verify=True, debug=False):
+                 verify=True, headers=None, debug=False):
         """Initial loading of the client.
 
         :param str api_key: API key from PassiveTotal.org
@@ -49,6 +49,8 @@ class Client(object):
             self.proxies['http'] = http_proxy
         if https_proxy:
             self.proxies['https'] = https_proxy
+        if headers:
+            self.headers.update(headers)
         self.verify = verify
         if '127.0.0.1' in server:
             self.verify = False
