@@ -12,6 +12,9 @@ __keywords__ = ['search', 'whois', 'analysis']
 import sys
 from passivetotal.libs.whois import WhoisRequest
 
+if len(sys.argv) != 3:
+    print "Usage: python whois_search.py <field> <query-value>"
+
 valid_types = ['domain', 'email', 'name',
                'organization', 'address', 'phone', 'nameserver']
 
