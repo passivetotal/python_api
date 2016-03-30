@@ -243,6 +243,8 @@ class DnsResponse(Response):
         for record in self.results:
             if 'collected' in record:
                 del record['collected']
+            if 'recordHash' in record:
+                del record['recordHash']
             ordered = collections.OrderedDict(sorted(record.items()))
             ordered = ordered.values()
             ordered[4] = '|'.join(ordered[4])
