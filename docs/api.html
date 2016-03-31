@@ -167,7 +167,7 @@
 <p>PassiveTotal API Interface.</p>
 <dl class="class">
 <dt id="passivetotal.api.Client">
-<em class="property">class </em><code class="descclassname">passivetotal.api.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>username</em>, <em>api_key</em>, <em>server='api.passivetotal.org'</em>, <em>version='v2'</em>, <em>http_proxy=None</em>, <em>https_proxy=None</em>, <em>verify=True</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">passivetotal.api.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>username</em>, <em>api_key</em>, <em>server='api.passivetotal.org'</em>, <em>version='v2'</em>, <em>http_proxy=None</em>, <em>https_proxy=None</em>, <em>verify=True</em>, <em>headers=None</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.api.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base client that all data sources will inherit from.</p>
 <dl class="method">
 <dt id="passivetotal.api.Client._endpoint">
@@ -326,6 +326,23 @@ the url as option)</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="passivetotal.libs.dns.DnsRequest.search_keyword">
+<code class="descname">search_keyword</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.dns.DnsRequest.search_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a keyword across passive DNS data.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-DNS-GetV2DnsSearchKeywordQuery">https://api.passivetotal.org/api/docs/#api-DNS-GetV2DnsSearchKeywordQuery</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Keyword value to search for in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of matching hits based on the keyword</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -340,7 +357,7 @@ the url as option)</li>
 <dt id="passivetotal.libs.whois.WhoisRequest.get_whois_details">
 <code class="descname">get_whois_details</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.get_whois_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get WHOIS details based on query value.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisQuery">https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisQuery</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -359,10 +376,27 @@ the url as option)</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="passivetotal.libs.whois.WhoisRequest.search_keyword">
+<code class="descname">search_keyword</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.search_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a keyword across WHOIS data.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchKeywordQuery">https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchKeywordQuery</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Keyword value to search for in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of matching hits based on the keyword</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="passivetotal.libs.whois.WhoisRequest.search_whois_by_field">
 <code class="descname">search_whois_by_field</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.search_whois_by_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search WHOIS details based on query value and field.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchQueryField">https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchQueryField</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -432,6 +466,23 @@ the url as option)</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SSL certificates records matching the query</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslRequest.search_keyword">
+<code class="descname">search_keyword</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslRequest.search_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a keyword across SSL certificate data.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetV2SslCertificateSearchQueryField">https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetV2SslCertificateSearchQueryField</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Keyword value to search for in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of matching hits based on the keyword</td>
 </tr>
 </tbody>
 </table>
@@ -537,10 +588,27 @@ the url as option)</li>
 <dd><p>Bases: <a class="reference internal" href="#passivetotal.api.Client" title="passivetotal.api.Client"><code class="xref py py-class docutils literal"><span class="pre">passivetotal.api.Client</span></code></a></p>
 <p>Client to interface with the enrichment calls from the PassiveTotal API.</p>
 <dl class="method">
+<dt id="passivetotal.libs.enrichment.EnrichmentRequest.get_bulk_osint">
+<code class="descname">get_bulk_osint</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.enrichment.EnrichmentRequest.get_bulk_osint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get bulk OSINT data for a value.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentBulkOsintQuery">https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentBulkOsintQuery</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> &#8211; Value to search for in OSINT</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict of results</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="passivetotal.libs.enrichment.EnrichmentRequest.get_enrichment">
 <code class="descname">get_enrichment</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.enrichment.EnrichmentRequest.get_enrichment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get enrichment data for a value.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentQuery">https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentQuery</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -554,10 +622,27 @@ the url as option)</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="passivetotal.libs.enrichment.EnrichmentRequest.get_malware">
+<code class="descname">get_malware</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.enrichment.EnrichmentRequest.get_malware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get malware data for a value.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentMalwareQuery">https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentMalwareQuery</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> &#8211; Value to search for in malware</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict of results</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="passivetotal.libs.enrichment.EnrichmentRequest.get_osint">
 <code class="descname">get_osint</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.enrichment.EnrichmentRequest.get_osint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get OSINT data for a value.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentOsintQuery">https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentOsintQuery</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -574,7 +659,7 @@ the url as option)</li>
 <dt id="passivetotal.libs.enrichment.EnrichmentRequest.get_subdomains">
 <code class="descname">get_subdomains</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.enrichment.EnrichmentRequest.get_subdomains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get listing of subdomains for a given query.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentSubdomains">https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentSubdomains</a></p>
 </dd></dl>
 
 </dd></dl>

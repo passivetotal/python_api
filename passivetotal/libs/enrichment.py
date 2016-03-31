@@ -24,7 +24,7 @@ class EnrichmentRequest(Client):
     def get_enrichment(self, **kwargs):
         """Get enrichment data for a value.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentQuery
 
         :param query: Value to enrich
         :return: Dict of results
@@ -34,17 +34,27 @@ class EnrichmentRequest(Client):
     def get_osint(self, **kwargs):
         """Get OSINT data for a value.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentOsintQuery
 
         :param query: Value to search for in OSINT
         :return: Dict of results
         """
         return self._get('enrichment', 'osint', **kwargs)
 
+    def get_bulk_osint(self, **kwargs):
+        """Get bulk OSINT data for a value.
+
+        Reference: https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentBulkOsintQuery
+
+        :param query: Value to search for in OSINT
+        :return: Dict of results
+        """
+        return self._get('enrichment', 'bulk', 'osint', **kwargs)
+
     def get_malware(self, **kwargs):
         """Get malware data for a value.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentMalwareQuery
 
         :param query: Value to search for in malware
         :return: Dict of results
@@ -54,7 +64,7 @@ class EnrichmentRequest(Client):
     def get_subdomains(self, **kwargs):
         """Get listing of subdomains for a given query.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentSubdomains
         """
         return self._get('enrichment', 'subdomains', **kwargs)
 

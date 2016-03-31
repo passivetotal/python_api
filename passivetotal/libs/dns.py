@@ -62,6 +62,16 @@ class DnsRequest(Client):
         """
         return self._get('dns', 'passive', 'unique', **kwargs)
 
+    def search_keyword(self, **kwargs):
+        """Search for a keyword across passive DNS data.
+
+        Reference: https://api.passivetotal.org/api/docs/#api-DNS-GetV2DnsSearchKeywordQuery
+
+        :param str query: Keyword value to search for in the dataset
+        :return: List of matching hits based on the keyword
+        """
+        return self._get('dns', 'search', 'keyword', **kwargs)
+
 
 class DnsRecord(object):
 

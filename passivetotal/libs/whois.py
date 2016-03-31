@@ -29,7 +29,7 @@ class WhoisRequest(Client):
     def get_whois_details(self, **kwargs):
         """Get WHOIS details based on query value.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisQuery
 
         :param str query: Query value to use when making the request for data
         :param str compact_record: Return the record in a compact format
@@ -40,7 +40,7 @@ class WhoisRequest(Client):
     def search_whois_by_field(self, **kwargs):
         """Search WHOIS details based on query value and field.
 
-        Reference:
+        Reference: https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchQueryField
 
         :param str query: Query value to use when making the request for data
         :param str compact_record: Return the record in a compact format
@@ -53,6 +53,16 @@ class WhoisRequest(Client):
             raise INVALID_FIELD_TYPE("Field must be one of the following: %s"
                                      % ', '.join(WHOIS_VALID_FIELDS))
         return self._get('whois', 'search', **kwargs)
+
+    def search_keyword(self, **kwargs):
+        """Search for a keyword across WHOIS data.
+
+        Reference: https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchKeywordQuery
+
+        :param str query: Keyword value to search for in the dataset
+        :return: List of matching hits based on the keyword
+        """
+        return self._get('whois', 'search', 'keyword', **kwargs)
 
 
 class WhoisResponse(Response):

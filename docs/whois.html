@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html#ssl-request">SSL Request</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#actions-request">Actions Request</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#attribute-request">Attribute Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#enrichment-request">Enrichment Request</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dns.html">DNS Results</a><ul>
@@ -194,7 +195,7 @@
 <dt id="passivetotal.libs.whois.WhoisRequest.get_whois_details">
 <code class="descname">get_whois_details</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.get_whois_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get WHOIS details based on query value.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisQuery">https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisQuery</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -213,10 +214,27 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="passivetotal.libs.whois.WhoisRequest.search_keyword">
+<code class="descname">search_keyword</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.search_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a keyword across WHOIS data.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchKeywordQuery">https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchKeywordQuery</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Keyword value to search for in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of matching hits based on the keyword</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="passivetotal.libs.whois.WhoisRequest.search_whois_by_field">
 <code class="descname">search_whois_by_field</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.whois.WhoisRequest.search_whois_by_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search WHOIS details based on query value and field.</p>
-<p>Reference:</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchQueryField">https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchQueryField</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

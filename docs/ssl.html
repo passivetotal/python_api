@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html#ssl-request">SSL Request</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#actions-request">Actions Request</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#attribute-request">Attribute Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#enrichment-request">Enrichment Request</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dns.html">DNS Results</a><ul>
@@ -231,6 +232,23 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SSL certificates records matching the query</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="passivetotal.libs.ssl.SslRequest.search_keyword">
+<code class="descname">search_keyword</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.ssl.SslRequest.search_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a keyword across SSL certificate data.</p>
+<p>Reference: <a class="reference external" href="https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetV2SslCertificateSearchQueryField">https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetV2SslCertificateSearchQueryField</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Keyword value to search for in the dataset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of matching hits based on the keyword</td>
 </tr>
 </tbody>
 </table>

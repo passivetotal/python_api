@@ -66,6 +66,16 @@ class SslRequest(Client):
                                      % ', '.join(SSL_VALID_FIELDS))
         return self._get('ssl-certificate', 'search', **kwargs)
 
+    def search_keyword(self, **kwargs):
+        """Search for a keyword across SSL certificate data.
+
+        Reference: https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetV2SslCertificateSearchQueryField
+
+        :param str query: Keyword value to search for in the dataset
+        :return: List of matching hits based on the keyword
+        """
+        return self._get('ssl-certificate', 'search', 'keyword', **kwargs)
+
 
 class SslResponse(Response):
 
