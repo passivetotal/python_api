@@ -11,7 +11,10 @@ supported as prefix or suffix. Supported methods would appear as follows:
 - *.<keyword>
 
 Both WHOIS and SSL certificates will have keywords applied to all alpha-based
-fields within the record.
+fields within the record. Keyword API documentation can be found here:
+- DNS (https://api.passivetotal.org/api/docs/#api-DNS-GetV2DnsSearchKeywordQuery)
+- WHOIS (https://api.passivetotal.org/api/docs/#api-WHOIS-GetV2WhoisSearchKeywordQuery)
+- SSL (https://api.passivetotal.org/api/docs/#api-SSL_Certificates-GetV2SslCertificateSearchQueryField)
 """
 __author__ = 'Brandon Dixon (brandon@passivetotal.org)'
 __version__ = '1.0.0'
