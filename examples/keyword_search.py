@@ -81,7 +81,7 @@ if __name__ == "__main__":
         print "[!] Edit this file to include your username and API key"
 
     query = sys.argv[1]
-    if (sys.argv) > 2:
+    if len(sys.argv) > 2:
         output = sys.argv.pop(2)
     else:
         output = 'csv'
