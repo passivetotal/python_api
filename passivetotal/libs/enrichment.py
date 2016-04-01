@@ -49,7 +49,8 @@ class EnrichmentRequest(Client):
         :param query: Value to search for in OSINT
         :return: Dict of results
         """
-        return self._get('enrichment', 'bulk', 'osint', **kwargs)
+        data = {'query': kwargs['query']}
+        return self._get_special('enrichment', 'bulk', 'osint', data)
 
     def get_malware(self, **kwargs):
         """Get malware data for a value.

@@ -135,6 +135,26 @@ class Client(object):
         response = requests.get(api_url, **kwargs)
         return self._json(response)
 
+    def _get_special(self, endpoint, action, trail, data, *url_args, **url_params):
+        """Request API Endpoint - for GET methods.
+
+        :param str endpoint: Endpoint
+        :param str action: Endpoint Action
+        :param url_args: Additional endpoints(for endpoints that take part of
+                         the url as option)
+        :param url_params: Parameters to pass to url, typically query string
+        :return: response deserialized from JSON
+        """
+        api_url = "/".join([self.api_base, endpoint, action, trail])
+        data = json.dumps(data)
+        kwargs = {'headers': self.headers, 'params': url_params,
+                  'verify': self.verify, 'data': data,
+                  'auth': (self.username, self.api_key)}
+        if self.proxies:
+            kwargs['proxies'] = self.proxies
+        response = requests.get(api_url, **kwargs)
+        return self._json(response)
+
     def _send_data(self, method, endpoint, action,
                    data, *url_args, **url_params):
         """Submit to API Endpoint - for DELETE, PUT, POST methods.
