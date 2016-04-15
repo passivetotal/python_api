@@ -249,7 +249,7 @@ class DnsResponse(Response):
         for record in self.results:
             headers |= set(record.keys())
         # Filter out fields.
-        headers -= {'collected', 'recordHash'}
+        headers = [x for x in headers if x not in ['collected', 'recordHash']]
         headers = sorted(headers)
         records = []
         for record in self.results:
