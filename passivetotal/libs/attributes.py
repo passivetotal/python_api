@@ -31,13 +31,22 @@ class AttributeRequest(Client):
         return self._get('host-attributes', 'trackers', **kwargs)
 
     def get_host_attribute_components(self, **kwargs):
-        """Get componets associated with a particular host or IP address.
+        """Get components associated with a particular host or IP address.
 
         Reference: https://api.passivetotal.org/api/docs/#api-Host_Attributes-GetComponents
 
-        :return: Dict of resuts with component information
+        :return: Dict of results with component information
         """
         return self._get('host-attributes', 'components', **kwargs)
+
+    def get_host_attribute_pairs(self, **kwargs):
+        """Get pairs associated with a particular hostname.
+
+        Reference: https://api.passivetotal.org/api/docs/#api-Host_Attributes-GetV2HostAttributesPairsQueryDirection
+
+        :return: Dict of results with component information
+        """
+        return self._get('host-attributes', 'pairs', **kwargs)
 
     def search_trackers(self, **kwargs):
         """Search tracking IDs for associated hosts.

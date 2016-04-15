@@ -25,8 +25,10 @@ import sys
 import pkg_resources
 import multiprocessing
 
-username = "--YOUR-USERNAME--"
-api_key = "--YOUR-API-KEY--"
+#username = "--YOUR-USERNAME--"
+#api_key = "--YOUR-API-KEY--"
+username = "brandon@passivetotal.org"
+api_key = "af62207054be38875f1566c21122e69d52c69ef680bf22d738a71d0a08a413db"
 
 
 def _generate_request_instance(request_type):
