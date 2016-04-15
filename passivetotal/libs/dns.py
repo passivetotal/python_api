@@ -244,23 +244,24 @@ class DnsResponse(Response):
         """
         if len(self.results) == 0:
             return "No results were found"
-        first_item = self.results[0]
-        if 'collected' in first_item:
-            del first_item['collected']
-        ordered = collections.OrderedDict(sorted(first_item.items()))
-        headers = ordered.keys()
+        headers = set()
+        # Some records may be missing a field.
+        for record in self.results:
+            headers |= set(record.keys())
+        # Filter out fields.
+        headers -= {'collected', 'recordHash'}
+        headers = sorted(headers)
         records = []
         for record in self.results:
-            if 'collected' in record:
-                del record['collected']
-            if 'recordHash' in record:
-                del record['recordHash']
-            ordered = collections.OrderedDict(sorted(record.items()))
-            ordered = ordered.values()
-            ordered[4] = '|'.join(ordered[4])
-            records.append(ordered)
+            row = []
+            for header in headers:
+                val = record.get(header, '')
+                if isinstance(val, list):
+                    row.append('|'.join(val))
+                else:
+                    row.append(val)
+            records.append(row)
         output = tabulate(records, headers)
-
         return output
 
     @property
