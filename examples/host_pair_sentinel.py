@@ -16,7 +16,6 @@ from passivetotal.libs.enrichment import EnrichmentRequest
 
 
 def show_tagged(direction, enriched):
-    print "%s Hosts with Tags" % direction
     for host, data in enriched.get("results", {}).iteritems():
         if len(data['tags']) == 0:
             continue
