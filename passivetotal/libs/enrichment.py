@@ -39,7 +39,8 @@ class EnrichmentRequest(Client):
         :param query: Value to enrich
         :return: Dict of results
         """
-        return self._get('enrichment', 'bulk', **kwargs)
+        data = {'query': kwargs['query']}
+        return self._get_special('enrichment', 'bulk', '', data)
 
     def get_osint(self, **kwargs):
         """Get OSINT data for a value.
