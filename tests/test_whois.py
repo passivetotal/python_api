@@ -5,9 +5,7 @@ from future.utils import iteritems
 
 from conf import fake_request
 from passivetotal.libs.whois import WhoisRequest
-from passivetotal.libs.whois import WhoisResponse
-from passivetotal.libs.whois import WhoisSearchResponse
-
+from passivetotal.response import Response
 from passivetotal.common.exceptions import MISSING_FIELD
 from passivetotal.common.exceptions import INVALID_FIELD_TYPE
 
@@ -16,7 +14,7 @@ class WhoisTestCase(unittest.TestCase):
 
     """Test case for WHOIS methods."""
 
-    formats = ['json', 'xml', 'csv', 'text', 'table']
+    formats = ['json']
 
     def setup_class(self):
         self.patcher = patch('passivetotal.api.Client._get', fake_request)
@@ -36,7 +34,7 @@ class WhoisTestCase(unittest.TestCase):
         """Test processing WHOIS details."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_whois_details(**payload)
-        wrapped = WhoisResponse(response)
+        wrapped = Response(response)
         for item in self.formats:
             assert (getattr(wrapped, item))
 
@@ -44,7 +42,7 @@ class WhoisTestCase(unittest.TestCase):
         """Test loading properties on a result."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_whois_details(**payload)
-        wrapped = WhoisResponse(response)
+        wrapped = Response(response)
 
         for key, value in iteritems(response):
             assert (getattr(wrapped, key)) == value
@@ -77,5 +75,5 @@ class WhoisTestCase(unittest.TestCase):
         """Test processing search results."""
         payload = {'query': '18772064254', 'field': 'phone'}
         response = self.client.search_whois_by_field(**payload)
-        results = WhoisSearchResponse(response)
-        assert (results.get_records()[0].domain) == 'passivetotal.org'
+        results = Response(response)
+        assert (Response(results.results[0]).domain) == 'passivetotal.org'

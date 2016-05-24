@@ -5,10 +5,7 @@ from future.utils import iteritems
 
 from conf import fake_request
 from passivetotal.libs.ssl import SslRequest
-from passivetotal.libs.ssl import SslResponse
-from passivetotal.libs.ssl import SslHistoryResponse
-from passivetotal.libs.ssl import SslSearchResponse
-
+from passivetotal.response import Response
 from passivetotal.common.exceptions import MISSING_FIELD
 from passivetotal.common.exceptions import INVALID_FIELD_TYPE
 
@@ -17,7 +14,7 @@ class SslTestCase(unittest.TestCase):
 
     """Test case for SSL certificate methods."""
 
-    formats = ['json', 'xml', 'csv', 'text', 'table']
+    formats = ['json']
 
     def setup_class(self):
         self.patcher = patch('passivetotal.api.Client._get', fake_request)
@@ -37,7 +34,7 @@ class SslTestCase(unittest.TestCase):
         """Test processing SSL certificate details."""
         payload = {'query': 'e9a6647d6aba52dc47b3838c920c9ee59bad7034'}
         response = self.client.get_ssl_certificate_details(**payload)
-        wrapped = SslResponse(response)
+        wrapped = Response(response)
         for item in self.formats:
             assert (getattr(wrapped, item))
 
@@ -45,7 +42,7 @@ class SslTestCase(unittest.TestCase):
         """Test loading properties on a result."""
         payload = {'query': 'e9a6647d6aba52dc47b3838c920c9ee59bad7034'}
         response = self.client.get_ssl_certificate_details(**payload)
-        wrapped = SslResponse(response)
+        wrapped = Response(response)
 
         for key, value in iteritems(response):
             assert (getattr(wrapped, key)) == value
@@ -78,13 +75,13 @@ class SslTestCase(unittest.TestCase):
         """Test processing search results."""
         payload = {'query': 'www.passivetotal.org', 'field': 'subjectCommonName'}
         response = self.client.search_ssl_certificate_by_field(**payload)
-        results = SslSearchResponse(response)
-        assert (results.get_records()[0].serialNumber) == '2317683628587350290823564500811277499'
+        results = Response(response)
+        assert (Response(results.results[0]).serialNumber) == '2317683628587350290823564500811277499'
 
     def test_process_ssl_certificate_history(self):
         """Test processing search results."""
         payload = {'query': '52.8.228.23'}
         response = self.client.get_ssl_certificate_history(**payload)
-        wrapped = SslHistoryResponse(response)
-        record = wrapped.get_records().pop(0)
+        wrapped = Response(response)
+        record = Response(wrapped.results.pop(0))
         assert (record.sha1) == 'e9a6647d6aba52dc47b3838c920c9ee59bad7034'

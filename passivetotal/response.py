@@ -6,7 +6,6 @@ __version__ = '1.0.0'
 
 from future.utils import iteritems
 import datetime
-import dicttoxml
 import json
 import logging
 import sys
@@ -61,11 +60,11 @@ class Response(object):
 
     @property
     def xml(self):
-        """Output data as XML.
+        """Output data as text.
 
-        :return: XML formatted results
+        :return: XML formatted data
         """
-        return dicttoxml.dicttoxml(self._results)
+        raise NotImplementedError("Subclass must implement this.")
 
     @property
     def json(self):

@@ -4,15 +4,14 @@ import unittest
 
 from conf import fake_request
 from passivetotal.libs.dns import DnsRequest
-from passivetotal.libs.dns import DnsResponse
-from passivetotal.libs.dns import DnsUniqueResponse
+from passivetotal.response import Response
 
 
 class DnsTestCase(unittest.TestCase):
 
     """Test case for DNS methods."""
 
-    formats = ['json', 'xml', 'csv', 'text', 'table', 'stix']
+    formats = ['json']
 
     def setup_class(self):
         self.patcher = patch('passivetotal.api.Client._get', fake_request)
@@ -32,18 +31,16 @@ class DnsTestCase(unittest.TestCase):
         """Test processing passive DNS records."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_passive_dns(**payload)
-        wrapped = DnsResponse(response)
+        wrapped = Response(response)
         assert (wrapped.queryValue) == 'passivetotal.org'
-        assert (wrapped.get_records().pop(0).recordHash) == '6d24bc7754af023afeaaa05ac689ac36e96656aa6519ba435b301b14916b27d3'
-        assert (wrapped.get_observed_days()) == 0
-        assert (len(wrapped.get_source_variety().keys())) == 1
+        assert (Response(wrapped.results.pop(0)).recordHash) == '6d24bc7754af023afeaaa05ac689ac36e96656aa6519ba435b301b14916b27d3'
 
     def test_dns_passive_unique(self):
         """Test getting unique passive DNS records."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_unique_resolutions(**payload)
-        wrapped = DnsUniqueResponse(response)
+        wrapped = Response(response)
         assert (wrapped.queryValue) == 'passivetotal.org'
-        record = wrapped.get_records().pop(0)
-        assert (record.resolve) == '107.170.89.121'
-        assert (record.count) == 2
+        record = wrapped.frequency.pop(0)
+        assert (record[0]) == '107.170.89.121'
+        assert (record[1]) == 2

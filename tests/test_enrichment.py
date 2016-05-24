@@ -4,7 +4,7 @@ import unittest
 
 from conf import fake_request
 from passivetotal.libs.enrichment import EnrichmentRequest
-from passivetotal.libs.enrichment import GenericResponse
+from passivetotal.response import Response
 
 
 class EnrichmentTestCase(unittest.TestCase):
@@ -31,16 +31,17 @@ class EnrichmentTestCase(unittest.TestCase):
         """Test processing enrichment data."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_enrichment(**payload)
-        wrapped = GenericResponse(response)
+        wrapped = Response(response)
         assert (wrapped.queryValue) == 'passivetotal.org'
 
     def test_osint(self):
         """Test getting unique passive DNS records."""
         payload = {'query': 'xxxvideotube.org'}
         response = self.client.get_osint(**payload)
-        wrapped = GenericResponse(response)
+        wrapped = Response(response)
         assert (response['results'])
-        record = wrapped.get_records().pop(0)
+        record = wrapped.results.pop(0)
+        record = Response(record)
         assert (record.source) == 'RiskIQ'
         assert (record.sourceUrl) == "https://www.riskiq.com/blog/riskiq-labs/post/a-brief-encounter-with-slempo"
 
@@ -48,9 +49,10 @@ class EnrichmentTestCase(unittest.TestCase):
         """Test processing malware."""
         payload = {'query': 'noorno.com'}
         response = self.client.get_malware(**payload)
-        wrapped = GenericResponse(response)
+        wrapped = Response(response)
         assert (response['results'])
-        record = wrapped.get_records().pop(0)
+        record = wrapped.results.pop(0)
+        record = Response(record)
         assert (record.source) == 'Threatexpert'
         assert (record.sample) == "7ebf1e2d0c89b1c8124275688c9e8e98"
 
@@ -58,6 +60,6 @@ class EnrichmentTestCase(unittest.TestCase):
         """Test processing subdomains."""
         payload = {'query': '*.passivetotal.org'}
         response = self.client.get_subdomains(**payload)
-        wrapped = GenericResponse(response)
+        wrapped = Response(response)
         assert (wrapped.queryValue) == '*.passivetotal.org'
         assert ('www' in wrapped.subdomains)

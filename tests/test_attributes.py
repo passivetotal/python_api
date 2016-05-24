@@ -4,7 +4,7 @@ import unittest
 
 from conf import fake_request
 from passivetotal.libs.attributes import AttributeRequest
-from passivetotal.libs.attributes import AttributeResponse
+from passivetotal.response import Response
 
 
 class AttributeTestCase(unittest.TestCase):
@@ -31,8 +31,9 @@ class AttributeTestCase(unittest.TestCase):
         """Test processing tracker data."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_host_attribute_trackers(**payload)
-        wrapped = AttributeResponse(response)
-        record = wrapped.get_records().pop(0)
+        wrapped = Response(response)
+        record = wrapped.results.pop(0)
+        record = Response(record)
         assert (record.hostname) == 'passivetotal.org'
         assert (record.lastSeen) == '2016-01-26 13:47:45'
         assert (record.attributeType) == 'GoogleAnalyticsAccountNumber'
@@ -49,8 +50,9 @@ class AttributeTestCase(unittest.TestCase):
         """Test processing component data."""
         payload = {'query': 'passivetotal.org'}
         response = self.client.get_host_attribute_components(**payload)
-        wrapped = AttributeResponse(response)
-        record = wrapped.get_records().pop(0)
+        wrapped = Response(response)
+        record = wrapped.results.pop(0)
+        record = Response(record)
         assert (record.hostname) == 'passivetotal.org'
         assert (record.lastSeen) == '2016-01-07 21:52:30'
         assert (record.category) == 'JavaScript Library'
@@ -67,8 +69,9 @@ class AttributeTestCase(unittest.TestCase):
         """Test processing component data."""
         payload = {'query': 'UA-49901229', 'type': 'GoogleAnalyticsAccountNumber'}
         response = self.client.search_trackers(**payload)
-        wrapped = AttributeResponse(response)
-        record = wrapped.get_records().pop(0)
+        wrapped = Response(response)
+        record = wrapped.results.pop(0)
+        record = Response(record)
         assert not (record.everBlacklisted)
         assert (record.alexaRank) == 38
         assert (record.hostname) == 'demo.paypal.com'
