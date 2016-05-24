@@ -1,11 +1,6 @@
-cybox==2.1.0.12
 dicttoxml
 ez-setup==0.9
-lxml==3.5.0
 passivetotal
 python-dateutil==2.4.2
 requests==2.9.1
-six==1.10.0
-stix==1.2.0.0
-tabulate==0.7.5
 future

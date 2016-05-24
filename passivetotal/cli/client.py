@@ -10,17 +10,11 @@ from passivetotal.common.utilities import prune_args
 from passivetotal.common.utilities import to_bool
 from passivetotal.common.utilities import valid_date
 from passivetotal.libs.attributes import AttributeRequest
-from passivetotal.libs.attributes import AttributeResponse
 from passivetotal.libs.actions import ActionsClient
 from passivetotal.libs.dns import DnsRequest
-from passivetotal.libs.dns import DnsResponse
-from passivetotal.libs.dns import DnsUniqueResponse
 from passivetotal.libs.ssl import SslRequest
-from passivetotal.libs.ssl import SslResponse
-from passivetotal.libs.ssl import SslHistoryResponse
 from passivetotal.libs.whois import WhoisRequest
-from passivetotal.libs.whois import WhoisResponse
-from passivetotal.libs.whois import WhoisSearchResponse
+from passivetotal.response import Response
 
 
 def call_dns(args):
@@ -159,51 +153,10 @@ def write_output(results, arguments):
     :param arguments: Supplied arguments from the CLI
     :return: Formatted list of output data
     """
-    if arguments.cmd == 'pdns':
-        if not arguments.format:
-            arguments.format = 'table'
-        if not arguments.unique:
-            data = DnsResponse.process(results)
-        else:
-            data = DnsUniqueResponse.process(results)
-
-        data = [getattr(data, arguments.format)]
-
-    elif arguments.cmd == 'whois':
-        if not arguments.format:
-            arguments.format = 'text'
-        if not arguments.field:
-            tmp = WhoisResponse.process(results)
-            data = [getattr(tmp, arguments.format)]
-        else:
-            data = list()
-            results = WhoisSearchResponse(results)
-            for record in results.get_records():
-                data.append(getattr(record, arguments.format))
-
-    elif arguments.cmd == 'ssl':
-        if not arguments.format:
-            arguments.format = 'text'
-        if not arguments.type:
-            tmp = SslResponse.process(results)
-            data = [getattr(tmp, arguments.format)]
-        elif arguments.type == 'search':
-            data = list()
-            for record in results.get('records', []):
-                tmp = SslResponse.process(record)
-                data.append(getattr(tmp, arguments.format))
-        else:
-            tmp = SslHistoryResponse.process(results)
-            data = [getattr(tmp, arguments.format)]
-
-    elif arguments.cmd == 'attribute':
-        if not arguments.format:
-            arguments.format = 'table'
-        tmp = AttributeResponse.process(results)
-        data = [getattr(tmp, arguments.format)]
-
-    else:
-        return [str(results)]
+    if not arguments.format:
+        arguments.format = 'json'
+        data = Response.process(results)
+    data = [getattr(data, arguments.format)]
 
     return data
 
