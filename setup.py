@@ -8,15 +8,14 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='1.0.27',
+    version='1.0.28',
     description='Client for the PassiveTotal REST API',
     url="https://github.com/passivetotal/python_api",
     author="Research Team, passivetotal",
     author_email="admin@passivetotal.org",
     license="GPLv2",
     packages=find_packages(),
-    install_requires=['requests', 'tabulate', 'stix', 'ez_setup', 'lxml',
-                      'cybox', 'python-dateutil', 'dicttoxml', 'future'],
+    install_requires=['requests', 'ez_setup', 'python-dateutil', 'future'],
     long_description=read('README.rst'),
     classifiers=[],
     entry_points={
