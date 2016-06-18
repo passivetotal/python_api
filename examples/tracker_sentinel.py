@@ -50,7 +50,7 @@ def main():
     all_records = list()
     initial_seed = client.get_host_attribute_trackers(query=query)
     for item in initial_seed.get('results', []):
-        for hostname, blacklisted in surface_values(item).iteritems():
+        for hostname, blacklisted in surface_values(item).items():
             tmp = [item.get('hostname'), item.get('attributeType'),
                    item.get('attributeValue'), item.get('firstSeen'),
                    item.get('lastSeen'), hostname, str(blacklisted)]
@@ -59,7 +59,7 @@ def main():
     headers = ['Host', 'Attribute', 'Value', 'First Seen', 'Last Seen',
                'Suspect', 'Ever Blacklisted']
 
-    print tabulate(all_records, headers)
+    print(tabulate(all_records, headers))
 
 if __name__ == "__main__":
     main()

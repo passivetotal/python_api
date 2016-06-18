@@ -38,7 +38,7 @@ def prune_args(**kwargs):
 
     :return: Dict of keyword arguments without null values
     """
-    return dict((k, v) for k, v in kwargs.iteritems() if v)
+    return dict((k, v) for k, v in kwargs.items() if v)
 
 
 def valid_date(input_date):

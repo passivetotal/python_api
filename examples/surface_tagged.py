@@ -28,7 +28,7 @@ def main():
         tmp = enricher.get_enrichment(query=item)
         tags = tmp.get('tags', list())
         if len(tags) > 0:
-            print "%s - %s" % (item, ', '.join(tags))
+            print("%s - %s" % (item, ', '.join(tags)))
 
 if __name__ == "__main__":
     main()
