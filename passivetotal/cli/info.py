@@ -21,7 +21,7 @@ def main():
                          help="Output as JSON")
     organization = subs.add_parser('organization')
     organization.add_argument('--json', '-j', action="store_true",
-                         help="Output as JSON")
+                              help="Output as JSON")
     args = parser.parse_args()
 
     client = Client.from_config()
@@ -40,7 +40,7 @@ def main():
     if args.json:
         print(json.dumps(data, indent=4))
     else:
-        print data
+        print(data)
 
 
 if __name__ == '__main__':

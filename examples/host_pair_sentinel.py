@@ -16,20 +16,20 @@ from passivetotal.libs.enrichment import EnrichmentRequest
 
 
 def show_tagged(direction, enriched):
-    for host, data in enriched.get("results", {}).iteritems():
+    for host, data in enriched.get("results", {}).items():
         if len(data['tags']) == 0:
             continue
-        print data['queryValue'], ','.join(data['tags'])
+        print(data['queryValue'], ','.join(data['tags']))
 
 query = sys.argv[1]
 direction = sys.argv[2]
 result_key = {'parents': 'parent', 'children': 'child'}
 
 if len(sys.argv) != 3:
-    print "Usage: python host_pair_sentinel.py <query> <parents|children>"
+    print("Usage: python host_pair_sentinel.py <query> <parents|children>")
     sys.exit(1)
 if direction not in ['children', 'parents']:
-    print "[!] Direction must be 'children' or 'parents' to work"
+    print("[!] Direction must be 'children' or 'parents' to work")
     sys.exit(1)
 
 client = AttributeRequest.from_config()

@@ -20,7 +20,7 @@ from passivetotal.libs.dns import DnsResponse
 def main():
     """Perform a passive DNS lookup and save the output."""
     if len(sys.argv) <= 1:
-        print "Usage: python pdns_multiput <query>"
+        print("Usage: python pdns_multiput <query>")
         sys.exit(1)
 
     query = sys.argv[1]
@@ -33,7 +33,7 @@ def main():
         tmp = open(save_location, "w")
         tmp.write(getattr(pdns_results, format_type))
         tmp.close()
-    print "Saved results inside of /tmp/%s" % (query)
+    print("Saved results inside of /tmp/%s" % (query))
 
 if __name__ == "__main__":
     main()
