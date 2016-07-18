@@ -31,7 +31,6 @@ class AccountTestCase(unittest.TestCase):
         assert(response['history'][0]['username']) == self.test_user
 
     def test_account_monitors(self):
-        print dir(self.client)
         response = self.client.get_account_monitors()
         assert('monitors' in response)
         assert(response['monitors'][0]['focus']) == "37.139.30.161"
