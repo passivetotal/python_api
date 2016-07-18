@@ -33,14 +33,23 @@ class AccountClient(Client):
         """
         return self._get('account', 'history')
 
-    def get_account_notifications(self):
+    def get_account_monitors(self):
+        """Get monitors from the requesting account.
+
+        Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountMonitors
+
+        :return: Dict of monitor data
+        """
+        return self._get('account', 'monitors')
+
+    def get_account_notifications(self, **kwargs):
         """Get notifications from the requesting account.
 
         Reference: https://api.passivetotal.org/api/docs/#api-Account-GetAccountNotifications
 
         :return: Dict of notifications data
         """
-        return self._get('account', 'notifications')
+        return self._get('account', 'notifications', **kwargs)
 
     def get_account_sources(self):
         """Get sources from the requesting account.

@@ -30,6 +30,12 @@ class AccountTestCase(unittest.TestCase):
         assert('history' in response)
         assert(response['history'][0]['username']) == self.test_user
 
+    def test_account_monitors(self):
+        print dir(self.client)
+        response = self.client.get_account_monitors()
+        assert('monitors' in response)
+        assert(response['monitors'][0]['focus']) == "37.139.30.161"
+
     def test_account_notifications(self):
         response = self.client.get_account_notifications()
         assert('notifications' in response)

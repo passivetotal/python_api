@@ -1,0 +1,7 @@
+{
+    "monitors": [{
+        "focus": "37.139.30.161",
+        "lastAlert": "2016-05-19T11:03:32.926000",
+        "tags": ["bepush", "crimeware"]
+    }]
+}
