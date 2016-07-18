@@ -19,4 +19,4 @@ whois_client = WhoisRequest.from_config()
 for record in loaded.get_records()[:3]:
     raw_whois = whois_client.get_whois_details(query=record.resolve)
     whois = WhoisResponse(raw_whois)
-    print record.resolve, whois.contactEmail
+    print(record.resolve, whois.contactEmail)

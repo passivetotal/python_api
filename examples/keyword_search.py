@@ -75,12 +75,12 @@ def run_searches(query):
 if __name__ == "__main__":
     pt_version = pkg_resources.get_distribution("passivetotal").version
     if int(pt_version.split('.')[2]) < 18:
-        print "[!] PassiveTotal library is out of date. Please run 'pip install passivetotal --upgrade' to use this tool."
+        print("[!] PassiveTotal library is out of date. Please run 'pip install passivetotal --upgrade' to use this tool.")
         sys.exit(1)
     if len(sys.argv) < 2:
-        print "Usage: python keyword_search.py <query-value> [csv|table]"
+        print("Usage: python keyword_search.py <query-value> [csv|table]")
     if username[0] == '-' or api_key[0] == '-':
-        print "[!] Edit this file to include your username and API key"
+        print("[!] Edit this file to include your username and API key")
 
     query = sys.argv[1]
     if len(sys.argv) > 2:
@@ -99,9 +99,9 @@ if __name__ == "__main__":
                          hit['matchType'], hit['fieldMatch']])
 
     if output == 'csv':
-        print ','.join(headers)
+        print(','.join(headers))
         for row in rows:
-            print ','.join(row)
+            print(','.join(row))
     else:
         from tabulate import tabulate
-        print tabulate(rows, headers)
+        print(tabulate(rows, headers))
