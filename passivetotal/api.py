@@ -105,7 +105,7 @@ class Client(object):
         if response.status_code == 204:
             return None
         try:
-            return response.json()
+            return response.json
         except ValueError as e:
             raise ValueError(
                 'Exception: %s\n'
