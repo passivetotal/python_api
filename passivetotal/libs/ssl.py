@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 """PassiveTotal API Interface."""
-
-__author__ = 'Brandon Dixon (PassiveTotal)'
-__version__ = '1.0.0'
-
+from passivetotal.common import utilities
 from passivetotal.api import Client
 # exceptions
 from passivetotal.common.exceptions import MISSING_FIELD
 from passivetotal.common.exceptions import INVALID_FIELD_TYPE
 # const
+from passivetotal.response import Response
 from passivetotal.common.const import SSL_VALID_FIELDS
+__author__ = 'Brandon Dixon (PassiveTotal)'
+__version__ = '1.0.0'
 
 
 class SslRequest(Client):
@@ -71,3 +71,19 @@ class SslRequest(Client):
         :return: List of matching hits based on the keyword
         """
         return self._get('ssl-certificate', 'search', 'keyword', **kwargs)
+
+
+class SSLHistoryResponse(Response):
+    pass
+
+
+class SSLResponse(Response):
+    @property
+    def csv(self):
+        """Output data as CSV.
+
+        :return: String of formatted data
+        """
+        for result in self._results.get('results', []):
+            data = [result.get(detail, '') for detail in SSL_VALID_FIELDS]
+        return utilities.to_csv(SSL_VALID_FIELDS, [data])
