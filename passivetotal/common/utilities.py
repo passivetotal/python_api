@@ -3,8 +3,12 @@ import datetime
 import json
 import os
 import socket
-from io import StringIO
 import csv
+import sys
+if sys.version_info[0] == 3:
+    from io import StringIO
+else:
+    from io import BytesIO as StringIO
 
 
 def to_csv(headers, data):
