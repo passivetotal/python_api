@@ -60,13 +60,6 @@ class WhoisRequest(Client):
         """
         return self._get('whois', 'search', 'keyword', **kwargs)
 
-approved_fields = []
 
 class WhoisResponse(Response):
-    @property
-    def csv(self):
-        import json
-        print(json.dumps(self._results, indent=4))
-        data = []
-        data.append([self._results.get(i) for i in approved_fields])
-        return utilities.to_csv(approved_fields, data)
+    pass
