@@ -3,7 +3,10 @@ WHOIS_VALID_FIELDS = ['domain', 'email', 'name', 'organization',
 WHOIS_SECTIONS = ['admin', 'tech', 'registrant']
 WHOIS_SECTION_FIELDS = ['section', 'query', 'city', 'country', 'email', 'name',
                         'organization', 'postalCode', 'state', 'street']
-
+DNS_APPROVED_FIELDS = [
+    "lastSeen", "resolve", "firstSeen", "resolveType", "value", "recordType",
+    "recordHash", "collected",
+]
 SSL_VALID_FIELDS = ["issuerSurname", "subjectOrganizationName",
                     "issuerCountry", "issuerOrganizationUnitName",
                     "fingerprint", "subjectOrganizationUnitName",
@@ -19,6 +22,10 @@ SSL_VALID_FIELDS = ["issuerSurname", "subjectOrganizationName",
                     "subjectProvince", "issuerSerialNumber",
                     "issuerEmailAddress"]
 
+
+ATTRIBUTE_APPROVED_FIELDS = [
+    "lastSeen", "firstSeen", "attributeType", "hostname", "attributeValue",
+]
 CLASSIFICATION_VALID_VALUES = ['malicious', 'suspicious', 'non-malicious',
                                'unknown']
 ACTIONS = 'actions'
