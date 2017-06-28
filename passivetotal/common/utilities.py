@@ -3,6 +3,18 @@ import datetime
 import json
 import os
 import socket
+from io import StringIO
+import csv
+
+
+def to_csv(headers, data):
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(headers)
+    for i in data:
+        writer.writerow(i)
+    output.seek(0)
+    return output.read()
 
 
 def is_ip(value):
@@ -30,7 +42,7 @@ def to_bool(string):
     negative = ("no",  "n", "false", "f", "0", "0.0", "", "none", "[]", "{}")
     if str(string).lower() in negative:
         return False
-    raise Exception('Invalid value for boolean conversion: ' + str(value))
+    raise Exception('Invalid value for boolean conversion: ' + str(string))
 
 
 def prune_args(**kwargs):
