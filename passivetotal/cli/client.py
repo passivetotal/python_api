@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-
 from argparse import ArgumentParser
 from passivetotal.common.utilities import prune_args
 from passivetotal.common.utilities import to_bool
@@ -11,6 +10,8 @@ from passivetotal.libs.dns import DnsRequest, DnsResponse
 from passivetotal.libs.ssl import SslRequest, SSLResponse, SSLHistoryResponse
 from passivetotal.libs.whois import WhoisRequest, WhoisResponse
 
+from passivetotal.libs.enrichment import EnrichmentRequest
+from passivetotal.response import Response
 
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
@@ -104,6 +105,11 @@ def call_ssl(args):
         raise ValueError("Field argument was missing from the call.")
 
     return data
+
+
+def call_osint(args):
+    client = EnrichmentRequest.from_config()
+    return client.get_osint(query=args.query)
 
 
 def call_actions(args):
@@ -253,6 +259,13 @@ def main():
     action.add_argument('--json', '-j', action="store_true",
                         help="Output as JSON")
 
+    osint = subs.add_parser('osint', help="Query OSINT data")
+    osint.add_argument('--query', '-q', required=True,
+                       help="Query for a domain or IP address")
+    osint.add_argument('--format', choices=['json', 'text', 'csv',
+                                            'stix', 'table', 'xml'],
+                       help="Format of the output from the query")
+
     args, unknown = parser.parse_known_args()
     data = None
 
@@ -267,6 +280,8 @@ def main():
             data = call_actions(args)
         elif args.cmd == 'attribute':
             data = call_attribute(args)
+        elif args.cmd == 'osint':
+            data = call_osint(args)
         else:
             parser.print_usage()
             sys.exit(1)
