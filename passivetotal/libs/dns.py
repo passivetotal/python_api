@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 """PassiveTotal API Interface."""
+from passivetotal.api import Client
+from passivetotal.response import Response
+from passivetotal.common import utilities
+from passivetotal.common.const import DNS_APPROVED_FIELDS as approved_fields
 
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
-
-from passivetotal.api import Client
 
 
 class DnsRequest(Client):
@@ -52,3 +54,12 @@ class DnsRequest(Client):
         :return: List of matching hits based on the keyword
         """
         return self._get('dns', 'search', 'keyword', **kwargs)
+
+
+class DnsResponse(Response):
+    @property
+    def csv(self):
+        data = []
+        for record in self._results['results']:
+            data.append([record.get(i) for i in approved_fields])
+        return utilities.to_csv(approved_fields, data)

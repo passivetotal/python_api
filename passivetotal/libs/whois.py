@@ -1,15 +1,17 @@
 #!/usr/bin/env python
-"""PassiveTotal API Interface."""
-
-__author__ = 'Brandon Dixon (PassiveTotal)'
-__version__ = '1.0.0'
-
+from passivetotal.common import utilities
 from passivetotal.api import Client
 # exceptions
 from passivetotal.common.exceptions import MISSING_FIELD
 from passivetotal.common.exceptions import INVALID_FIELD_TYPE
 # const
 from passivetotal.common.const import WHOIS_VALID_FIELDS
+from passivetotal.response import Response
+"""PassiveTotal API Interface."""
+
+__author__ = 'Brandon Dixon (PassiveTotal)'
+__version__ = '1.0.0'
+
 
 
 class WhoisRequest(Client):
@@ -58,3 +60,6 @@ class WhoisRequest(Client):
         """
         return self._get('whois', 'search', 'keyword', **kwargs)
 
+
+class WhoisResponse(Response):
+    pass

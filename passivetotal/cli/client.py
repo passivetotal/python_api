@@ -1,20 +1,20 @@
 #!/usr/bin/env python
-
-__author__ = 'Brandon Dixon (PassiveTotal)'
-__version__ = '1.0.0'
-
 import sys
 from argparse import ArgumentParser
 from passivetotal.common.utilities import prune_args
 from passivetotal.common.utilities import to_bool
 from passivetotal.common.utilities import valid_date
-from passivetotal.libs.attributes import AttributeRequest
+from passivetotal.libs.attributes import AttributeRequest, AttributeResponse
+from passivetotal.libs.actions import ActionsClient, ActionsResponse
+from passivetotal.libs.dns import DnsRequest, DnsResponse
+from passivetotal.libs.ssl import SslRequest, SSLResponse, SSLHistoryResponse
+from passivetotal.libs.whois import WhoisRequest, WhoisResponse
+
 from passivetotal.libs.enrichment import EnrichmentRequest
-from passivetotal.libs.actions import ActionsClient
-from passivetotal.libs.dns import DnsRequest
-from passivetotal.libs.ssl import SslRequest
-from passivetotal.libs.whois import WhoisRequest
 from passivetotal.response import Response
+
+__author__ = 'Brandon Dixon (PassiveTotal)'
+__version__ = '1.0.0'
 
 
 def call_dns(args):
@@ -29,9 +29,9 @@ def call_dns(args):
     )
 
     if args.unique:
-        data = client.get_unique_resolutions(**pruned)
+        data = DnsResponse.process(client.get_unique_resolutions(**pruned))
     else:
-        data = client.get_passive_dns(**pruned)
+        data = DnsResponse.process(client.get_passive_dns(**pruned))
 
     return data
 
@@ -41,13 +41,16 @@ def call_attribute(args):
     client = AttributeRequest.from_config()
     pruned = prune_args(
         query=args.query,
-        type=args.type
     )
 
     if args.type == 'tracker':
-        data = client.get_host_attribute_trackers(**pruned)
+        data = AttributeResponse.process(
+            client.get_host_attribute_trackers(**pruned)
+        )
     else:
-        data = client.get_host_attribute_components(**pruned)
+        data = AttributeResponse.process(
+            client.get_host_attribute_components(**pruned)
+        )
 
     return data
 
@@ -62,9 +65,13 @@ def call_whois(args):
     )
 
     if not args.field:
-        data = client.get_whois_details(**pruned)
+        data = WhoisResponse.process(
+            client.get_whois_details(**pruned)
+        )
     else:
-        data = client.search_whois_by_field(**pruned)
+        data = WhoisResponse.process(
+            client.search_whois_by_field(**pruned)
+        )
 
     return data
 
@@ -76,7 +83,6 @@ def call_ssl(args):
         query=args.query,
         compact_record=args.compact,
         field=args.field,
-        type=args.type
     )
 
     valid_types = ['search', 'history']
@@ -84,11 +90,17 @@ def call_ssl(args):
         raise ValueError("Invalid type specified.")
 
     if not args.type:
-        data = client.get_ssl_certificate_details(**pruned)
+        data = SSLResponse.process(
+            {'results': [client.get_ssl_certificate_details(**pruned)]}
+        )
     elif args.type == 'history':
-        data = client.get_ssl_certificate_history(**pruned)
+        data = SSLHistoryResponse.process(
+            client.get_ssl_certificate_history(**pruned)
+        )
     elif args.type == 'search' and args.field:
-        data = client.search_ssl_certificate_by_field(**pruned)
+        data = SSLResponse.process(
+            client.search_ssl_certificate_by_field(**pruned)
+        )
     else:
         raise ValueError("Field argument was missing from the call.")
 
@@ -114,6 +126,7 @@ def call_actions(args):
         metadata=args.metadata
     )
 
+    data = {}
     if args.tags:
         tag_values = [x.strip() for x in args.tags.split(',')]
         pruned['tags'] = tag_values
@@ -148,7 +161,7 @@ def call_actions(args):
     if args.metadata:
         data = client.get_metadata(**pruned)
 
-    return data
+    return ActionsResponse.process(data)
 
 
 def write_output(results, arguments):
@@ -160,8 +173,7 @@ def write_output(results, arguments):
     """
     if not arguments.format:
         arguments.format = 'json'
-        data = Response.process(results)
-    data = [getattr(data, arguments.format)]
+    data = [getattr(results, arguments.format)]
 
     return data
 

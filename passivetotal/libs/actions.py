@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 """PassiveTotal API Interface."""
-
-__author__ = 'Brandon Dixon (PassiveTotal)'
-__version__ = '1.0.0'
-
 from passivetotal.api import Client
+from passivetotal.response import Response
 # exceptions
 from passivetotal.common.exceptions import MISSING_FIELD
 from passivetotal.common.exceptions import INVALID_VALUE_TYPE
@@ -18,6 +15,9 @@ from passivetotal.common.const import ACTIONS_SINKHOLE
 from passivetotal.common.const import ACTIONS_TAG
 from passivetotal.common.const import CLASSIFICATION_VALID_VALUES
 from passivetotal.common.const import ENRICHMENT
+
+__author__ = 'Brandon Dixon (PassiveTotal)'
+__version__ = '1.0.0'
 
 
 class ActionsClient(Client):
@@ -114,3 +114,7 @@ class ActionsClient(Client):
 
     def get_metadata(self, **kwargs):
         return self._get(ENRICHMENT, '', **kwargs)
+
+
+class ActionsResponse(Response):
+    pass

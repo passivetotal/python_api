@@ -4,7 +4,10 @@
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
+from passivetotal.common.const import ATTRIBUTE_APPROVED_FIELDS as approved_fields
 from passivetotal.api import Client
+from passivetotal.response import Response
+from passivetotal.common import utilities
 
 
 class AttributeRequest(Client):
@@ -50,3 +53,12 @@ class AttributeRequest(Client):
         :return: Dict of matching hosts using a tracking ID
         """
         return self._get('trackers', 'search', **kwargs)
+
+
+class AttributeResponse(Response):
+    @property
+    def csv(self):
+        data = []
+        for record in self._results['results']:
+            data.append([record.get(i) for i in approved_fields])
+        return utilities.to_csv(approved_fields, data)
