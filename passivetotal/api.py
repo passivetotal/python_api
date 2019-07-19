@@ -42,7 +42,6 @@ class Client(object):
         self.api_key = api_key
         self.headers = {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
         }
         self.proxies = {}
         if http_proxy:
