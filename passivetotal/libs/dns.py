@@ -63,3 +63,14 @@ class DnsResponse(Response):
         for record in self._results['results']:
             data.append([record.get(i) for i in approved_fields])
         return utilities.to_csv(approved_fields, data)
+
+    @property
+    def table(self):
+        data = []
+        for r in self._results['results']:
+            this_dict = {}
+            for k,v in r.items():
+                if k in approved_fields:
+                    this_dict[k] = v 
+            data.append(this_dict)
+        return utilities.to_table(data)

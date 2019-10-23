@@ -10,6 +10,10 @@ if sys.version_info[0] == 3:
 else:
     from io import BytesIO as StringIO
 
+from tabulate import tabulate
+
+def to_table(data):
+    return tabulate(data, headers="keys")
 
 def to_csv(headers, data):
     output = StringIO()
