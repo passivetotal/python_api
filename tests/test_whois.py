@@ -1,9 +1,8 @@
-import pytest
-from mock import patch
+from unittest.mock import patch
 import unittest
 from future.utils import iteritems
 
-from conf import fake_request
+from .conf import fake_request
 from passivetotal.libs.whois import WhoisRequest
 from passivetotal.response import Response
 from passivetotal.common.exceptions import MISSING_FIELD
@@ -16,12 +15,12 @@ class WhoisTestCase(unittest.TestCase):
 
     formats = ['json']
 
-    def setup_class(self):
+    def setUp(self):
         self.patcher = patch('passivetotal.api.Client._get', fake_request)
         self.patcher.start()
         self.client = WhoisRequest('--No-User--', '--No-Key--')
 
-    def teardown_class(self):
+    def tearDown(self):
         self.patcher.stop()
 
     def test_whois_details(self):
@@ -55,21 +54,21 @@ class WhoisTestCase(unittest.TestCase):
 
     def test_whois_search_bad_field(self):
         """Test sending a bad field in a search."""
-        with pytest.raises(INVALID_FIELD_TYPE) as excinfo:
+        with self.assertRaises(INVALID_FIELD_TYPE) as cm:
             def invalid_field():
                 payload = {'query': '18772064254', 'field': '_'}
                 self.client.search_whois_by_field(**payload)
             invalid_field()
-        assert 'must be one of the following' in str(excinfo.value)
+        assert 'must be one of the following' in str(cm.exception)
 
     def test_whois_search_missing_field(self):
         """Test missing a field in a search."""
-        with pytest.raises(MISSING_FIELD) as excinfo:
+        with self.assertRaises(MISSING_FIELD) as cm:
             def missing_field():
                 payload = {'query': '18772064254', 'no-field': '_'}
                 self.client.search_whois_by_field(**payload)
             missing_field()
-        assert 'value is required' in str(excinfo.value)
+        assert 'value is required' in str(cm.exception)
 
     def test_process_whois_search(self):
         """Test processing search results."""

@@ -1,8 +1,7 @@
-import pytest
-from mock import patch
+from unittest.mock import patch
 import unittest
 
-from conf import fake_request
+from .conf import fake_request
 from passivetotal.libs.dns import DnsRequest
 from passivetotal.response import Response
 
@@ -13,12 +12,12 @@ class DnsTestCase(unittest.TestCase):
 
     formats = ['json']
 
-    def setup_class(self):
+    def setUp(self):
         self.patcher = patch('passivetotal.api.Client._get', fake_request)
         self.patcher.start()
         self.client = DnsRequest('--No-User--', '--No-Key--')
 
-    def teardown_class(self):
+    def tearDown(self):
         self.patcher.stop()
 
     def test_dns_passive(self):

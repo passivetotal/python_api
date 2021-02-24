@@ -17,7 +17,7 @@ def fake_request(*args, **kwargs):
         url_path = url_path.rstrip('/')
 
     resource_file = os.path.normpath('tests/resources/%s.json' % url_path)
-    response = open(resource_file, mode='rb')
-    raw_data = response.read().decode('utf-8')
+    with open(resource_file, mode='rb') as response:
+        raw_data = response.read().decode('utf-8')
     return json.loads(raw_data)
 

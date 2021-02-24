@@ -13,9 +13,6 @@ Build Status
 .. image:: https://img.shields.io/pypi/v/passivetotal.svg
    :target: https://pypi.python.org/pypi/passivetotal
 
-.. image:: https://img.shields.io/badge/passivetotal-2.7-blue.svg
-    :target: https://pypi.python.org/pypi/passivetotal/
-
 .. image:: https://img.shields.io/pypi/l/passivetotal.svg
     :target: https://pypi.python.org/pypi/passivetotal/
 
