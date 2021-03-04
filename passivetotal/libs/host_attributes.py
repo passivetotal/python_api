@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 
 __author__ = 'Brandon Dixon (PassiveTotal)'
@@ -49,6 +48,16 @@ class HostAttributeRequest(Client):
         :return: Dict of results
         """
         return self._get('host-attributes', 'pairs', **kwargs)
+
+    def get_cookies(self, **kwargs):
+        """Get host pair data for a value.
+
+        Reference: https://api.passivetotal.org/index.html#api-Host_Attributes-GetV2HostAttributesCookies
+
+        :param query: Value to enrich
+        :return: Dict of results
+        """
+        return self._get('host-attributes', 'cookies', **kwargs)
 
     def search_trackers_by_type(self, **kwargs):
         """Search trackers based on query value and type.

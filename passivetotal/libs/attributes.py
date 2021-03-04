@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 
 __author__ = 'Brandon Dixon (PassiveTotal)'
@@ -12,7 +11,7 @@ from passivetotal.common import utilities
 
 class AttributeRequest(Client):
 
-    """Client to interface with the account calls from the PassiveTotal API."""
+    """Client to interface with the Host Attribute calls from the PassiveTotal API."""
 
     def __init__(self, *args, **kwargs):
         """Setup the primary client instance."""
@@ -39,11 +38,20 @@ class AttributeRequest(Client):
     def get_host_attribute_pairs(self, **kwargs):
         """Get pairs associated with a particular hostname.
 
-        Reference: https://api.passivetotal.org/api/docs/#api-Host_Attributes-GetV2HostAttributesPairsQueryDirection
+        Reference: https://api.passivetotal.org/api/docs/#api-Host_Attributes-GetV2HostAttributesPairsQuery
 
-        :return: Dict of results with component information
+        :return: Dict of results with hostpairs information
         """
         return self._get('host-attributes', 'pairs', **kwargs)
+    
+    def get_host_attribute_cookies(self, **kwargs):
+        """Get cookies associated with a particular hostname.
+
+        Reference: https://api.passivetotal.org/index.html#api-Host_Attributes-GetV2HostAttributesCookies
+
+        :return: Dict of results with cookies information
+        """
+        return self._get('host-attributes', 'cookies', **kwargs)
 
     def search_trackers(self, **kwargs):
         """Search tracking IDs for associated hosts.

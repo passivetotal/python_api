@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 
 __author__ = 'Brandon Dixon (PassiveTotal)'
@@ -167,9 +166,8 @@ class Client(object):
         :return: response deserialized from JSON
         """
         api_url = self._endpoint(endpoint, action, *url_args)
-        data = json.dumps(data)
         kwargs = {'headers': self.headers, 'params': url_params,
-                  'verify': self.verify, 'data': data,
+                  'verify': self.verify, 'json': data,
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies

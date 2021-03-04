@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 from passivetotal.api import Client
 from passivetotal.response import Response
@@ -13,6 +12,7 @@ from passivetotal.common.const import ACTIONS_EVER_COMPROMISED
 from passivetotal.common.const import ACTIONS_MONITOR
 from passivetotal.common.const import ACTIONS_SINKHOLE
 from passivetotal.common.const import ACTIONS_TAG
+from passivetotal.common.const import ACTIONS_BULK
 from passivetotal.common.const import CLASSIFICATION_VALID_VALUES
 from passivetotal.common.const import ENRICHMENT
 
@@ -75,6 +75,10 @@ class ActionsClient(Client):
     def get_classification_status(self, **kwargs):
         return self._get(ACTIONS, ACTIONS_CLASSIFICATION, **kwargs)
 
+    def get_classification_status_bulk(self, domain_list):
+        query = ','.join(domain_list)
+        return self._get(ACTIONS, ACTIONS_BULK, ACTIONS_CLASSIFICATION, query=query)
+
     def set_classification_status(self, **kwargs):
         if 'classification' not in kwargs:
             raise MISSING_FIELD("Classification field is required.")
@@ -84,9 +88,22 @@ class ActionsClient(Client):
         data = {'classification': kwargs['classification'],
                 'query': kwargs['query']}
         return self._send_data('POST', ACTIONS, ACTIONS_CLASSIFICATION, data)
+    
+    def set_classification_status_bulk(self, classification, domain_list):
+        if classification not in CLASSIFICATION_VALID_VALUES:
+            raise INVALID_VALUE_TYPE("Classification must be one of the following: %s"
+                                     % ', '.join(CLASSIFICATION_VALID_VALUES))
+        if classification == 'non-malicious':
+            classification = 'non_malicious' # workaround for confused API controller
+        data = {'classification': classification,
+                'queries': domain_list} # docs say query but endpoint actually requires 'queries'
+        return self._send_data('POST', ACTIONS, ACTIONS_BULK + '/' + ACTIONS_CLASSIFICATION, data)
 
     def get_tags(self, **kwargs):
         return self._get(ACTIONS, ACTIONS_TAG, **kwargs)
+
+    def search_tags(self, **kwargs):
+        return self._get(ACTIONS, ACTIONS_TAG, 'search', **kwargs)
 
     def add_tags(self, **kwargs):
         if type(kwargs['tags']) == str:

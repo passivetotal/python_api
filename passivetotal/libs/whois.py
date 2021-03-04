@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from passivetotal.common import utilities
 from passivetotal.api import Client
 # exceptions
