@@ -1,6 +1,8 @@
 """PassiveTotal API Interface."""
 
 from passivetotal.api import Client
+from passivetotal.response import Response
+
 
 
 class ServicesRequest(Client):
@@ -21,3 +23,7 @@ class ServicesRequest(Client):
         """
         return self._get('services', '', **kwargs)
 
+
+
+class ServicesResponse(Response):
+    pass

@@ -1,6 +1,7 @@
 """PassiveTotal API Interface."""
 
 from passivetotal.api import Client
+from passivetotal.response import Response
 
 
 class CookiesRequest(Client):
@@ -63,3 +64,5 @@ class CookiesRequest(Client):
         """
         return self._get('cookies', 'name/{}/hosts'.format(cookie_name), **kwargs)
 
+class CookiesResponse(Response):
+    pass

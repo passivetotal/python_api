@@ -1,6 +1,8 @@
 """PassiveTotal API Interface."""
 
 from passivetotal.api import Client
+from passivetotal.response import Response
+
 
 
 class ProjectsRequest(Client):
@@ -18,7 +20,7 @@ class ProjectsRequest(Client):
 
         :param project: Project UUID, optional
         :param owner: filter by owner (email or org id), optional
-        :param creater: filter by creator email, optional
+        :param creator: filter by creator email, optional
         :param organization: filter by organization, optional
         :param visibility: filter by visiblity (public, private, or analyst), optional
         :param featured: filter by featured status (true or false), optional
@@ -121,3 +123,6 @@ class ProjectsRequest(Client):
         return self._send_data('DELETE', 'project', 'tag', data)
 
 
+
+class ProjectsResponse(Response):
+    pass

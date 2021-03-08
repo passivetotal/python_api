@@ -1,6 +1,8 @@
 """PassiveTotal API Interface."""
 
+from passivetotal.common import utilities
 from passivetotal.api import Client
+from passivetotal.response import Response
 
 
 class ArticlesRequest(Client):
@@ -12,19 +14,19 @@ class ArticlesRequest(Client):
         super(ArticlesRequest, self).__init__(*args, **kwargs)
 
     def get_articles(self, **kwargs):
-        """Get all articles for an ip or domain.
+        """Get all articles.
 
         Reference: https://api.passivetotal.org/index.html#api-Articles-GetV2Articles
 
         :param page: Page number for results, optional
-        :param sort: 'lastSeen' or 'firstSeen', optional
+        :param sort: order to sort - defaults to created, optional
         :param order: 'asc' or 'desc', optional
         :return: Dict of results
         """
         return self._get('articles', '', **kwargs)
     
     def get_details(self,article_guid):
-        """Get all articles for an ip or domain.
+        """Get article details.
 
         Reference: https://api.passivetotal.org/index.html#api-Articles-GetV2Articles
 
@@ -42,5 +44,20 @@ class ArticlesRequest(Client):
         :param startDate: Starting date in YYYY-MM-DD format, optional
         :return: Dict of results
         """
-        return self._get('articles', 'indicators')
+        return self._get('articles', 'indicators', **kwargs)
 
+
+
+class ArticlesResponse(Response):
+    pass
+
+
+
+class ArticlesIndicatorResponse(Response):
+    @property
+    def csv(self):
+        fields = ['type', 'value', 'guid', 'source', 'link', 'publishedDate', 'tags']
+        def build_row():
+            for result in self._results.get('indicators', []):
+                yield [ result.get(field,'') for field in fields ]
+        return utilities.to_csv(fields, build_row())

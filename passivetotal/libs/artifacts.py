@@ -1,6 +1,7 @@
 """PassiveTotal API Interface."""
 
 from passivetotal.api import Client
+from passivetotal.response import Response
 
 
 class ArtifactsRequest(Client):
@@ -102,3 +103,5 @@ class ArtifactsRequest(Client):
         }
         return self._send_data('DELETE', 'artifact', '', data)
 
+class ArtifactsResponse(Response):
+    pass
