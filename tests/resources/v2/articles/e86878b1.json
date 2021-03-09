@@ -1,0 +1,24 @@
+{
+    "guid": "e86878b1",
+    "title": "Spam Farm Spotted in the Wild",
+    "summary": "InfoSec Handlers Diary...",
+    "type": "public",
+    "publishedDate": "2021-03-05T08:00:00.000+0000",
+    "link": "https://community.riskiq.com/article/e86878b1",
+    "categories": [],
+    "tags": [
+        "spam",
+        "NDR",
+        "Non-Delivery Receipt"
+    ],
+    "indicators": [
+        {
+            "type": "url",
+            "count": 1,
+            "values": [
+                "https://example.com/evil.php"
+            ],
+            "source": "riskiq"
+        }
+    ]
+}

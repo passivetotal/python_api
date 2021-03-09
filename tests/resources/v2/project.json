@@ -1,0 +1,30 @@
+{
+    "success": true,
+    "results": [
+        {
+            "guid": "4baf9154f3cf",
+            "active": true,
+            "name": "Unit Test Project",
+            "description": "For unit tests",
+            "visibility": "community",
+            "featured": false,
+            "tags": [],
+            "owner": "user@gmail.com",
+            "creator": "user@gmail.com",
+            "organization": "",
+            "collaborators": [],
+            "link": null,
+            "links": {
+                "self": "/v2/project?project=4baf9154f3cf",
+                "artifact": "/v2/artifact?project=4baf9154f3cf",
+                "tag": "/v2/project/tag?project=4baf9154f3cf"
+            },
+            "created": "2020-01-01T06:07:00.123+0000",
+            "success": true,
+            "subscribers": [
+                "user@gmail.com"
+            ],
+            "can_edit": false
+        }
+    ]
+}

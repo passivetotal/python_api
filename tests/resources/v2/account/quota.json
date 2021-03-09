@@ -1,0 +1,102 @@
+{
+    "user": {
+        "owner": "jdoe@passivetotal.org",
+        "organization": null,
+        "guid": null,
+        "profile": {
+            "analysis": null,
+            "workflow": null
+        },
+        "freebies": {
+            "search_web": 0,
+            "search_api": 0
+        },
+        "counts": {
+            "keyword_monitors": 0,
+            "basic_monitors": 0,
+            "projects_private": 0,
+            "projects_public": 0,
+            "search_api": 100,
+            "search_web": 150
+        },
+        "limits": {
+            "basic_monitors": 100,
+            "monitor_results": 1,
+            "projects_private": 1,
+            "monitor_frequency": "weekly",
+            "keyword_monitors": 1,
+            "projects_public": 1000,
+            "create_crawls": 0,
+            "crawl_submissions": 0,
+            "search_api": 1000,
+            "search_web": 1000
+        },
+        "quotaInterval": "monthly",
+        "useMonthlyQuotaInactive": false,
+        "licenseCounts": {
+            "searchApi": 1234,
+            "searchWeb": 123
+        },
+        "licenseLimits": {
+            "searchApi": 2000,
+            "searchWeb": 200
+        },
+        "next_reset": "2021-01-02 00:00:00",
+        "last_reset": "2021-01-01 00:00:00",
+        "username": "jdoe@passivetotal.org",
+        "event_code": null,
+        "event_code_expiration": null
+    },
+    "organization": {
+        "owner": "PassiveTotal",
+        "organization": "PassiveTotal",
+        "guid": "1234567-cccc-bbbb-dddd-abcdabcdabcd",
+        "profile": {
+            "analysis": "free",
+            "workflow": "free"
+        },
+        "freebies": {
+            "search_web": 0,
+            "search_api": 0
+        },
+        "counts": {
+            "keyword_monitors": 3,
+            "basic_monitors": 10,
+            "projects_private": 20,
+            "projects_public": 30,
+            "search_api": 0,
+            "search_web": 140
+        },
+        "limits": {
+            "basic_monitors": 100,
+            "monitor_results": 1,
+            "projects_private": 100,
+            "monitor_frequency": "daily",
+            "keyword_monitors": 100,
+            "projects_public": 100,
+            "create_crawls": 0,
+            "crawl_submissions": 0,
+            "search_api": 100,
+            "search_web": 1000
+        },
+        "quotaInterval": "daily",
+        "useMonthlyQuotaInactive": true,
+        "licenseCounts": {
+            "enterprise": {
+                "searchApi": 0,
+                "searchWeb": 1
+            }
+        },
+        "licenseLimits": {
+            "enterprise": {
+                "searchApi": 1234,
+                "searchWeb": 5678
+            }
+        },
+        "next_reset": "2021-01-02 00:00:00",
+        "last_reset": "2021-01-01 00:00:00",
+        "username": null,
+        "event_code": null,
+        "event_code_expiration": null
+    }
+}

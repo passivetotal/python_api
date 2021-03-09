@@ -1,0 +1,29 @@
+{
+    "success": true,
+    "indicators": [
+        {
+            "value": "9466c865dead7a35e4e1a8f48ef1dffd",
+            "type": "hash_md5",
+            "source": "public",
+            "guid": "04a9234e",
+            "link": "https://community.riskiq.com/article/04a9234e",
+            "publishedDate": "2021-03-05T01:00:00.000+0000",
+            "tags": [
+                "APT123",
+                "Malware"
+            ]
+        },
+        {
+            "value": "48b9e25491e088a351deed9cae0b9e67",
+            "type": "hash_md5",
+            "source": "public",
+            "guid": "04a9234e",
+            "link": "https://community.riskiq.com/article/04a9234e",
+            "publishedDate": "2021-03-05T01:00:00.000+0000",
+            "tags": [
+                "Malware"
+            ]
+        }
+    ],
+    "totalRecords": 2
+}

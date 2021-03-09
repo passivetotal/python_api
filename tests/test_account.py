@@ -24,6 +24,14 @@ class AccountTestCase(unittest.TestCase):
         assert (response.get('firstName', '')) == 'John'
         assert (response.get('lastName', '')) == 'Doe'
         assert (response.get('organization', '')) == 'PassiveTotal'
+    
+    def test_account_quota(self):
+        response = self.client.get_account_quota()
+        assert('user' in response)
+        assert (response['user']['limits']['basic_monitors'] == 100)
+        assert('organization' in response)
+        assert (response['organization']['quotaInterval'] == 'daily')
+        
 
     def test_account_history(self):
         response = self.client.get_account_history()
