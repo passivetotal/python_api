@@ -321,8 +321,7 @@ def main():
                       help="Timeout to use for passive DNS source queries")
     pdns.add_argument('--unique', action="store_true",
                       help="Use this to only get back unique resolutons")
-    pdns.add_argument('--format', choices=['json', 'text', 'csv',
-                                           'stix', 'table', 'xml'],
+    pdns.add_argument('--format', choices=['json', 'csv'],
                       help="Format of the output from the query")
 
     whois = subs.add_parser('whois', help="Query WHOIS data")
@@ -332,8 +331,7 @@ def main():
                        help="Run a specific query against a WHOIS field")
     whois.add_argument('--compact', action="store_true",
                        help="Show WHOIS record in a compact way")
-    whois.add_argument('--format', choices=['json', 'text', 'csv',
-                                            'stix', 'table', 'xml'],
+    whois.add_argument('--format', choices=['json'],
                        help="Format of the output from the query")
 
     ssl = subs.add_parser('ssl', help="Query SSL certificate data")
@@ -345,8 +343,7 @@ def main():
                      help="Perform a plain search or get history")
     ssl.add_argument('--compact', action="store_true",
                      help="Show SSL record in a compact way")
-    ssl.add_argument('--format', choices=['json', 'text', 'csv',
-                                          'stix', 'table', 'xml'],
+    ssl.add_argument('--format', choices=['json', 'csv'],
                      help="Format of the output from the query")
 
     attribute = subs.add_parser('attribute', help="Query host attribute data")
@@ -355,7 +352,7 @@ def main():
     attribute.add_argument('--type', '-t', choices=['tracker', 'component', 'cookie'],
                            help="Query tracker data or component data",
                            required=True)
-    attribute.add_argument('--format', choices=['json', 'csv', 'table', 'xml'],
+    attribute.add_argument('--format', choices=['json', 'csv'],
                            help="Format of the output from the query")
 
     action = subs.add_parser('action', help="Query and input feedback")
@@ -392,8 +389,7 @@ def main():
     osint = subs.add_parser('osint', help="Query OSINT data")
     osint.add_argument('--query', '-q', required=True,
                        help="Query for a domain or IP address")
-    osint.add_argument('--format', choices=['json', 'text', 'csv',
-                                            'stix', 'table', 'xml'],
+    osint.add_argument('--format', choices=['json'],
                        help="Format of the output from the query")
 
     articles = subs.add_parser('articles', help="Query Articles data")
@@ -410,8 +406,7 @@ def main():
     articles.add_argument('--startdate',
                         default=days_back(DEFAULT_ARTICLE_DAYS_BACK),
                         help="Starting date for indicator list in YYYY-MM-DD format, defaults to 7 days ago")
-    articles.add_argument('--format', choices=['json', 'text', 'csv',
-                                          'stix', 'table', 'xml'],
+    articles.add_argument('--format', choices=['json', 'csv'],
                         help="Format of the output from the query")
 
     artifacts = subs.add_parser('artifacts', help="Query Artifacts data")
