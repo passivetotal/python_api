@@ -1,12 +1,11 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 from passivetotal.api import Client
 from passivetotal.response import Response
 from passivetotal.common import utilities
 from passivetotal.common.const import DNS_APPROVED_FIELDS as approved_fields
 
-__author__ = 'Brandon Dixon (PassiveTotal)'
-__version__ = '1.0.0'
+__author__ = 'RiskIQ'
+__version__ = '1.2.0'
 
 
 class DnsRequest(Client):

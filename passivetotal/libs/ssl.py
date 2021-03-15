@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 from passivetotal.common import utilities
 from passivetotal.api import Client
@@ -8,6 +7,7 @@ from passivetotal.common.exceptions import INVALID_FIELD_TYPE
 # const
 from passivetotal.response import Response
 from passivetotal.common.const import SSL_VALID_FIELDS
+
 __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 

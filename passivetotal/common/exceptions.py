@@ -18,3 +18,7 @@ class INVALID_FIELD_TYPE(Exception):
 class MISSING_FIELD(Exception):
     """Generic exception for missing fields."""
     pass
+
+class INVALID_URL(Exception):
+    """Generic exception for invalid request URLs."""
+    pass

@@ -35,6 +35,7 @@ ACTIONS_EVER_COMPROMISED = 'ever-compromised'
 ACTIONS_MONITOR = 'monitor'
 ACTIONS_SINKHOLE = 'sinkhole'
 ACTIONS_TAG = 'tags'
+ACTIONS_BULK = 'bulk'
 ENRICHMENT = 'enrichment'
 
 TRACKER_VALID_FIELDS = ["51laId", "AboutmeId", "AddThisPubId", "AddThisUsername", "AuthorstreamId", "BitbucketcomId", "BitlyId", "CheezburgerId", "ClickyId", "ColourloversId", "DiigoId", "DispusId", "EngadgetId", "EtsyId", "FacebookId", "FavstarId", "FfffoundId", "FlavorsId", "FlickrId", "FoodspottingId", "FreesoundId", "GitHubId", "GithubId", "GoogleAnalyticsTrackingId", "GooglePlusId", "GoogleTagManagerId", "HubpagesId", "ImgurId", "InstagramId", "KloutId", "LanyrdId", "LastfmId", "LibrarythingId", "LinkedInId", "LinkedinId", "MarketinglandcomId", "MixpanelId", "MuckrackId", "MyanimelistId", "MyfitnesspalId", "NewRelicId", "OptimizelyId", "PandoraId", "PicasaId", "PinkbikeId", "PinterestId", "PlancastId", "PlurkId", "PornhubId", "RaptorId", "ReadabilityId", "RedditId", "RedtubeId", "SlideshareId", "SmugmugId", "SmuleId", "SoundcloudId", "SoupId", "SpeakerdeckId", "SporcleId", "StackoverflowId", "SteamcommunityId", "StumbleuponId", "ThesixtyoneId", "TribeId", "TripitId", "TumblrId", "TwitpicId", "TwitterId", "UntappdId", "UstreamId", "WattpadId", "WefollowId", "WhosAmungUsId", "WordPressId", "Wordpress", "SupportId", "XangaId", "Xfire", "SocialId", "XhamsterId", "XvideosId", "YandexMetricaCounterId", "YouTubeChannel", "YouTubeId", "YoutubeId"]

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """PassiveTotal API Interface."""
 
 __author__ = 'Brandon Dixon (PassiveTotal)'

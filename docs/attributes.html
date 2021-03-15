@@ -1,60 +1,73 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Attribute Results &mdash; PassiveTotal 2.0.0 documentation</title>
+  <title>Attribute Results &mdash; PassiveTotal 2.1.0 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
 
   
   
 
   
+  
 
   
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="PassiveTotal 2.0.0 documentation" href="index.html"/>
-        <link rel="prev" title="SSL Results" href="ssl.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="SSL Results" href="ssl.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-        
-          <a href="index.html" class="icon icon-home"> PassiveTotal
-        
+          
+            <a href="index.html" class="icon icon-home"> PassiveTotal
+          
 
-        
-        </a>
+          
+          </a>
 
-        
+          
+            
+            
+              <div class="version">
+                2.1.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -63,128 +76,140 @@
   </form>
 </div>
 
-        
-      </div>
+          
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-          
+            
+            
+              
+            
+            
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#quick-start">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#library-organization">Library Organization</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="outputs.html">Output Formats</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="outputs.html#text">Text</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputs.html#table">Table</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputs.html#csv">CSV</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputs.html#stix">STIX</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputs.html#json">JSON</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputs.html#xml">XML</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="developers.html">Writing Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="developers.html#building-a-simple-tool">Building a Simple Tool</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Wrappers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-passivetotal.api">Base Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#dns-request">DNS Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#whois-request">WHOIS Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#ssl-request">SSL Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#actions-request">Actions Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#attribute-request">Attribute Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#enrichment-request">Enrichment Request</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="dns.html">DNS Results</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dns.html#dnsresponse">DnsResponse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dns.html#dnsrecord">DnsRecord</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dns.html#dnsuniqueresponse">DnsUniqueResponse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dns.html#uniquednsrecord">UniqueDnsRecord</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="whois.html">WHOIS Results</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="whois.html#whoisrequest">WhoisRequest</a></li>
-<li class="toctree-l2"><a class="reference internal" href="whois.html#whoisresponse">WhoisResponse</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL Results</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ssl.html#sslrequest">SslRequest</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssl.html#sslhistoryresponse">SslHistoryResponse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssl.html#historyrecord">HistoryRecord</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Attribute Results</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Output Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Writing Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Wrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dns.html">DNS Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whois.html">WHOIS Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssl.html">SSL Results</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Attribute Results</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#attributeresponse">AttributeResponse</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#geneticattributerecord">GeneticAttributeRecord</a></li>
 </ul>
 </li>
 </ul>
 
+            
           
+        </div>
         
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">PassiveTotal</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PassiveTotal</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Attribute Results</li>
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Attribute Results</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/attributes.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/attributes.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="attribute-results">
 <h1>Attribute Results<a class="headerlink" href="#attribute-results" title="Permalink to this headline">¶</a></h1>
 <p>Attributes bring the power of page content and other details gleaned from Internet-scanning into your hands. Over time, as more datasets are released, attributes will be one of the primary mechanisms for querying or interacting with that data.</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">passivetotal.libs.attributes</span> <span class="kn">import</span> <span class="n">AttributeRequest</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">passivetotal.libs.attributes</span> <span class="kn">import</span> <span class="n">AttributeRequest</span>
 <span class="kn">from</span> <span class="nn">passivetotal.libs.attributes</span> <span class="kn">import</span> <span class="n">AttributeResponse</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">AttributeRequest</span><span class="o">.</span><span class="n">from_config</span><span class="p">()</span>
 <span class="n">raw_results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_host_attribute_trackers</span><span class="p">(</span>
-    <span class="n">query</span><span class="o">=</span><span class="s">&quot;www.passivetotal.org&quot;</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;www.passivetotal.org&quot;</span>
 <span class="p">)</span>
 
 <span class="n">loaded</span> <span class="o">=</span> <span class="n">AttributeResponse</span><span class="p">(</span><span class="n">raw_results</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">loaded</span><span class="o">.</span><span class="n">table</span>
+<span class="nb">print</span> <span class="n">loaded</span><span class="o">.</span><span class="n">table</span>
 </pre></div>
 </td></tr></table></div>
 <div class="section" id="attributeresponse">
 <h2>AttributeResponse<a class="headerlink" href="#attributeresponse" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="passivetotal.libs.attributes.AttributeResponse">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">passivetotal.libs.attributes.</span></code><code class="sig-name descname"><span class="pre">AttributeResponse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#passivetotal.libs.attributes.AttributeResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">passivetotal.response.Response</span></code></p>
+<dl class="py method">
+<dt id="passivetotal.libs.attributes.AttributeResponse.csv">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">csv</span></code><a class="headerlink" href="#passivetotal.libs.attributes.AttributeResponse.csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output data as CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>String of formatted data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="geneticattributerecord">
 <h2>GeneticAttributeRecord<a class="headerlink" href="#geneticattributerecord" title="Permalink to this headline">¶</a></h2>
@@ -192,28 +217,32 @@
 </div>
 
 
+           </div>
+           
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="ssl.html" class="btn btn-neutral" title="SSL Results" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="ssl.html" class="btn btn-neutral float-left" title="SSL Results" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Brandon Dixon.
+        &#169; Copyright 2021, RiskIQ.
+
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -222,36 +251,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2.0.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

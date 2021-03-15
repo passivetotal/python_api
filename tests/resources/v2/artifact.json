@@ -1,0 +1,51 @@
+{
+    "artifacts": [
+        {
+            "guid": "3bb5-3ab01cd",
+            "monitorable": true,
+            "organization": "passivetotal",
+            "query": "127.0.0.1",
+            "creator": "@passivetotal.org",
+            "created": "2016-11-16T02:34:32.990000",
+            "enterprise": false,
+            "type": "ip",
+            "project": "abff1c8acd1dc35",
+            "monitor": true,
+            "links": {
+                "tag": "/v2/artifact/tag?artifact=3bb5-3ab01cd",
+                "project": "/v2/project?project=abff1c8acd1dc35",
+                "self": "/v2/artifact?artifact=3bb5-3ab01cd"
+            },
+            "owner": "passivetotal",
+            "tags": [],
+            "tag_meta": {},
+            "system_tags": [],
+            "user_tags": []
+        },
+        {
+            "guid": "765422c62fa28c",
+            "monitorable": true,
+            "organization": "passivetotal",
+            "query": "127.0.0.2",
+            "creator": "@passivetotal.org",
+            "created": "2016-11-16T02:34:33.053000",
+            "enterprise": false,
+            "type": "ip",
+            "project": "abff1c8acd1dc35",
+            "monitor": true,
+            "links": {
+                "tag": "/v2/artifact/tag?artifact=765422c62fa28c",
+                "project": "/v2/project?project=abff1c8acd1dc35",
+                "self": "/v2/artifact?artifact=765422c62fa28c"
+            },
+            "owner": "passivetotal",
+            "tags": [],
+            "tag_meta": {},
+            "system_tags": [
+                "known_compromise"
+            ],
+            "user_tags": []
+        }
+    ],
+    "success": true
+}
