@@ -10,3 +10,4 @@ setuptools-*
 venv/
 libpassivetotal.egg-info/
 .pypirc
+pip-wheel-metadata
