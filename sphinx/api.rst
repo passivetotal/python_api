@@ -1,11 +1,23 @@
-API Wrappers
-============
+Request Wrappers
+================
 
-Base Client
------------
-.. automodule:: passivetotal.api
-    :members:
-    :private-members:
+These low-level wrappers provide direct access to specific PassiveTotal API
+endpoints. To determine which wrapper to use, review the
+`API documentation <https://api.passivetotal.org/index.html>`_ 
+for a specific dataset, then select a wrapper with a similar name.
+
+Call the `from_config()` class method to obtain an instance of a request wrapper 
+pre-configured with your API credentials (as set by the pt-config CLI command):
+
+.. code-block:: python
+    :linenos:
+
+    from passivetotal import WhoisRequest
+    whois_req = WhoisRequest.from_config()
+
+Each wrapper class in this module can be directly imported from the `passivetotal`
+module for convenience.
+
 
 Account Client
 --------------

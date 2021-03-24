@@ -1,3 +1,5 @@
+"""Analyzer package for the RiskIQ PassiveTotal API."""
+
 from collections import namedtuple
 from datetime import datetime, timezone, timedelta
 from passivetotal import *
@@ -18,8 +20,8 @@ config = {
 def init(**kwargs):
     """Instantiate API clients.
 
-    Arguments are passed to the client object constructors unless
-    none are provided, in which case the class method from_config()
+    Arguments are passed to the request wrapper constructors; if
+    none are provided, the class method from_config()
     is called to instantiate an API client from config files.
     """
     api_classes = [
@@ -55,6 +57,7 @@ def get_api(name):
         raise Exception('Unknown API, must be one of {}'.format(','.join(api_clients.keys())))
 
 def get_config(key=None):
+    """Get the active configuration for the analyzer module."""
     if not config['start_date'] or not config['end_date']:
         set_date_range()
     if key:
@@ -62,6 +65,12 @@ def get_config(key=None):
     return config
 
 def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, end=None):
+    """Set a range of dates for all date-bounded API queries.
+    
+    :param days_back: Number of days back to query (optional, defaults to DEFAULT_DAYS_BACK).
+    :param start: Starting date in YYYY-MM-DD 00:00:00 format; calculated automatically when days_back is set.
+    :param end: Ending date in YYYY-MM-DD 00:00:00 format; calculated automatically when days_back is set.
+    """
     if start and end:
         config['start_date'] = start
         config['end_date'] = end
@@ -72,12 +81,15 @@ def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, end=None):
         config['end_date'] = now.date().isoformat() + ' 00:00:00'
 
 def set_pdns_timeout(timeout):
+    """Set a timeout on pDNS queries to third-party sources."""
     config['pdns_timeout'] = timeout
 
 def set_pdns_sources(sources):
+    """Set a list of third-sources for pDNS queries."""
     config['pdns_sources'] = sources
 
 def set_pprint_params(**kwargs):
+    """Configure options for the Python prettyprint module."""
     config['pprint'] = kwargs
 
 from passivetotal.analyzer.hostname import Hostname

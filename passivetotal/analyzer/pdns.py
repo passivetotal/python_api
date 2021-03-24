@@ -1,10 +1,13 @@
 from datetime import datetime
 from passivetotal.analyzer import get_config
-from passivetotal.analyzer._common import RecordList, Record
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
 
 
 
 class PdnsResolutions(RecordList):
+
+    """Historical passive DNS resolution records."""
+
     def __init__(self, api_response = None):
         super().__init__(api_response)
         if api_response:
@@ -30,28 +33,50 @@ class PdnsResolutions(RecordList):
     
     @property
     def newest(self):
+        """Most recently seen pDNS record.
+        
+        :rtype: :class:`PdnsRecord`"""
         return self.sorted_by('lastseen', True)[0]
     
     @property
     def oldest(self):
+        """Oldest pDNS record (earliest firstseen date).
+        
+        :rtype: :class:`PdnsRecord`
+        """
         return self.sorted_by('firstseen')[0]
     
     @property
     def only_a_records(self):
+        """Filter recordtype='A'.
+        
+        :rtype: :class:`PdnsResolutions`
+        """
         return self.filter(recordtype='A')
     
     @property
     def only_ips(self):
+        """Filter resolvetype='ip'.
+        
+        :rtype: :class:`PdnsResolutions`
+        """
         return self.filter(resolvetype='ip')
     
     @property
     def only_hostnames(self):
+        """Filter resolvetype='domain'.
+        
+        :rtype: :class:`PdnsResolutions`
+        """
         return self.filter(resolvetype='domain')
     
 
 
 
-class PdnsRecord(Record):
+class PdnsRecord(Record, FirstLastSeen):
+
+    """Individual pDNS record returned by the API."""
+
     _instances = {}
 
     def __new__(cls, record):
@@ -76,70 +101,48 @@ class PdnsRecord(Record):
     
     def __repr__(self):
         return "<PdnsRecord '{0.value}' : '{0.resolve}'>".format(self)
-
-    @property
-    def firstseen(self):
-        if not self._firstseen:
-            return None
-        return datetime.fromisoformat(self._firstseen)
-    
-    @property
-    def firstseen_date(self):
-        return self.firstseen.date()
-    
-    @property
-    def firstseen_raw(self):
-        return self._firstseen
-    
-    @property
-    def lastseen(self):
-        if not self._lastseen:
-            return None
-        return datetime.fromisoformat(self._lastseen)
-    
-    @property
-    def lastseen_date(self):
-        return self.lastseen.date()
-    
-    @property
-    def lastseen_raw(self):
-        return self._lastseen
-    
-    @property
-    def duration(self):
-        if not self._firstseen or not self._lastseen:
-            return None
-        interval = self.lastseen - self.firstseen
-        return interval.days
     
     @property
     def sources(self):
+        """Sources of API data."""
         return self._sources
     
     @property
     def value(self):
+        """Query value used in pDNS record search."""
         return self._value
     
     @property
     def collected(self):
+        """Date & time the record was collected.
+        
+        :rtype: datetime
+        """
         if not self._collected:
             return None
         return datetime.fromisoformat(self._collected)
     
     @property
     def recordtype(self):
+        """DNS record type (A, CNAME, NS, MX, etc)."""
         return self._recordtype
     
     @property
     def resolve(self):
+        """Resolve value of the pDNS record."""
         return self._resolve
     
     @property
     def resolvetype(self):
+        """Type of the resolve value (hostname, ip, etc)."""
         return self._resolvetype
     
     @property
     def ip(self):
+        """:class:`passivetotal.analyzer.IPAddress` the record resolves to.
+
+        Will return None if the resolvetype is not 'ip'.
+        """
         from passivetotal.analyzer import IPAddress
         if self._resolvetype != 'ip':
             return None
@@ -147,6 +150,10 @@ class PdnsRecord(Record):
     
     @property
     def hostname(self):
+        """:class:`passivetotal.analyzer.Hostname` the record resolves to.
+
+        Will return None if the resolvetype is not 'domain'.
+        """
         from passivetotal.analyzer import Hostname
         if self._resolvetype != 'domain':
             return None

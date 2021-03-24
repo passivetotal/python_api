@@ -7,6 +7,8 @@ from passivetotal.analyzer import get_api, get_config
 
 class Certificates(RecordList):
     
+    """List of historical SSL certificates."""
+
     def _get_shallow_copy_fields(self):
         return []
 
@@ -20,23 +22,37 @@ class Certificates(RecordList):
     
     @property
     def newest(self):
+        """Most recently seen :class:`CertificateRecord`."""
         return self.sorted_by('lastseen', True)[0]
     
     @property
     def oldest(self):
+        """Earliest seen :class:`CertificateRecord`."""
         return self.sorted_by('firstseen')[0]
     
     @property
     def expired(self):
+        """Filtered list of :class:`Certificates` that have expired."""
         return self.filter(expired=True)
     
     @property
     def not_expired(self):
+        """Filtered list of :class:`Certificates' that have not expired."""
         return self.filter(expired=False)
 
 
 
 class CertificateField:
+
+    """A field on an SSL certificate. 
+
+    Print or cast as string to access the value directly.
+
+    In addition to a simple key/value mapping, this class also provides a
+    `certificates` property that searches the API for other SSL certificates
+    that match the key/value pair of the instance.
+    """
+
     _instances = {}
 
     def __new__(cls, name, value):
@@ -67,7 +83,7 @@ class CertificateField:
         return "CertificateField('{0.name}','{0.value}')".format(self)
     
     def _api_search(self):
-        print('api search')
+        """Use the 'SSL' request wrapper to perform an SSL certificate search by field."""
         if type(self._value) == list:
             raise ValueError('Cannot search a list')
         response = get_api('SSL').search_ssl_certificate_by_field(query=self._value, field=self._name)
@@ -76,16 +92,22 @@ class CertificateField:
     
     @property
     def name(self):
+        """Name of the field."""
         return self._name
     
     @property
     def value(self):
+        """Value of the field.
+
+        May return a list if the name is 'subjectAlternativeName'.
+        """
         if type(self._value) == list and self._name == 'subjectAlternativeNames':
             return [CertificateField('subjectAlternativeName', altname) for altname in self._value ]
         return self._value
     
     @property
     def certificates(self):
+        """List of :class:`Certificates` that match the key/value of this field."""
         if self._certificates==None:
             self._api_search()
         return self._certificates
@@ -93,6 +115,12 @@ class CertificateField:
 
 
 class CertificateRecord(Record, FirstLastSeen):
+
+    """SSL Certificate record.
+    
+    This base class is suited for API responses with complete certificate details.
+    """
+
     _instances = {}
     _fields = ['issuerCountry','subjectCommonName','subjectOrganizationName','subjectGivenName','subjectSurname',
                'fingerprint','issuerStateOrProvinceName','issuerCommonName','subjectLocalityName',
@@ -129,166 +157,318 @@ class CertificateRecord(Record, FirstLastSeen):
     
     @property
     def as_dict(self):
+        """All SSL fields as a mapping with string values."""
         return { field: getattr(self, field).value for field in self.__class__._fields }
     
     @property
     def pretty(self):
+        """Pretty-print formatted view of all SSL fields."""
         config = get_config('pprint')
         return pprint.pformat(self.as_dict, **config)
 
     @property
     def hash(self):
+        """Certificate hash value."""
         return self._sha1
     
     @property
     def sha1(self):
+        """Certificate hash value (alias for `hash`)."""
         return self.hash
 
     @property
     def issuerCountry(self):
+        """Certificate issuer country.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerCountry')
     
     @property
     def issuerDate(self):
+        """Certificate issue date field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerDate')
     
     @property
     def date_issued(self):
+        """Date & time the certificate was issued.
+        
+        :rtype: datetime
+        """
         return datetime.strptime(self.issuerDate.value, '%b %d %H:%M:%S %Y %Z')
     
     @property
     def days_valid(self):
+        """Number of days the certificate is valid.
+
+        Returns the timedelta between date_expires and date_issued.
+        :rtype: int
+        """
         interval = self.date_expires - self.date_issued
         return interval.days
     
     @property
     def subjectCommonName(self):
+        """Certificate subject common name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectCommonName')
     
     @property
     def subjectSurname(self):
+        """Certificate subject surname field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectSurname')
     
     @property
     def subjectOrganizationUnitName(self):
+        """Certificate subject organizational unit name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectOrganizationUnitName')
     
     @property
     def subjectGivenName(self):
+        """Certificate subject given name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectGivenName')
 
     @property
     def fingerprint(self):
+        """Certificate fingerprint field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('fingerprint')
     
     @property
     def issuerStateOrProvinceName(self):
+        """Certificate issuer state or province name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerStateOrProvinceName')
     
     @property
     def issuerCommonName(self):
+        """Certificate issuer common name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerCommonName')
     
     @property
     def issuerGivenName(self):
+        """Certificate issuer given name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerGivenName')
     
     @property
     def subjectLocalityName(self):
+        """Certificate subject locality name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectLocalityName')
     
     @property
     def subjectOrganizationName(self):
+        """Certificate subject organization name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectOrganizationName')
     
     @property
     def issueDate(self):
+        """Certificate issue date field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issueDate')
     
     @property
     def subjectEmailAddress(self):
+        """Certificate subject email address field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectEmailAddress')
     
     @property
     def subjectProvince(self):
+        """Certificate subject province field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectProvince')
     
     @property
     def subjectStateOrProvinceName(self):
+        """Certificate subject state or province name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectStateOrProvinceName')
     
     @property
     def issuerEmailAddress(self):
+        """Certificate issuer email address field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerEmailAddress')
     
     @property
     def subjectSerialNumber(self):
+        """Certificate subject serial number field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectSerialNumber')
     
     @property
     def issuerProvince(self):
+        """Certificate issuer province field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerProvince')
     
     @property
     def issuerOrganizationUnitName(self):
+        """Certificate issuer orgnaizational unit name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerOrganizationUnitName')
     
     @property
     def serialNumber(self):
+        """Certificate issuer serial number field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('serialNumber')
     
     @property
     def issuerSurname(self):
+        """Certificate issuer surname field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerSurname')
     
     @property
     def issuerStreetAddress(self):
+        """Certificate issuer street address field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerStreetAddress')
     
     @property
     def issuerLocalityName(self):
+        """Certificate issuer locality name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerLocalityName')
     
     @property
     def expirationDate(self):
+        """Certificate expiration date field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('expirationDate')
     
     @property
     def date_expires(self):
+        """Date & time when the certificate expires.
+        
+        :rtype: datetime
+        """
         return datetime.strptime(self.expirationDate.value, '%b %d %H:%M:%S %Y %Z')
     
     @property
     def expired(self):
+        """Whether the certificate has expired (if the expiration date is in the past).
+        
+        :rtype: bool
+        """
         return datetime.utcnow() > self.date_expires
     
     @property
     def issuerOrganizationName(self):
+        """Certificate issuer organization name field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerOrganizationName')
     
     @property
     def subjectStreetAddress(self):
+        """Certificate subject street address field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectStreetAddress')
     
     @property
     def sslVersion(self):
+        """Certificate ssl version field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('sslVersion')
     
     @property
     def issuerSerialNumber(self):
+        """Certificate serial number field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('issuerSerialNumber')
     
     @property
     def subjectCountry(self):
+        """Certificate subject country field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectCountry')
     
     @property
     def subjectAlternativeNames(self):
+        """Certificate subject alternative names field.
+        
+        :rtype: CertificateField
+        """
         return self._get_field('subjectAlternativeNames')
         
 
 
 
 class CertHistoryRecord(CertificateRecord):
+
+    """SSL Certificate historical record. 
+
+    Suited for API responses that may not provide SSL certificate details. Provides
+    a mechanism to populate missing data with a call to the SSL certificate detail
+    API upon first request of a missing field.
+    """
 
     def __init__(self, record):
         self._firstseen = record.get('firstSeen')
@@ -307,18 +487,25 @@ class CertHistoryRecord(CertificateRecord):
         return "<CertHistoryRecord '{0.hash}'>".format(self)
     
     def _api_get_details(self):
+        """Query the SSL API for certificate details."""
         response = get_api('SSL').get_ssl_certificate_details(query=self._sha1)
         self._cert_details = response['results'][0] # API oddly returns an array
         self._has_details = True
         return self._cert_details
     
     def _ensure_details(self):
+        """Ensure the certificate has all details populated.
+
+        Triggers an API call if details are missing.
+        """
         if self._has_details:
             return
         self._api_get_details()
 
     @property
     def ips(self):
+        """Provides list of :class:`passivetotal.analyzer.IPAddress` instances
+        representing IP addresses associated with this SSL certificate."""
         from passivetotal.analyzer import IPAddress
         for ip in self._ips:
             yield IPAddress(ip)
