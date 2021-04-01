@@ -117,7 +117,7 @@ class HostnameSummary(Summary):
     @property
     def as_dict(self):
         """All data counts as a mapping."""
-        counts = super().all
+        counts = super().as_dict
         counts.update({
             field: getattr(self, field) for field in ['trackers','components','hostpairs','cookies']
         })

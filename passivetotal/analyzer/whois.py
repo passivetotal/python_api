@@ -24,7 +24,7 @@ class DomainWhois:
         return self
     
     def __str__(self):
-        return 'registrant: "{0.org} | {0.registrant_name} | {0.registrant_email}"'
+        return 'registrant: "{0.organization} | {0.registrant_name} | {0.registrant_email}"'.format(self)
 
     def __repr__(self):
         return "DomainWhois('{}')".format(self.domain)
@@ -48,9 +48,11 @@ class DomainWhois:
             return datetime.fromisoformat(self._rawrecord[field])
         except ValueError:
             fixed = datestr[:-2] + ':00'
+        try:
             return datetime.fromisoformat(fixed)
-        finally:
+        except ValueError:
             return None
+        return None
     
     @property
     def domain(self):
