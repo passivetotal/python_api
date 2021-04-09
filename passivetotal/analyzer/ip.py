@@ -6,10 +6,14 @@ from passivetotal.analyzer.pdns import PdnsResolutions
 from passivetotal.analyzer.services import Services
 from passivetotal.analyzer.ssl import Certificates
 from passivetotal.analyzer.summary import IPSummary
+from passivetotal.analyzer.hostpairs import HasHostpairs
+from passivetotal.analyzer.cookies import HasCookies
+from passivetotal.analyzer.trackers import HasTrackers
+from passivetotal.analyzer.components import HasComponents
 
 
 
-class IPAddress(object):
+class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers):
 
     """Represents an IPv4 address such as 8.8.8.8
     
@@ -33,6 +37,12 @@ class IPAddress(object):
             self._ssl_history = None
             self._summary = None
             self._whois = None
+            self._components = None
+            self._cookies = None
+            self._trackers = None
+            self._pairs = {}
+            self._pairs['parents'] = None
+            self._pairs['children'] = None
         return self
 
     def __str__(self):
@@ -41,6 +51,14 @@ class IPAddress(object):
     def __repr__(self):
         return "IPAddress('{}')".format(self.ip)
     
+    def get_host_identifier(self):
+        """Alias for the IP address as a string.
+        
+        Used for API queries that accept either a hostname or an IP
+        address as the query value.
+        """
+        return self._ip
+
     def _api_get_resolutions(self, unique=False, start_date=None, end_date=None, timeout=None, sources=None):
         """Query the pDNS API for resolution history."""
         meth = get_api('DNS').get_unique_resolutions if unique else get_api('DNS').get_passive_dns

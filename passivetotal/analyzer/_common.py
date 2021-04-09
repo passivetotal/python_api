@@ -169,3 +169,29 @@ class FirstLastSeen:
             return None
         interval = self.lastseen - self.firstseen
         return interval.days
+
+
+
+class PagedRecordList:
+
+    """Record list that may return more than one page of data.
+
+    Current implementation only provides a mechanism to determine if
+    more records are available. Actual pagination is not implemented yet.
+    
+    Expects a _totalrecords attribute on the object
+    """
+
+    @property
+    def totalrecords(self):
+        """Total number of available records as reported by the API."""
+        return self._totalrecords
+    
+    @property
+    def has_more_records(self):
+        """Whether more records are available.
+
+        :rtype: bool
+        """
+        return len(self) < self._totalrecords
+

@@ -3,14 +3,18 @@
 import socket
 from passivetotal.analyzer import get_api, get_config
 from passivetotal.analyzer.pdns import PdnsResolutions
-from passivetotal.analyzer.whois import DomainWhois
 from passivetotal.analyzer.summary import HostnameSummary
+from passivetotal.analyzer.whois import DomainWhois
 from passivetotal.analyzer.ssl import CertificateField
 from passivetotal.analyzer.ip import IPAddress
+from passivetotal.analyzer.hostpairs import HasHostpairs
+from passivetotal.analyzer.cookies import HasCookies
+from passivetotal.analyzer.trackers import HasTrackers
+from passivetotal.analyzer.components import HasComponents
 
 
 
-class Hostname(object):
+class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs):
 
     """Represents a hostname such as api.passivetotal.org.
     
@@ -34,8 +38,12 @@ class Hostname(object):
             self._whois = None
             self._resolutions = None
             self._summary = None
-            self._cookie_addresses = None
-            self._cookie_hosts = None
+            self._components = None
+            self._cookies = None
+            self._trackers = None
+            self._pairs = {}
+            self._pairs['parents'] = None
+            self._pairs['children'] = None
         return self
     
     def __str__(self):
@@ -44,6 +52,14 @@ class Hostname(object):
     def __repr__(self):
         return "Hostname('{}')".format(self.hostname)
     
+    def get_host_identifier(self):
+        """Alias for the hostname as a string.
+        
+        Used for API queries that accept either a hostname or an IP
+        address as the query value.
+        """
+        return self._hostname
+
     def _api_get_resolutions(self, unique=False, start_date=None, end_date=None, timeout=None, sources=None):
         """Query the pDNS API for resolution history."""
         meth = get_api('DNS').get_unique_resolutions if unique else get_api('DNS').get_passive_dns
@@ -62,6 +78,7 @@ class Hostname(object):
         response = get_api('Cards').get_summary(query=self._hostname)
         self._summary = HostnameSummary(response)
         return self._summary
+    
     
     def _api_get_whois(self, compact=False):
         """Query the Whois API for complete whois details."""
@@ -123,7 +140,7 @@ class Hostname(object):
         :rtype: :class:`passivetotal.analyzer.ssl.Certificates`
         """
         return CertificateField('subjectAlternativeName', self._hostname).certificates
-        
+   
     @property
     def summary(self):
         """Summary of PassiveTotal data available for this hostname.

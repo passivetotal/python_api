@@ -16,6 +16,7 @@ class Services(RecordList):
         return ['firstseen','lastseen','duration','port','count','status','protocol']
     
     def parse(self, api_response):
+        """Parse an API response."""
         self._totalrecords = api_response.get('totalRecords')
         self._records = []
         for result in api_response.get('results', []):
@@ -48,7 +49,7 @@ class Services(RecordList):
 
         :rtype: Services
         """
-        return self.fitler(status='closed')
+        return self.filter(status='closed')
     
 
 
@@ -80,7 +81,8 @@ class ServiceRecord(Record, FirstLastSeen):
         return {
             field: getattr(self, field) for field in [
                 'port','count','status','protocol','banners',
-                'current_services','recent_services'
+                'current_services','recent_services', 'firstseen',
+                'lastseen'
             ]
         }
     

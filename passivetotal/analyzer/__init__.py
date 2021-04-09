@@ -14,6 +14,8 @@ config = {
     'pdns_sources': None,
     'is_ready': False,
     'pprint': { 'indent': 2 },
+    'datesort': None,
+    'dateorder': None,
 }
 
 
@@ -91,6 +93,44 @@ def set_pdns_sources(sources):
 def set_pprint_params(**kwargs):
     """Configure options for the Python prettyprint module."""
     config['pprint'] = kwargs
+
+def set_datesort_lastseen():
+    """Set the sort param for date-aware searches to 'lastSeen'.
+
+    Especially relevant when searching crawl data such as components,
+    cookies, hostpairs, and trackers.
+    """
+    config['datesort'] = 'lastSeen'
+
+def set_datesort_firstseen():
+    """Set the sort param for date-aware searches to 'firstSeen'.
+
+    Especially relevant when searching crawl data such as components,
+    cookies, hostpairs, and trackers.
+    """
+    config['datesort'] = 'firstSeen'
+
+def clear_datesort():
+    """Unset the sort and order param for date-aware searches to restore default behavior."""
+    config['datesort'] = None
+    config['dateorder'] = None
+
+def set_datesort_ascending():
+    """Set the order param for date-aware searches to 'asc'.
+
+    Especially relevant when searching crawl data such as components,
+    cookies, hostpairs, and trackers.
+    """
+    config['dateorder'] = 'asc'
+
+def set_dateorder_descending():
+    """Set the order param for date-aware searches to 'firstSeen'.
+
+    Especially relevant when searching crawl data such as components,
+    cookies, hostpairs, and trackers.
+    """
+    config['dateorder'] = 'desc'
+
 
 from passivetotal.analyzer.hostname import Hostname
 from passivetotal.analyzer.ip import IPAddress
