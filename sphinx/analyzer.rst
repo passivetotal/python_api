@@ -52,6 +52,7 @@ Hostname Analysis
 
 .. autoclass:: passivetotal.analyzer.Hostname
    :members:
+   :inherited-members:
 
 
 IP Analysis
@@ -71,6 +72,7 @@ IP Analysis
 
 .. autoclass:: passivetotal.analyzer.IPAddress
    :members:
+   :inherited-members:
 
 
 
@@ -158,3 +160,47 @@ Services Record Lists
 .. autoclass:: passivetotal.analyzer.services.ServiceRecord
    :members:
    :inherited-members:
+
+Hostpairs Record Lists
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: passivetotal.analyzer.hostpairs.HostpairHistory
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.hostpairs.HostpairRecord
+    :members:
+    :inherited-members:
+
+Web Component Record Lists
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: passivetotal.analyzer.components.ComponentHistory
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.components.ComponentRecord
+    :members:
+    :inherited-members:
+
+Cookies Record Lists
+^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: passivetotal.analyzer.cookies.CookieHistory
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.cookies.CookieRecord
+    :members:
+    :inherited-members:
+
+Trackers Record Lists
+^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: passivetotal.analyzer.trackers.TrackerHistory
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.trackers.TrackerRecord
+    :members:
+    :inherited-members:

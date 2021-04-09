@@ -19,12 +19,7 @@ Contents:
 
    getting-started
    analyzer
-   developers
-   api
-   dns
-   whois
-   ssl
-   attributes
+   wrappers
 
 
 Indices and tables
