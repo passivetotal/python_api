@@ -52,7 +52,7 @@ To see other configuration options, including options for an HTTP proxy, enter:
 
 Choose an Interface
 -------------------
-This library enables interaction with the Python API through several distinct
+This library enables interaction with the PassiveTotal API through several distinct
 interfaces. Choose the one that best fits your use case.
 
 Object Analyzer
@@ -111,3 +111,36 @@ the credential management and config file mechanism described above.
 Wrappers should exist for every PassiveTotal API endpoint, but availability may
 lag behind when new features are implemented. If you cannot locate a wrapper for
 your preferred endpoint, use an instance of the ``passivetotal.GenericRequest`` class.
+
+
+
+Advanced Setup 
+--------------
+
+API Client Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^
+It is possible to configure the API client with explicit API credentials, 
+proxy servers, https validation, and other parameters directly, without
+using the command line scripts or config files.
+
+Parameters passed to the ``analyzer.init()`` method or any of the
+:doc:`wrappers` constructors are provided directly to the 
+base API client object. For example:
+
+.. code-block:: python
+
+   from passivetotal import analyzer
+   analyzer.init(username='user@host.com',api_key='aaa-bbb-ccc-ddd')
+
+or
+
+.. code-block:: python
+
+   from passivetotal import AccountClient
+   client = AccountClient(username='user@host.com',api_key='aaa-bbb-ccc-ddd')
+
+
+Supported parameters include:
+
+.. autofunction:: passivetotal.api.Client.__init__
+
