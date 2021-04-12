@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from collections import namedtuple
-from passivetotal.analyzer import get_config
+from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer._common import RecordList, Record
 
 
 
@@ -8,7 +9,105 @@ WhoisContact = namedtuple('WhoisContact',['organization','name','email','telepho
 
 
 
-class DomainWhois:
+class WhoisField:
+    """Searchable field in a Whois record.
+
+    Print or cast as string to access the value directly.
+
+    Provides a `records` property that searches the API for other
+    Whois records that match the value provided in the field.
+    """
+
+    _instances = {}
+
+    def __new__(cls, name, value):
+        if name=='telephone':
+            name = 'phone'
+        if name=='contactEmail':
+            name = 'email'
+        by_name = cls._instances.get(name)
+        if not by_name:
+            cls._instances[name] = {}
+        self = cls._instances[name].get(value)
+        if not self:
+            self = cls._instances[name][value] = object.__new__(cls)
+            self._name = name
+            self._value = value
+            self._records = None
+        return self
+
+    def __str__(self):
+        if not self._value:
+            return ''
+        return self._value
+
+    def __repr__(self):
+        return "WhoisField('{0.name}','{0.value}')".format(self)
+
+    def _api_search(self):
+        """Use the 'Whois' request wrapper to perform a keyword search by field."""
+        response = get_api('Whois').search_whois_by_field(field=self._name, query=self._value)
+        self._records = WhoisRecords(response)
+        return self._records
+
+    @property
+    def name(self):
+        """Name of the field."""
+        return self._name 
+    
+    @property
+    def value(self):
+        """Value of the field."""
+        return self._value
+    
+    @property
+    def records(self):
+        """List of :class:`DomainWhois` records that match the key/value of this field."""
+        if self._records==None:
+            self._api_search()
+        return self._records
+
+
+
+class WhoisRecords(RecordList):
+
+    """List of Whois records."""
+
+    def _get_shallow_copy_fields(self):
+        return []
+    
+    def _get_sortable_fields(self):
+        return ['domain']
+    
+    def parse(self, api_response):
+        """Parse an API response into a list of `DomainWhois` records."""
+        self._records = list(map(DomainWhois, api_response.get('results',[])))
+    
+    @property
+    def domains(self):
+        """Return a set of unique domains in this record list."""
+        return set([r.domain for r in self if r.domain])
+    
+    @property
+    def emails(self):
+        """Return a set of unique emails in this record list."""
+        return set([r.email for r in self if r.email])
+    
+    @property
+    def names(self):
+        """Return a set of unique names in this record list."""
+        return set([r.name for r in self if r.name])
+    
+    @property
+    def orgs(self):
+        """Return a set of unique org names in this record list."""
+        return set([r.organization for r in self if r.organization])
+    
+
+
+
+
+class DomainWhois(Record):
 
     """Whois record for an Internet domain name."""
 
@@ -34,9 +133,9 @@ class DomainWhois:
         if not self._rawrecord:
             values = [None, None, None, None]
         if contact_type == 'root':
-            values = [ self._rawrecord.get(field) for field in ['organization','name','contactEmail','telephone'] ]
+            values = [ WhoisField(field, self._rawrecord.get(field)) for field in ['organization','name','contactEmail','telephone'] ]
         else:
-            values = [ self._rawrecord[contact_type].get(field) for field in ['organization','name','email','telephone'] ]
+            values = [ WhoisField(field, self._rawrecord[contact_type].get(field)) for field in ['organization','name','email','telephone'] ]
         return WhoisContact._make(values)
     
     def _parsedate(self, field):
@@ -57,7 +156,8 @@ class DomainWhois:
     @property
     def domain(self):
         """The domain name as returned by the API."""
-        return self._domain
+        from passivetotal.analyzer import Hostname
+        return Hostname(self._domain)
     
     @property
     def registrant(self):
@@ -201,8 +301,13 @@ class DomainWhois:
     
     @property
     def record(self):
-        """Raw API response."""
+        """Raw Whois record as text."""
         return self._rawrecord.get('rawText')
+    
+    @property
+    def raw(self):
+        """Raw API response."""
+        return self._rawrecord
     
 
 

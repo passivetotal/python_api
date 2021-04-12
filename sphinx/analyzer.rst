@@ -96,8 +96,40 @@ directly inform security research and may guide subsequent searches.
 
 Whois Records
 -------------
+The `whois` property for host names returns the DomainWhois record for
+the registered domain name portion of the host name. 
+
+.. code-block:: python
+
+   >>> from passivetotal import analyzer
+   >>> print(analyzer.Hostname('riskiq.net').whois.registrant.organization)
+   RiskIQ UK Limited
+
+Whois data varies widely across Internet registrars and registries, and although 
+the API tries to normalize and parse the data into fields, your code should always be
+prepared for missing or malformed data. Access the `raw` record for the API response 
+directly as a Python dict or use the `record` property to get the raw Whois response.
+
+The RiskIQ PassiveTotal API can  search Whois records by field to find related
+domain names with the same contact information. Use the `records` property of
+supported fields (any property that returns type `WhoisField`).
+
+.. code-block:: python
+
+   >>> from passivetotal import analyzer
+   >>> analyzer.Hostname('riskiq.net').whois.organization.records.domains
+   {Hostname('riskiq.com'), Hostname('riskiq.net'), Hostname('riskiqeg.com')}
+
 
 .. autoclass:: passivetotal.analyzer.whois.DomainWhois
+   :members:
+   :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.whois.WhoisField
+   :members:
+   :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.whois.WhoisContact
    :members:
    :inherited-members:
 
@@ -202,5 +234,11 @@ Trackers Record Lists
     :inherited-members:
 
 .. autoclass:: passivetotal.analyzer.trackers.TrackerRecord
+    :members:
+    :inherited-members:
+
+Whois Record Lists
+^^^^^^^^^^^^^^^^^^
+.. autoclass:: passivetotal.analyzer.whois.WhoisRecords
     :members:
     :inherited-members:
