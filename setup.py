@@ -8,15 +8,15 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='2.1.0',
-    description='Client for the PassiveTotal REST API',
+    version='2.2.0',
+    description='Library for the RiskIQ PassiveTotal API',
     url="https://github.com/passivetotal/python_api",
-    author="Research Team, passivetotal",
+    author="RiskIQ",
     author_email="admin@passivetotal.org",
     license="GPLv2",
     packages=find_packages(),
     install_requires=['requests', 'ez_setup', 'python-dateutil', 'future'],
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     classifiers=[],
     entry_points={
         'console_scripts': [

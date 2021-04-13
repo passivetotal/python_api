@@ -12,7 +12,7 @@ from passivetotal.libs.dns import DnsRequest, DnsResponse
 from passivetotal.libs.ssl import SslRequest, SSLResponse, SSLHistoryResponse
 from passivetotal.libs.whois import WhoisRequest, WhoisResponse
 from passivetotal.libs.articles import ArticlesRequest, ArticlesResponse, ArticlesIndicatorResponse
-from passivetotal.libs.enrichment import EnrichmentRequest
+from passivetotal.libs.enrichment import EnrichmentRequest, EnrichmentResponse
 from passivetotal.libs.cards import CardsRequest, CardsResponse
 from passivetotal.libs.cookies import CookiesRequest, CookiesResponse
 from passivetotal.libs.services import ServicesRequest, ServicesResponse
@@ -121,7 +121,9 @@ def call_ssl(args):
 
 def call_osint(args):
     client = EnrichmentRequest.from_config()
-    return client.get_osint(query=args.query)
+    return EnrichmentResponse.process(
+        client.get_osint(query=args.query)
+    )
 
 
 def call_actions(args):

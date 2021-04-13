@@ -3,22 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-PassiveTotal's Python Client
-============================
+RiskIQ PassiveTotal Python Library
+==================================
+
+Provides connectivity for Python developers and security researchers to a 
+comprehensive web infrastructure database offered through the 
+RiskIQ PassiveTotal API. 
+
+Learn more at `community.riskiq.com <https://community.riskiq.com>`_
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   introduction
-   outputs
-   developers
-   api
-   dns
-   whois
-   ssl
-   attributes
+   getting-started
+   analyzer
+   wrappers
 
 
 Indices and tables

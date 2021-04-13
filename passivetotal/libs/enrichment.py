@@ -4,6 +4,7 @@ __author__ = 'Brandon Dixon (PassiveTotal)'
 __version__ = '1.0.0'
 
 from passivetotal.api import Client
+from passivetotal.response import Response
 
 
 class EnrichmentRequest(Client):
@@ -83,3 +84,8 @@ class EnrichmentRequest(Client):
         Reference: https://api.passivetotal.org/api/docs/#api-Enrichment-GetV2EnrichmentSubdomains
         """
         return self._get('enrichment', 'subdomains', **kwargs)
+
+
+
+class EnrichmentResponse(Response):
+    pass

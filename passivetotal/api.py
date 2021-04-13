@@ -23,11 +23,15 @@ class Client(object):
                  verify=True, headers=None, debug=False):
         """Initial loading of the client.
 
-        :param str api_key: API key from PassiveTotal.org
-        :param str server: Hostname for the API
-        :param str version: Version of the API to use
+        :param str username: API username in email address format
+        :param str api_key: API secret or key
+        :param str server: Base hostname for the API, defaults to api.passivetotal.org
+        :param str version: Version of the API to use, defaults to v2
         :param str http_proxy: HTTP proxy to use (optional)
         :param str https_proxy: HTTPS proxy to use (optional)
+        :param bool verify: Whether to verify the SSL certificate, defaults to True
+        :param dict headers: Additional HTTP headers to add to the request
+        :param bool debug: Whether to activate debugging
         """
         self.logger = logging.getLogger('pt-base-request')
         self.logger.setLevel('INFO')
