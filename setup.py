@@ -17,6 +17,7 @@ setup(
     packages=find_packages(),
     install_requires=['requests', 'ez_setup', 'python-dateutil', 'future'],
     long_description=read('README.md'),
+    long_description_content_type="text/markdown",
     classifiers=[],
     entry_points={
         'console_scripts': [
