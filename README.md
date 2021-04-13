@@ -2,13 +2,9 @@
 
 ## Build Status
 [![build status](https://travis-ci.org/passivetotal/python_api.svg)](https://travis-ci.org/passivetotal/python_api)
-
 [![doc status](https://readthedocs.org/projects/passivetotal/badge/?version=latest)](https://readthedocs.org/projects/passivetotal/?badge=latest)
-
 [![pypi downloads](https://img.shields.io/pypi/dm/passivetotal.svg)](https://pypi.python.org/pypi/passivetotal/)
-
 [![pypi version](https://img.shields.io/pypi/v/passivetotal.svg)](https://pypi.python.org/pypi/passivetotal)
-
 [![license](https://img.shields.io/pypi/l/passivetotal.svg)](https://pypi.python.org/pypi/passivetotal/)
 
 ## Introduction
@@ -25,9 +21,6 @@ Capabilites of this library include:
 * Low-level wrappers for all PassiveTotal API endpoints
 
 To learn more about RiskIQ and start a free trial, visit [https://community.riskiq.com](https://community.riskiq.com)
-
-## Example Usage
-
 
 ## Getting Started
 
