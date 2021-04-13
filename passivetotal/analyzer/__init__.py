@@ -40,7 +40,8 @@ def init(**kwargs):
         (ProjectsRequest, 'Projects'), 
         (ServicesRequest, 'Services'),
         (SslRequest, 'SSL'), 
-        (WhoisRequest, 'Whois')
+        (WhoisRequest, 'Whois'),
+        (IlluminateRequest, 'Illuminate'),
     ]
     for c, name in api_classes:
         if 'username' in kwargs and 'api_key' in kwargs:

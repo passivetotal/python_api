@@ -79,6 +79,12 @@ Projects Request
     :members:
     :show-inheritance:
 
+Illuminate Request
+------------------
+.. autoclass:: passivetotal.libs.illuminate.IlluminateRequest
+    :members:
+    :show-inheritance:
+
 Services Request
 ----------------
 .. autoclass:: passivetotal.libs.services.ServicesRequest

@@ -11,10 +11,11 @@ from passivetotal.analyzer.hostpairs import HasHostpairs
 from passivetotal.analyzer.cookies import HasCookies
 from passivetotal.analyzer.trackers import HasTrackers
 from passivetotal.analyzer.components import HasComponents
+from passivetotal.analyzer.illuminate import HasReputation
 
 
 
-class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs):
+class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputation):
 
     """Represents a hostname such as api.passivetotal.org.
     
@@ -44,6 +45,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs):
             self._pairs = {}
             self._pairs['parents'] = None
             self._pairs['children'] = None
+            self._reputation = None
         return self
     
     def __str__(self):
