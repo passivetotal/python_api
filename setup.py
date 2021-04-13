@@ -16,7 +16,7 @@ setup(
     license="GPLv2",
     packages=find_packages(),
     install_requires=['requests', 'ez_setup', 'python-dateutil', 'future'],
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     classifiers=[],
     entry_points={
         'console_scripts': [
