@@ -42,11 +42,11 @@ property that returns an instance of a `ReputationScore` object. That
 object can be treated directly like a string or an integer, or you can 
 access the properties directly. 
 
-.. autoclass:: passivetotal.analyzer.illuminate.HasReputation
-    :members:
+.. autoclass:: passivetotal.analyzer.hostname.Hostname
+    :members: reputation
 
-.. autoclass:: passivetotal.analyzer.illuminate.ReputationScore
-    :members:
+.. autoclass:: passivetotal.analyzer.ip.IPAddress
+    :members: reputation
 
 
 Reputation Score CLI
