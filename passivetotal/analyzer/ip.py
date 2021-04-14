@@ -10,10 +10,11 @@ from passivetotal.analyzer.hostpairs import HasHostpairs
 from passivetotal.analyzer.cookies import HasCookies
 from passivetotal.analyzer.trackers import HasTrackers
 from passivetotal.analyzer.components import HasComponents
+from passivetotal.analyzer.illuminate import HasReputation
 
 
 
-class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers):
+class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, HasReputation):
 
     """Represents an IPv4 address such as 8.8.8.8
     
@@ -43,6 +44,7 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers):
             self._pairs = {}
             self._pairs['parents'] = None
             self._pairs['children'] = None
+            self._reputation = None
         return self
 
     def __str__(self):
@@ -50,6 +52,28 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers):
     
     def __repr__(self):
         return "IPAddress('{}')".format(self.ip)
+    
+    def reset(self, prop=None):
+        """Reset this instance to clear all (default) or one cached properties.
+
+        Useful when changing module-level settings such as analyzer.set_date_range().
+
+        :param str prop: Property to reset (optional, if none provided all values will be cleared)
+        """
+        resettable_fields = ['whois','resolutions','summary','components',
+                             'services','ssl_history',
+                             'cookies','trackers','pairs','reputation']
+        if not prop:
+            for field in resettable_fields:
+                setattr(self, '_'+field, None)
+            self._reset_hostpairs()
+        else:
+            if prop not in resettable_fields:
+                raise ValueError('Invalid property to reset')
+            if prop == 'pairs':
+                self._reset_hostpairs()
+            else:
+                setattr(self, '_'+prop, None)
     
     def get_host_identifier(self):
         """Alias for the IP address as a string.

@@ -11,9 +11,10 @@ class HostpairHistory(RecordList, PagedRecordList):
 
     """Historical connections between hosts."""
 
-    def __init__(self, api_response, direction=None):
+    def __init__(self, api_response=None, direction=None):
         self._direction = direction
-        self.parse(api_response)
+        if api_response:
+            self.parse(api_response)
 
     def _get_shallow_copy_fields(self):
         return ['_totalrecords','_direction']
@@ -114,6 +115,12 @@ class HostpairRecord(Record, FirstLastSeen):
 class HasHostpairs:
 
     """An object with hostpair history."""
+
+    def _reset_hostpairs(self):
+        """Reset the instance hostpairs private attributes."""
+        self._pairs = {}
+        self._pairs['parents'] = None
+        self._pairs['children'] = None
 
     def _api_get_hostpairs(self, direction, start_date=None, end_date=None):
         """Query the hostpairs API for the parent or child relationships.

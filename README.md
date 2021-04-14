@@ -10,9 +10,11 @@
 ## Introduction
 
 This Python library provides an interface to the RiskIQ PassiveTotal Internet
-intelligence database. Security researchers and network defenders use 
-PassiveTotal to map threat actor infrastructure, profile hostnames & IP
-addresses, discover web technologies on Internet hosts.
+intelligence database and the RiskIQ Illuminate Reputation Score. 
+
+Security researchers and network defenders use RiskIQ PassiveTotal to map threat 
+actor infrastructure, profile hostnames & IP addresses, discover web technologies 
+on Internet hosts.
 
 Capabilites of this library include:
 * Credential management - protect API keys from accidental disclosure
@@ -25,7 +27,8 @@ To learn more about RiskIQ and start a free trial, visit [https://community.risk
 ## Getting Started
 
 ### Install the PassiveTotal Library
-The PassiveTotal Python library is availabe in pip under the package name `passivetotal`. Consider setting up a [virtual environment](https://docs.python.org/3/library/venv.html), then run:
+The PassiveTotal Python library is available in pip under the package name `passivetotal`. 
+Consider setting up a [virtual environment](https://docs.python.org/3/library/venv.html), then run:
 ```
 pip install passivetotal
 ```
@@ -36,15 +39,17 @@ Queries to the API must be authenticated with a PassiveTotal API key.
 1. Log in (or sign up) at [community.riskiq.com](https://community.riskiq.com)
 2. Access your profile by clicking the person icon in the upper-right corner of the page.
 3. Click on "Account Settings"
-4. Under "API Access", click "Show" to reveal your user or organization credentials.
+4. Under "API Access", click "Show" to reveal your API credentials.
 
 The identifier for your API account is alternatively called a "username", a "user", or
 an "API key". Look for an email address and use that value when prompted for your 
 "API username".
 
 The "API Secret" is a long string of characters that should be kept secure. It is
-the primary authentication method for your API account. Note your PassiveTotal 
-account may have a seperate "API Secret" for your organization.
+the primary authentication method for your API account. 
+
+Your PassiveTotal account may have a separate "API Secret" for your organization - when 
+available, **always use your organization key** unless you have a specific reason not to.
 
 
 ### Build a Config File

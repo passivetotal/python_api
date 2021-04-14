@@ -17,6 +17,7 @@ from passivetotal.libs.cards import CardsRequest, CardsResponse
 from passivetotal.libs.cookies import CookiesRequest, CookiesResponse
 from passivetotal.libs.services import ServicesRequest, ServicesResponse
 from passivetotal.libs.projects import ProjectsRequest, ProjectsResponse
+from passivetotal.libs.illuminate import IlluminateRequest, IlluminateReputationResponse
 from passivetotal.response import Response
 
 __author__ = 'Brandon Dixon (PassiveTotal)'
@@ -280,6 +281,21 @@ def call_projects(args):
     data = ProjectsResponse.process(response)
     return data
 
+def call_illuminate(args):
+    client = IlluminateRequest.from_config()
+    if args.illuminate_cmd == 'reputation':
+        results = []
+        for host in args.hosts:
+            try:
+                response = client.get_reputation(query=host)
+            except Exception as e:
+                response = {}
+            response.update({'host': host})
+            if args.brief:
+                del(response['rules'])
+            results.append(response)
+        data = IlluminateReputationResponse.process(results)
+    return data
 
 def write_output(results, arguments):
     """Format data based on the type.
@@ -506,7 +522,15 @@ def main():
     projects.add_argument('--format', choices=['json'], default='json',
                         help="Format of the output from the query")
 
-
+    illuminate = subs.add_parser('illuminate', help="Query RiskIQ Illuminate API")
+    illuminate.add_argument('--reputation', dest='illuminate_cmd', action='store_const', const='reputation',
+                        help="Get hostname or IP reputation from RiskIQ Illuminate.")
+    illuminate.add_argument('--format', choices=['json','csv','text'], default='json',
+                        help="Format of the output from the query")
+    illuminate.add_argument('--brief', action='store_true',
+                        help="Create a brief output; for reputation, prints score and classification only")
+    illuminate.add_argument('hosts', metavar='query', nargs='+',
+                        help="One or more hostnames or IPs")
     args, unknown = parser.parse_known_args()
     data = None
 
@@ -535,6 +559,8 @@ def main():
             data = call_services(args)
         elif args.cmd == 'projects':
             data = call_projects(args)
+        elif args.cmd == 'illuminate':
+            data = call_illuminate(args)
         else:
             parser.print_usage()
             sys.exit(1)

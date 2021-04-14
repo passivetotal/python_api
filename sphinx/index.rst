@@ -20,6 +20,7 @@ Contents:
    getting-started
    analyzer
    wrappers
+   illuminate
 
 
 Indices and tables
