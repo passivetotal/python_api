@@ -8,8 +8,8 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='2.2.0',
-    description='Library for the RiskIQ PassiveTotal API',
+    version='2.3.0',
+    description='Library for the RiskIQ PassiveTotal and Illuminate API',
     url="https://github.com/passivetotal/python_api",
     author="RiskIQ",
     author_email="admin@passivetotal.org",
