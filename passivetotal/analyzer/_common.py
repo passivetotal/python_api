@@ -78,6 +78,32 @@ class RecordList:
         sorted_results._records = sorted(self.all, key=lambda record: getattr(record, field), reverse=reverse)
         return sorted_results
 
+    def _ensure_firstlastseen(self):
+        """Ensure this record list has records of type FirstLastSeen."""
+        if not isinstance(self._records[0], FirstLastSeen):
+            raise TypeError('Cannot filter on a record type without firstseen / lastseen fields')
+    
+    def filter_dateseen_after(self, date_string):
+        self._ensure_firstlastseen()
+        dateobj = datetime.fromisoformat(date_string)
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = filter(lambda r: r.firstseen > dateobj, self._records)
+        return filtered_results
+
+    def filter_dateseen_before(self, date_string):
+        self._ensure_firstlastseen()
+        dateobj = datetime.fromisoformat(date_string)
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = filter(lambda r: r.lastseen < dateobj, self._records)
+        return filtered_results
+    
+    def filter_dateseen_between(self, start_date_string, end_date_string):
+        self._ensure_firstlastseen()
+        dateobj_start = datetime.fromisoformat(start_date_string)
+        dateobj_end = datetime.fromisoformat(end_date_string)
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = filter(lambda r: r.firstseen >= dateobj_start and r.lastseen <= dateobj_end, self._records)
+        return filtered_results
 
 
 class Record:

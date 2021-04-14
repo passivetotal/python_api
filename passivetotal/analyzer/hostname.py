@@ -54,6 +54,27 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
     def __repr__(self):
         return "Hostname('{}')".format(self.hostname)
     
+    def reset(self, prop=None):
+        """Reset this instance to clear all (default) or one cached properties.
+
+        Useful when changing module-level settings such as analyzer.set_date_range().
+
+        :param str prop: Property to reset (optional, if none provided all values will be cleared)
+        """
+        resettable_fields = ['whois','resolutions','summary','components',
+                             'cookies','trackers','pairs','reputation']
+        if not prop:
+            for field in resettable_fields:
+                setattr(self, '_'+field, None)
+            self._reset_hostpairs()
+        else:
+            if prop not in resettable_fields:
+                raise ValueError('Invalid property to reset')
+            if prop == 'pairs':
+                self._reset_hostpairs()
+            else:
+                setattr(self, '_'+prop, None)
+
     def get_host_identifier(self):
         """Alias for the hostname as a string.
         
