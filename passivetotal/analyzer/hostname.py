@@ -1,6 +1,7 @@
 """Hostname analyzer for the RiskIQ PassiveTotal API."""
 
 import socket
+import tldextract
 from passivetotal.analyzer import get_api, get_config
 from passivetotal.analyzer.pdns import PdnsResolutions
 from passivetotal.analyzer.summary import HostnameSummary
@@ -46,6 +47,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
             self._pairs['parents'] = None
             self._pairs['children'] = None
             self._reputation = None
+            self._tldextract = None
         return self
     
     def __str__(self):
@@ -114,6 +116,55 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         ip = socket.gethostbyname(self._hostname)
         self._current_ip = IPAddress(ip)
         return self._current_ip
+    
+    def _extract(self):
+        """Use the tldextract library to extract parts out of the hostname."""
+        self._tldextract = tldextract.extract(self._hostname)
+        return self._tldextract
+    
+    @property
+    def domain(self):
+        """Returns only the domain portion of the registered domain name for this hostname.
+
+        Uses the `tldextract` library and returns the domain property of the 
+        `ExtractResults` named tuple.
+        """
+        if getattr(self, '_tldextract'):
+            return self._tldextract.domain
+        return self._extract().domain
+    
+    @property
+    def tld(self):
+        """Returns the top-level domain name (TLD) for this hostname.
+
+        Uses the `tldextract` library and returns the suffix property of the 
+        `ExtractResults` named tuple.
+        """
+        if getattr(self, '_tldextract'):
+            return self._tldextract.suffix
+        return self._extract().suffix
+    
+    @property
+    def registered_domain(self):
+        """Returns the registered domain name (with TLD) for this hostname.
+
+        Uses the `tldextract` library and returns the registered_domain property of the 
+        `ExtractResults` named tuple.
+        """
+        if getattr(self, '_tldextract'):
+            return self._tldextract.registered_domain
+        return self._extract().registered_domain
+    
+    @property
+    def subdomain(self):
+        """Entire set of subdomains for this hostname (third level and higher).
+
+        Uses the `tldextract` library and returns the subdomain property of the 
+        `ExtractResults` named tuple.
+        """
+        if getattr(self, '_tldextract'):
+            return self._tldextract.subdomain
+        return self._extract().subdomain
     
     @property
     def hostname(self):

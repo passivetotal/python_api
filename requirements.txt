@@ -3,3 +3,4 @@ passivetotal
 python-dateutil==2.4.2
 requests==2.20.0
 future
+tldextract==3.1.0
