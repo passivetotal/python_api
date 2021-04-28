@@ -221,3 +221,8 @@ class PagedRecordList:
         """
         return len(self) < self._totalrecords
 
+
+
+class AnalyzerError(Exception):
+    """Base error class for Analyzer objects."""
+    pass

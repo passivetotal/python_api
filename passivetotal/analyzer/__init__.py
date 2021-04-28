@@ -3,6 +3,7 @@
 from collections import namedtuple
 from datetime import datetime, timezone, timedelta
 from passivetotal import *
+from passivetotal.analyzer._common import AnalyzerError
 
 DEFAULT_DAYS_BACK = 30
 
