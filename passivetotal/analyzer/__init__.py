@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 from passivetotal import *
 from passivetotal.analyzer._common import AnalyzerError
 
-DEFAULT_DAYS_BACK = 30
+DEFAULT_DAYS_BACK = 90
 
 api_clients = {}
 config = {
