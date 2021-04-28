@@ -3,6 +3,7 @@
 import socket
 import tldextract
 from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer._common import is_ip, refang, AnalyzerError
 from passivetotal.analyzer.pdns import PdnsResolutions
 from passivetotal.analyzer.summary import HostnameSummary
 from passivetotal.analyzer.whois import DomainWhois
@@ -32,6 +33,9 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
 
     def __new__(cls, hostname):
         """Create or find an instance for the given hostname."""
+        hostname = refang(hostname)
+        if is_ip(hostname):
+            raise AnalyzerError('Use analyzer.IPAddress for IPv4 addresses.')
         self = cls._instances.get(hostname)
         if self is None:
             self = cls._instances[hostname] = object.__new__(Hostname)

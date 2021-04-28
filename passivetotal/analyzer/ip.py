@@ -2,6 +2,7 @@
 
 
 from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer._common import is_ip, AnalyzerError
 from passivetotal.analyzer.pdns import PdnsResolutions
 from passivetotal.analyzer.services import Services
 from passivetotal.analyzer.ssl import Certificates
@@ -29,6 +30,8 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, HasReputat
 
     def __new__(cls, ip):
         """Create or find an instance for the given IP."""
+        if not is_ip(ip):
+            raise AnalyzerError('Invalid IP address')
         self = cls._instances.get(ip)
         if self is None:
             self = cls._instances[ip] = object.__new__(IPAddress)

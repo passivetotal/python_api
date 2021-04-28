@@ -3,8 +3,17 @@
 
 
 from datetime import datetime
+import re
 
 
+def is_ip(test):
+    """Test to see if a string contains an IPv4 address."""
+    pattern = re.compile(r"(\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3})")
+    return len(pattern.findall(test)) > 0
+
+def refang(hostname):
+    """Remove square braces around dots in a hostname."""
+    return re.sub(r'[\[\]]','', hostname)
 
 class RecordList:
 
