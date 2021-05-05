@@ -17,7 +17,6 @@ credentials and development environment.
 Hostname and IP Reputation Analysis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: python
-    :linenos:
 
     >>> from passivetotal import analyzer
     >>> analyzer.init()

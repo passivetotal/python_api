@@ -12,10 +12,11 @@ from passivetotal.analyzer.cookies import HasCookies
 from passivetotal.analyzer.trackers import HasTrackers
 from passivetotal.analyzer.components import HasComponents
 from passivetotal.analyzer.illuminate import HasReputation
+from passivetotal.analyzer.articles import HasArticles
 
 
 
-class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, HasReputation):
+class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, HasReputation, HasArticles):
 
     """Represents an IPv4 address such as 8.8.8.8
     
@@ -48,6 +49,7 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, HasReputat
             self._pairs['parents'] = None
             self._pairs['children'] = None
             self._reputation = None
+            self._articles = None
         return self
 
     def __str__(self):

@@ -137,3 +137,4 @@ def set_dateorder_descending():
 from passivetotal.analyzer.hostname import Hostname
 from passivetotal.analyzer.ip import IPAddress
 from passivetotal.analyzer.ssl import CertificateField
+from passivetotal.analyzer.articles import AllArticles

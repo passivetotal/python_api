@@ -45,6 +45,7 @@ Hostname Analysis
 .. code-block:: python
 
    >>> from passivetotal import analyzer
+   >>> analyzer.init()
    >>> host = analyzer.Hostname('riskiq.net')
    >>> registrant = host.whois.organization
    >>> print(registrant.organization)
@@ -62,6 +63,7 @@ IP Analysis
 .. code-block:: python
    
    >>> from passivetotal import analyzer
+   >>> analyzer.init()
    >>> ip = analyzer.IPAddress('35.189.71.51')
    >>> print(ip.summary)
    22 records available for 35.189.71.51
@@ -102,6 +104,7 @@ the registered domain name portion of the host name.
 .. code-block:: python
 
    >>> from passivetotal import analyzer
+   >>> analyzer.init()
    >>> print(analyzer.Hostname('riskiq.net').whois.registrant.organization)
    RiskIQ UK Limited
 
@@ -135,9 +138,64 @@ supported fields (any property that returns type `WhoisField`).
 
 
 
+Threat Intel Articles
+---------------------
+RiskIQ publishes threat intelligence articles with lists of IOCs (indicators of
+compromise). Using the Analyzer module, you can retrieve the entire list of
+currently published articles, or only those articles that are associated with an
+IP or hostname. 
+
+**Fetch all articles**
+
+.. code-block:: python
+
+   >>> from passivetotal import analyzer
+   >>> analyzer.init()
+   >>> articles = analyzer.AllArticles()
+   >>> for article in articles[0:3]: # retrieve the first 3 articles
+           print(article)
+   Threat Roundup for April 23 to April 30
+   PortDoor: New Chinese APT Backdoor Attack Targets Russian Defense Sector
+   UNC2447 SOMBRAT and FIVEHANDS Ransomware: A Sophisticated Financial Threat
+   
+**Get articles for an IP and list other IOCs.**
+
+.. code-block:: python
+
+   >>> from passivetotal import analyzer
+   >>> analyzer.init()
+   >>> for article in analyzer.IPAddress('23.95.97.59').articles:
+           print(article.title)
+           print('  HOSTNAMES:')
+           for hostname in article.hostnames:
+               print(f'    {hostname}')
+           print('  IPs:')
+           for ip in article.ips:
+               print(f'    {ip}')
+   Alert (AA20-302A) - Ransomware Activity Targeting the Healthcare and Public Health Sector
+   HOSTNAMES:
+       biillpi.com
+       chishir.com
+       dns1.yastatic.cf
+       ...
+   IPs:
+       195.123.240.219
+       195.123.241.12
+       195.123.242.119
+       ...
+   ...
+
+.. autoclass:: passivetotal.analyzer.articles.AllArticles
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.articles.Article
+    :members:
+    :inherited-members:
+
 Using Record Lists
 ------------------
-Several attributes of Hostnams and IPs return lists of records from the API. The
+Several attributes of Hostnames and IPs return lists of records from the API. The
 analyzer module delivers these as list-like objects that can be looped through
 like regular Python lists. They also provide analytic methods to sort
 and filter records in meaningful ways.
@@ -240,5 +298,12 @@ Trackers Record Lists
 Whois Record Lists
 ^^^^^^^^^^^^^^^^^^
 .. autoclass:: passivetotal.analyzer.whois.WhoisRecords
+    :members:
+    :inherited-members:
+
+
+Articles Lists
+^^^^^^^^^^^^^^
+.. autoclass:: passivetotal.analyzer.articles.ArticlesList
     :members:
     :inherited-members:
