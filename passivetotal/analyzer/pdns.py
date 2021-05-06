@@ -1,5 +1,5 @@
 from datetime import datetime
-from passivetotal.analyzer import get_config
+from passivetotal.analyzer import get_config, get_api
 from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
 
 
@@ -162,4 +162,42 @@ class PdnsRecord(Record, FirstLastSeen):
     @property
     def rawrecord(self):
         return self._rawrecord
+
+
+
+class HasResolutions:
+    """An object with pDNS resolutions."""
+
+    def _api_get_resolutions(self, unique=False, start_date=None, end_date=None, timeout=None, sources=None):
+        """Query the pDNS API for resolution history."""
+        meth = get_api('DNS').get_unique_resolutions if unique else get_api('DNS').get_passive_dns
+        response = meth(
+            query=self.get_host_identifier(),
+            start=start_date,
+            end=end_date,
+            timeout=timeout,
+            sources=sources
+        )
+        self._resolutions = PdnsResolutions(api_response=response)
+        return self._resolutions
+    
+    @property
+    def resolutions(self):
+        """:class:`passivetotal.analyzer.pdns.PdnsResolutions` where this 
+        object was the DNS response value.
+            
+        Bounded by dates set in :meth:`passivetotal.analyzer.set_date_range`.
+        `timeout` and `sources` params are also set by the analyzer configuration.
         
+        Provides list of :class:`passivetotal.analyzer.pdns.PdnsRecord` objects.
+        """
+        if getattr(self, '_resolutions', None) is not None:
+            return self._resolutions
+        config = get_config()
+        return self._api_get_resolutions(
+            unique=False, 
+            start_date=config['start_date'],
+            end_date=config['end_date'],
+            timeout=config['pdns_timeout'],
+            sources=config['pdns_sources']
+        )

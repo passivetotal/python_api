@@ -170,4 +170,18 @@ class IPSummary(Summary):
     def services(self):
         """Number of service (port) history records for this IP."""
         return self._count_or_none('services')
-    
+
+
+
+class HasSummary:
+    """An object with summary card data."""
+
+    @property
+    def summary(self):
+        """Summary of PassiveTotal data available for this hostname.
+        
+        :rtype: :class:`passivetotal.analyzer.summary.HostnameSummary`
+        """
+        if getattr(self, '_summary', None) is not None:
+            return self._summary
+        return self._api_get_summary()

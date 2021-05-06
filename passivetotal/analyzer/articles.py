@@ -213,6 +213,6 @@ class HasArticles:
 
         :rtype: :class:`passivetotal.analyzer.articles.ArticlesList`
         """
-        if getattr(self, '_articles'):
+        if getattr(self, '_articles', None) is not None:
             return self._articles
         return self._api_get_articles()

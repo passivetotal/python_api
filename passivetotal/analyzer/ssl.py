@@ -1,7 +1,7 @@
 from datetime import datetime
 import pprint
 from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, AnalyzerError
-from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
@@ -173,7 +173,7 @@ class CertificateRecord(Record, FirstLastSeen):
         For most use cases, the `ips` property is a more direct route to get the list
         of IPs previously associated with this SSL certificate.
         """
-        if getattr(self, '_ip_history', None):
+        if getattr(self, '_ip_history', None) is not None:
             return self._ip_history
         return self._api_get_ip_history()
     
@@ -181,10 +181,16 @@ class CertificateRecord(Record, FirstLastSeen):
     def ips(self):
         """Provides list of :class:`passivetotal.analyzer.IPAddress` instances
         representing IP addresses associated with this SSL certificate."""
-        from passivetotal.analyzer import IPAddress
         history = self.iphistory
+        ips = []
+        if history['ipAddresses'] == 'N/A':
+            return ips
         for ip in history['ipAddresses']:
-            yield IPAddress(ip)
+            try:
+                ips.append(get_object(ip,'IPAddress'))
+            except AnalyzerError:
+                continue
+        return ips
 
     @property
     def as_dict(self):

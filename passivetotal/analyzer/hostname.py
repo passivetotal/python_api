@@ -2,13 +2,12 @@
 
 import socket
 import tldextract
-from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer import get_api, get_config, get_object
 from passivetotal.analyzer._common import is_ip, refang, AnalyzerError
-from passivetotal.analyzer.pdns import PdnsResolutions
-from passivetotal.analyzer.summary import HostnameSummary
+from passivetotal.analyzer.pdns import HasResolutions
+from passivetotal.analyzer.summary import HostnameSummary, HasSummary
 from passivetotal.analyzer.whois import DomainWhois
 from passivetotal.analyzer.ssl import CertificateField
-from passivetotal.analyzer.ip import IPAddress
 from passivetotal.analyzer.hostpairs import HasHostpairs
 from passivetotal.analyzer.cookies import HasCookies
 from passivetotal.analyzer.trackers import HasTrackers
@@ -18,7 +17,8 @@ from passivetotal.analyzer.articles import HasArticles
 
 
 
-class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputation, HasArticles):
+class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, 
+               HasReputation, HasArticles, HasResolutions, HasSummary):
 
     """Represents a hostname such as api.passivetotal.org.
     
@@ -41,19 +41,9 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         if self is None:
             self = cls._instances[hostname] = object.__new__(Hostname)
             self._hostname = hostname
-            self._current_ip = None
-            self._whois = None
-            self._resolutions = None
-            self._summary = None
-            self._components = None
-            self._cookies = None
-            self._trackers = None
             self._pairs = {}
             self._pairs['parents'] = None
             self._pairs['children'] = None
-            self._reputation = None
-            self._tldextract = None
-            self._articles = None
         return self
     
     def __str__(self):
@@ -90,26 +80,12 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         address as the query value.
         """
         return self._hostname
-
-    def _api_get_resolutions(self, unique=False, start_date=None, end_date=None, timeout=None, sources=None):
-        """Query the pDNS API for resolution history."""
-        meth = get_api('DNS').get_unique_resolutions if unique else get_api('DNS').get_passive_dns
-        response = meth(
-            query=self._hostname,
-            start=start_date,
-            end=end_date,
-            timeout=timeout,
-            sources=sources
-        )
-        self._resolutions = PdnsResolutions(response)
-        return self._resolutions
-
+    
     def _api_get_summary(self):
         """Query the Cards API for summary data."""
-        response = get_api('Cards').get_summary(query=self._hostname)
+        response = get_api('Cards').get_summary(query=self.get_host_identifier())
         self._summary = HostnameSummary(response)
         return self._summary
-    
     
     def _api_get_whois(self, compact=False):
         """Query the Whois API for complete whois details."""
@@ -120,7 +96,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
     def _query_dns(self):
         """Perform a DNS lookup."""
         ip = socket.gethostbyname(self._hostname)
-        self._current_ip = IPAddress(ip)
+        self._current_ip = get_object(ip,'IPAddress')
         return self._current_ip
     
     def _extract(self):
@@ -135,7 +111,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         Uses the `tldextract` library and returns the domain property of the 
         `ExtractResults` named tuple.
         """
-        if getattr(self, '_tldextract'):
+        if getattr(self, '_tldextract', None) is not None:
             return self._tldextract.domain
         return self._extract().domain
     
@@ -146,7 +122,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         Uses the `tldextract` library and returns the suffix property of the 
         `ExtractResults` named tuple.
         """
-        if getattr(self, '_tldextract'):
+        if getattr(self, '_tldextract', None) is not None:
             return self._tldextract.suffix
         return self._extract().suffix
     
@@ -157,7 +133,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         Uses the `tldextract` library and returns the registered_domain property of the 
         `ExtractResults` named tuple.
         """
-        if getattr(self, '_tldextract'):
+        if getattr(self, '_tldextract', None) is not None:
             return self._tldextract.registered_domain
         return self._extract().registered_domain
     
@@ -168,7 +144,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         Uses the `tldextract` library and returns the subdomain property of the 
         `ExtractResults` named tuple.
         """
-        if getattr(self, '_tldextract'):
+        if getattr(self, '_tldextract', None) is not None:
             return self._tldextract.subdomain
         return self._extract().subdomain
     
@@ -185,30 +161,9 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
 
         :rtype: :class:`passivetotal.analyzer.IPAddress`
         """
-        if getattr(self, '_current_ip'):
+        if getattr(self, '_current_ip', None) is not None:
             return self._current_ip
         return self._query_dns()
-    
-    @property
-    def resolutions(self):
-        """ List of pDNS resolutions where hostname was the DNS query value.
-            
-        Bounded by dates set in :meth:`passivetotal.analyzer.set_date_range`.
-        
-        Provides list of :class:`passivetotal.analyzer.pdns.PdnsRecord` objects.
-
-        :rtype: :class:`passivetotal.analyzer.pdns.PdnsResolutions`
-        """
-        if getattr(self, '_resolutions'):
-            return self._resolutions
-        config = get_config()
-        return self._api_get_resolutions(
-            unique=False, 
-            start_date=config['start_date'],
-            end_date=config['end_date'],
-            timeout=config['pdns_timeout'],
-            sources=config['pdns_sources']
-        )
     
     @property
     def certificates(self):
@@ -222,22 +177,12 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, HasReputati
         return CertificateField('subjectAlternativeName', self._hostname).certificates
    
     @property
-    def summary(self):
-        """Summary of PassiveTotal data available for this hostname.
-        
-        :rtype: :class:`passivetotal.analyzer.summary.HostnameSummary`
-        """
-        if getattr(self, '_summary'):
-            return self._summary
-        return self._api_get_summary()
-    
-    @property
     def whois(self):
         """Most recently available Whois record for the hostname's domain name.
 
         :rtype: :class:`passivetotal.analyzer.whois.DomainWhois`
         """
-        if getattr(self, '_whois'):
+        if getattr(self, '_whois', None) is not None:
             return self._whois
         return self._api_get_whois(
             compact=False

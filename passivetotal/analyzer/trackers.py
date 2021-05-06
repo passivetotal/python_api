@@ -3,7 +3,7 @@ import pprint
 from passivetotal.analyzer._common import (
     RecordList, Record, FirstLastSeen, PagedRecordList
 )
-from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
@@ -27,9 +27,8 @@ class TrackerHistory(RecordList, PagedRecordList):
     @property
     def hostnames(self):
         """List of unique hostnames in the tracker record list."""
-        from passivetotal.analyzer import Hostname
         return set(
-            Hostname(host) for host in set([record.hostname for record in self])
+            get_object(host) for host in set([record.hostname for record in self])
         )
     
     @property
@@ -122,7 +121,7 @@ class HasTrackers:
 
         :rtype: :class:`passivetotal.analyzer.trackers.TrackersHistory`
         """
-        if getattr(self, '_trackers'):
+        if getattr(self, '_trackers', None) is not None:
             return self._trackers
         config = get_config()
         return self._api_get_trackers(

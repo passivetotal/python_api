@@ -109,7 +109,7 @@ class HasCookies:
 
         :rtype: :class:`passivetotal.analyzer.components.CookieHistory`
         """
-        if getattr(self, '_cookies'):
+        if getattr(self, '_cookies', None) is not None:
             return self._cookies
         config = get_config()
         return self._api_get_cookies(
