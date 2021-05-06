@@ -13,11 +13,13 @@ from passivetotal.analyzer.trackers import HasTrackers
 from passivetotal.analyzer.components import HasComponents
 from passivetotal.analyzer.illuminate import HasReputation
 from passivetotal.analyzer.articles import HasArticles
+from passivetotal.analyzer.enrich import HasMalware
 
 
 
 class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, 
-                HasReputation, HasArticles, HasResolutions, HasSummary):
+                HasReputation, HasArticles, HasResolutions, HasSummary,
+                HasMalware):
 
     """Represents an IPv4 address such as 8.8.8.8
     

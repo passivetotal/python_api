@@ -307,3 +307,13 @@ Articles Lists
 .. autoclass:: passivetotal.analyzer.articles.ArticlesList
     :members:
     :inherited-members:
+
+Malware Lists
+^^^^^^^^^^^^^^
+.. autoclass:: passivetotal.analyzer.enrich.MalwareList
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.enrich.MalwareRecord
+    :members:
+    :inherited-members:
