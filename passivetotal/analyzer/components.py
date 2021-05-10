@@ -137,7 +137,7 @@ class HasComponents:
 
         :rtype: :class:`passivetotal.analyzer.components.ComponentHistory`
         """
-        if getattr(self, '_components'):
+        if getattr(self, '_components', None) is not None:
             return self._components
         config = get_config()
         return self._api_get_components(

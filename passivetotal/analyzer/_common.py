@@ -1,10 +1,19 @@
 """Base classes and common methods for the analyzer package."""
-
+import pprint
 
 
 from datetime import datetime
+import re
 
 
+def is_ip(test):
+    """Test to see if a string contains an IPv4 address."""
+    pattern = re.compile(r"(\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3})")
+    return len(pattern.findall(test)) > 0
+
+def refang(hostname):
+    """Remove square braces around dots in a hostname."""
+    return re.sub(r'[\[\]]','', hostname)
 
 class RecordList:
 
@@ -221,3 +230,40 @@ class PagedRecordList:
         """
         return len(self) < self._totalrecords
 
+
+class PrettyRecord:
+    """A record that can pretty-print itself.
+
+    For best results, wrap this property in a print() statement.
+
+    Depends on a as_dict property on the base object.
+    """
+
+    @property
+    def pretty(self):
+        """Pretty printed version of this record."""
+        from passivetotal.analyzer import get_config
+        config = get_config('pprint')
+        return pprint.pformat(self.as_dict, **config)
+
+
+
+class PrettyList:
+    """A record list that can pretty-print itself.
+
+    Depends on an as_dict property each object in the list.
+    """
+
+    @property
+    def pretty(self):
+        """Pretty printed version of this record list."""
+        from passivetotal.analyzer import get_config
+        config = get_config('pprint')
+        return pprint.pformat([r.as_dict for r in self], **config)
+
+
+
+
+class AnalyzerError(Exception):
+    """Base error class for Analyzer objects."""
+    pass

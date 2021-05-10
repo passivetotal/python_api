@@ -3,7 +3,7 @@ import pprint
 from passivetotal.analyzer._common import (
     RecordList, Record, FirstLastSeen, PagedRecordList
 )
-from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
@@ -101,14 +101,12 @@ class HostpairRecord(Record, FirstLastSeen):
     @property
     def child(self):
         """Descendant hostname for this pairing."""
-        from passivetotal.analyzer import Hostname
-        return Hostname(self._child)
+        return get_object(self._child)
     
     @property
     def parent(self):
         """Parent hostname for this pairing."""
-        from passivetotal.analyzer import Hostname
-        return Hostname(self._parent)
+        return get_object(self._parent)
 
 
 
@@ -144,7 +142,7 @@ class HasHostpairs:
 
         :rtype: :class:`passivetotal.analyzer.hostpairs.HostpairHistory`
         """
-        if self._pairs['parents']:
+        if self._pairs['parents'] is not None:
             return self._pairs['parents']
         config = get_config()
         return self._api_get_hostpairs(
@@ -159,7 +157,7 @@ class HasHostpairs:
 
         :rtype: :class:`passivetotal.analyzer.hostpairs.HostpairHistory`
         """
-        if self._pairs['children']:
+        if self._pairs['children'] is not None:
             return self._pairs['children']
         config = get_config()
         return self._api_get_hostpairs(

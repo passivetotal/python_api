@@ -3,8 +3,9 @@
 from collections import namedtuple
 from datetime import datetime, timezone, timedelta
 from passivetotal import *
+from passivetotal.analyzer._common import AnalyzerError, is_ip
 
-DEFAULT_DAYS_BACK = 30
+DEFAULT_DAYS_BACK = 90
 
 api_clients = {}
 config = {
@@ -66,6 +67,23 @@ def get_config(key=None):
     if key:
         return config[key]
     return config
+
+def get_object(input, type=None):
+    """Get an Analyzer object for a given input and type. If no type is specified,
+    type will be autodetected based on the input.
+
+    Returns :class:`analyzer.Hostname` or :class:`analyzer.IPAddress`.
+    """
+    objs = {
+        'IPAddress': IPAddress,
+        'Hostname': Hostname
+    }
+    if type is None:
+        type = 'IPAddress' if is_ip(input) else 'Hostname'
+    elif type not in objs.keys():
+        raise AnalyzerError('type must be IPAddress or Hostname')
+    return objs[type](input)
+        
 
 def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, end=None):
     """Set a range of dates for all date-bounded API queries.
@@ -136,3 +154,4 @@ def set_dateorder_descending():
 from passivetotal.analyzer.hostname import Hostname
 from passivetotal.analyzer.ip import IPAddress
 from passivetotal.analyzer.ssl import CertificateField
+from passivetotal.analyzer.articles import AllArticles

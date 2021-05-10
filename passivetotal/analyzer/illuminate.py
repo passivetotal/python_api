@@ -72,6 +72,6 @@ class HasReputation:
 
         :rtype: :class:`passivetotal.analyzer.illuminate.ReputationScore`
         """
-        if getattr(self, '_reputation'):
+        if getattr(self, '_reputation', None) is not None:
             return self._reputation
         return self._api_get_reputation()

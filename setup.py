@@ -8,14 +8,14 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='2.3.0',
+    version='2.4.0',
     description='Library for the RiskIQ PassiveTotal and Illuminate API',
     url="https://github.com/passivetotal/python_api",
     author="RiskIQ",
     author_email="admin@passivetotal.org",
     license="GPLv2",
     packages=find_packages(),
-    install_requires=['requests', 'ez_setup', 'python-dateutil', 'future'],
+    install_requires=['requests', 'ez_setup', 'python-dateutil', 'future', 'tldextract'],
     long_description=read('README.md'),
     long_description_content_type="text/markdown",
     classifiers=[],

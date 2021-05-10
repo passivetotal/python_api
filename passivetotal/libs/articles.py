@@ -45,6 +45,17 @@ class ArticlesRequest(Client):
         :return: Dict of results
         """
         return self._get('articles', 'indicators', **kwargs)
+    
+    def get_articles_for_indicator(self, indicator, indicator_type=None):
+        """Get articles that reference an indicator (typically a domain or IP).
+
+        Reference: https://api.riskiq.net/api/articles/#!/default/get_pt_v2_articles_indicator
+
+        :param indicator: Indicator to search, typically domain or IP
+        :param indicator_type: Type of indicator to search for (optional)
+        :return: Dict of results
+        """
+        return self._get('articles', 'indicator', query=indicator, type=indicator_type)
 
 
 

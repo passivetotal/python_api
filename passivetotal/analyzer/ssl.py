@@ -1,7 +1,7 @@
 from datetime import datetime
 import pprint
-from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
-from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, AnalyzerError
+from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
@@ -86,7 +86,10 @@ class CertificateField:
         """Use the 'SSL' request wrapper to perform an SSL certificate search by field."""
         if type(self._value) == list:
             raise ValueError('Cannot search a list')
-        response = get_api('SSL').search_ssl_certificate_by_field(query=self._value, field=self._name)
+        try:
+            response = get_api('SSL').search_ssl_certificate_by_field(query=self._value, field=self._name)
+        except Exception:
+            raise AnalyzerError
         self._certificates = Certificates(response)
         return self._certificates
     
@@ -155,6 +158,40 @@ class CertificateRecord(Record, FirstLastSeen):
             self._values[fieldname] = CertificateField(fieldname, self._cert_details.get(fieldname))
         return self._values[fieldname]
     
+    def _api_get_ip_history(self):
+        try:
+            response = get_api('SSL').get_ssl_certificate_history(query=self.hash)
+        except Exception as e:
+            raise AnalyzerError
+        self._ip_history = response['results'][0]
+        return self._ip_history
+    
+    @property
+    def iphistory(self):
+        """Get the direct API response for a history query on this certificates hash.
+        
+        For most use cases, the `ips` property is a more direct route to get the list
+        of IPs previously associated with this SSL certificate.
+        """
+        if getattr(self, '_ip_history', None) is not None:
+            return self._ip_history
+        return self._api_get_ip_history()
+    
+    @property
+    def ips(self):
+        """Provides list of :class:`passivetotal.analyzer.IPAddress` instances
+        representing IP addresses associated with this SSL certificate."""
+        history = self.iphistory
+        ips = []
+        if history['ipAddresses'] == 'N/A':
+            return ips
+        for ip in history['ipAddresses']:
+            try:
+                ips.append(get_object(ip,'IPAddress'))
+            except AnalyzerError:
+                continue
+        return ips
+
     @property
     def as_dict(self):
         """All SSL fields as a mapping with string values."""
@@ -480,16 +517,21 @@ class CertHistoryRecord(CertificateRecord):
         self._ips = record.get('ipAddresses',[])
 
     def __str__(self):
-        ips = 'ip' if len(self._ips)==1 else 'ips'
-        return '{0.hash} on {ipcount} {ips} from {0.firstseen_date} to {0.lastseen_date}'.format(self, ipcount=len(self._ips), ips=ips)
+        return '{0.hash} from {0.firstseen_date} to {0.lastseen_date}'.format(self)
     
     def __repr__(self):
         return "<CertHistoryRecord '{0.hash}'>".format(self)
     
     def _api_get_details(self):
         """Query the SSL API for certificate details."""
-        response = get_api('SSL').get_ssl_certificate_details(query=self._sha1)
-        self._cert_details = response['results'][0] # API oddly returns an array
+        try:
+            response = get_api('SSL').get_ssl_certificate_details(query=self._sha1)
+        except Exception:
+            raise AnalyzerError
+        try:
+            self._cert_details = response['results'][0] # API oddly returns an array
+        except IndexError:
+            raise SSLAnalyzerError('No details available for this certificate')
         self._has_details = True
         return self._cert_details
     
@@ -502,13 +544,10 @@ class CertHistoryRecord(CertificateRecord):
             return
         self._api_get_details()
 
-    @property
-    def ips(self):
-        """Provides list of :class:`passivetotal.analyzer.IPAddress` instances
-        representing IP addresses associated with this SSL certificate."""
-        from passivetotal.analyzer import IPAddress
-        for ip in self._ips:
-            yield IPAddress(ip)
 
+
+class SSLAnalyzerError(AnalyzerError):
+    """An exception raised when accessing SSL properties in the Analyzer module."""
+    pass
 
     

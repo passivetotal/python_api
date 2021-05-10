@@ -1,11 +1,10 @@
 from datetime import datetime
-import pprint
-from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
+from passivetotal.analyzer._common import RecordList, Record, PrettyRecord, PrettyList, FirstLastSeen
 from passivetotal.analyzer.ssl import CertHistoryRecord
-from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer import get_api
 
 
-class Services(RecordList):
+class Services(RecordList, PrettyList):
 
     """Historical port, service and banner data."""
 
@@ -53,7 +52,7 @@ class Services(RecordList):
     
 
 
-class ServiceRecord(Record, FirstLastSeen):
+class ServiceRecord(Record, FirstLastSeen, PrettyRecord):
 
     """Record of an observed port with current and recent services."""
 
@@ -85,12 +84,6 @@ class ServiceRecord(Record, FirstLastSeen):
                 'lastseen'
             ]
         }
-    
-    @property
-    def pretty(self):
-        """Pretty printed version of services data."""
-        config = get_config('pprint')
-        return pprint.pformat(self.as_dict, **config)
 
     @property
     def port(self):
