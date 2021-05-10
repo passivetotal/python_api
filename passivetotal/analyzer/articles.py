@@ -24,6 +24,33 @@ class ArticlesList(RecordList):
         self._records = []
         for article in api_response.get('articles', []):
             self._records.append(Article(article))
+    
+    def filter_tags(self, tags):
+        """Filtered article list that includes articles with an exact match to one
+        or more tags.
+
+        Tests the `match_tags` method on each article.
+
+        :param tags: String with one or multiple comma-separated tags, or a list
+        :rtype: :class:`passivetotal.analyzer.articles.ArticlesList`
+        """
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = filter(lambda r: r.match_tags(tags), self._records)
+        return filtered_results
+    
+    def filter_text(self, text, fields=['tags','title','summary']):
+        """Filtered article list that contain the text in one or more fields.
+        
+        Searches tags, title and summary by default - set `fields` param to a 
+        smaller list to narrow the search.
+        
+        :param text: text to search for
+        :param fields: list of fields to search (optional)
+        :rtype: :class:`passivetotal.analyzer.articles.ArticlesList`
+        """
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = filter(lambda r: r.match_text(text, fields), self._records)
+        return filtered_results
 
 
 
@@ -87,7 +114,7 @@ class Article(Record):
 
         Some API responses do not include full article details. This internal method
         will determine if they are missing and trigger an API call to fetch them."""
-        if not self._summary and not self._publishdate:
+        if self._summary is None and self._publishdate is None:
             self._api_get_details()
     
     def _indicators_by_type(self, type):
@@ -98,8 +125,40 @@ class Article(Record):
         from the API response. It assumes there is only one instance of a group
         type in the indicator list and therefore only returns the first one.
         """
-        return [ group for group in self.indicators if group['type']==type][0]
+        try:
+            return [ group for group in self.indicators if group['type']==type][0]
+        except IndexError:
+            return {'type': None, 'count': 0, 'values': [] }
+    
+    def match_tags(self, tags):
+        """Exact match search for one or more tags in this article's list of tags.
 
+        :param tags: String with one or multiple comma-seperated tags, or a list
+        :rtype bool: Whether any of the tags are included in this article's list of tags.
+        """
+        if type(tags) is str:
+            tags = tags.split(',')
+        return len(set(tags) & set(self.tags)) > 0
+    
+    def match_text(self, text, fields=['tags','title','summary']):
+        """Case insensitive substring search across article text fields.
+
+        Searches tags, title and summary by default - set `fields` param to a 
+        smaller list to narrow the search.
+        :param text: text to search for
+        :param fields: list of fields to search (optional)
+        :rtype bool: whether the text was found in any of the fields
+        """
+        for field in ['title','summary']:
+            if field in fields:
+                if text.casefold() in getattr(self, field).casefold():
+                    return True
+        if 'tags' in fields:
+            for tag in self.tags:
+                if text.casefold() in tag.casefold():
+                    return True
+        return False
+    
     @property
     def guid(self):
         """Article unique ID within the RiskIQ system."""
