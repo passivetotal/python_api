@@ -1,10 +1,12 @@
 from datetime import date
 from passivetotal.analyzer import get_api
-from passivetotal.analyzer._common import Record, RecordList, PrettyList, PrettyRecord, AnalyzerError
+from passivetotal.analyzer._common import (
+    Record, RecordList, AnalyzerError
+)
 
 
 
-class MalwareList(RecordList, PrettyList):
+class MalwareList(RecordList):
 
     """List of malware hashes associated with a host or domain."""
 
@@ -26,7 +28,7 @@ class MalwareList(RecordList, PrettyList):
 
 
 
-class MalwareRecord(Record, PrettyRecord):
+class MalwareRecord(Record):
 
     """Record of malware associated with a host."""
 
@@ -42,14 +44,8 @@ class MalwareRecord(Record, PrettyRecord):
     def __repr__(self):
         return "<MalwareRecord {0.hash}>".format(self)
     
-    @property
-    def as_dict(self):
-        """Malware record as a Python dictionary."""
-        return {
-            field: getattr(self, field) for field in [
-                'hash','source','source_url','date_collected'
-            ]
-        }
+    def _get_dict_fields(self):
+        return ['hash','source','source_url','str:date_collected']
     
     @property
     def hash(self):

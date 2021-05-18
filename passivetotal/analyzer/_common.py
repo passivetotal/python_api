@@ -15,7 +15,47 @@ def refang(hostname):
     """Remove square braces around dots in a hostname."""
     return re.sub(r'[\[\]]','', hostname)
 
-class RecordList:
+
+
+class AsDictionary:
+    """An object that can represent itself as a dictionary."""
+    
+    def _get_dict_fields(self):
+        """Implementations may return a list of record list attributes to include in
+        a dictionary representation of this list.
+        
+        Prefix fields with `str:` to have the value wrapped in str().
+        """
+        return []
+    
+    @property
+    def as_dict(self):
+        """Return a dictionary representation of the object."""
+        plain_fields = [ field for field in self._get_dict_fields() if ':' not in field ]
+        typed_fields = [ field for field in self._get_dict_fields() if ':' in field ]
+        d = { field: getattr(self, field) for field in plain_fields }
+        for field in typed_fields:
+            (type, name) = field.split(':')
+            if type == 'str':
+                value = getattr(self, name)
+                if isinstance(value, list):
+                    d[name] = [ str(v) for v in value ]
+                elif value is None:
+                    d[name] = None
+                else:
+                    d[name] = str(value)
+        return d
+    
+    @property
+    def pretty(self):
+        """Pretty printed version of this object's dictionary representation."""
+        from passivetotal.analyzer import get_config
+        config = get_config('pprint')
+        return pprint.pformat(self.as_dict, **config)
+
+
+
+class RecordList(AsDictionary):
 
     """List-like object that contains a set of records."""
 
@@ -59,10 +99,21 @@ class RecordList:
         """All the records as a list."""
         return self._records
     
+    @property
+    def as_dict(self):
+        """Return the recordlist as a list of dictionary objects."""
+        d = super().as_dict
+        d['records'] = [ r.as_dict for r in self.all ]
+        return d
+    
     def filter(self, **kwargs):
         """Shortcut for filter_and."""
         return self.filter_and(**kwargs)
     
+    @property
+    def length(self):
+        return len(self._records)
+
     def filter_and(self, **kwargs):
         """Return only records that match all key/value arguments."""
         filtered_results = self._make_shallow_copy()
@@ -115,7 +166,7 @@ class RecordList:
         return filtered_results
 
 
-class Record:
+class Record(AsDictionary):
 
     """A Record in a :class:`RecordList`."""
     
@@ -229,39 +280,7 @@ class PagedRecordList:
         :rtype: bool
         """
         return len(self) < self._totalrecords
-
-
-class PrettyRecord:
-    """A record that can pretty-print itself.
-
-    For best results, wrap this property in a print() statement.
-
-    Depends on a as_dict property on the base object.
-    """
-
-    @property
-    def pretty(self):
-        """Pretty printed version of this record."""
-        from passivetotal.analyzer import get_config
-        config = get_config('pprint')
-        return pprint.pformat(self.as_dict, **config)
-
-
-
-class PrettyList:
-    """A record list that can pretty-print itself.
-
-    Depends on an as_dict property each object in the list.
-    """
-
-    @property
-    def pretty(self):
-        """Pretty printed version of this record list."""
-        from passivetotal.analyzer import get_config
-        config = get_config('pprint')
-        return pprint.pformat([r.as_dict for r in self], **config)
-
-
+        
 
 
 class AnalyzerError(Exception):

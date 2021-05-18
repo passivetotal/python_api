@@ -17,12 +17,24 @@ class CookieHistory(RecordList, PagedRecordList):
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','name','domain']
     
+    def _get_dict_fields(self):
+        return ['totalrecords']
+    
     def parse(self, api_response):
         """Parse an API response."""
         self._totalrecords = api_response.get('totalRecords')
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(CookieRecord(result))
+    
+    @property
+    def as_dict(self):
+        d = super().as_dict
+        d.update({
+            'distinct_domains': self.domains,
+            'distinct_names': self.names,
+        })
+        return d
     
     @property
     def domains(self):
@@ -53,14 +65,8 @@ class CookieRecord(Record, FirstLastSeen):
     def __repr__(self):
         return '<CookieRecord {0.name}>'.format(self)
 
-    @property
-    def as_dict(self):
-        """Component data as a mapping."""
-        return {
-            field: getattr(self, field) for field in [
-                'firstseen','lastseen','domain','name','hostname'
-            ]
-        }
+    def _get_dict_fields(self):
+        return ['domain','str:firstseen','str:lastseen','name','hostname']
     
     @property
     def domain(self):

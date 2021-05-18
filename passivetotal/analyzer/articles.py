@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen
+    RecordList, Record
 )
 from passivetotal.analyzer import get_api
 
@@ -18,12 +18,20 @@ class ArticlesList(RecordList):
     def _get_sortable_fields(self):
         return ['age','title','type']
     
+    def _get_dict_fields(self):
+        return ['totalrecords']
+    
+    @property
+    def totalrecords(self):
+        return self._totalrecords
+    
     def parse(self, api_response):
         """Parse an API response."""
         self._totalrecords = api_response.get('totalRecords')
         self._records = []
-        for article in api_response.get('articles', []):
-            self._records.append(Article(article))
+        if api_response.get('articles', None) is not None:
+            for article in api_response.get('articles', []):
+                self._records.append(Article(article))
     
     def filter_tags(self, tags):
         """Filtered article list that includes articles with an exact match to one
@@ -109,6 +117,11 @@ class Article(Record):
         self._categories = response.get('categories')
         self._indicators = response.get('indicators')
 
+    def _get_dict_fields(self):
+        return ['guid','title','type','summary','str:date_published','age',
+                 'link','categories','tags','indicators','indicator_count',
+                 'indicator_types','str:ips','str:hostnames']
+
     def _ensure_details(self):
         """Ensure we have details for this article.
 
@@ -158,7 +171,7 @@ class Article(Record):
                 if text.casefold() in tag.casefold():
                     return True
         return False
-    
+   
     @property
     def guid(self):
         """Article unique ID within the RiskIQ system."""

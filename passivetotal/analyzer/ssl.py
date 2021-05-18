@@ -166,6 +166,11 @@ class CertificateRecord(Record, FirstLastSeen):
         self._ip_history = response['results'][0]
         return self._ip_history
     
+    def _get_dict_fields(self):
+        fields = self.__class__._fields
+        fields.extend(['days_valid','expired'])
+        return fields
+    
     @property
     def iphistory(self):
         """Get the direct API response for a history query on this certificates hash.
@@ -191,17 +196,6 @@ class CertificateRecord(Record, FirstLastSeen):
             except AnalyzerError:
                 continue
         return ips
-
-    @property
-    def as_dict(self):
-        """All SSL fields as a mapping with string values."""
-        return { field: getattr(self, field).value for field in self.__class__._fields }
-    
-    @property
-    def pretty(self):
-        """Pretty-print formatted view of all SSL fields."""
-        config = get_config('pprint')
-        return pprint.pformat(self.as_dict, **config)
 
     @property
     def hash(self):
@@ -235,6 +229,8 @@ class CertificateRecord(Record, FirstLastSeen):
         
         :rtype: datetime
         """
+        if self.issuerDate.value is None:
+            return None
         return datetime.strptime(self.issuerDate.value, '%b %d %H:%M:%S %Y %Z')
     
     @property
@@ -244,6 +240,8 @@ class CertificateRecord(Record, FirstLastSeen):
         Returns the timedelta between date_expires and date_issued.
         :rtype: int
         """
+        if self.date_expires is None or self.date_issued is None:
+            return None
         interval = self.date_expires - self.date_issued
         return interval.days
     
@@ -437,6 +435,8 @@ class CertificateRecord(Record, FirstLastSeen):
         
         :rtype: datetime
         """
+        if self.expirationDate.value is None:
+            return None
         return datetime.strptime(self.expirationDate.value, '%b %d %H:%M:%S %Y %Z')
     
     @property
@@ -445,6 +445,8 @@ class CertificateRecord(Record, FirstLastSeen):
         
         :rtype: bool
         """
+        if self.date_expires is None:
+            return None
         return datetime.utcnow() > self.date_expires
     
     @property

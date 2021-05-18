@@ -21,6 +21,9 @@ class HostpairHistory(RecordList, PagedRecordList):
     
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','cause','child','parent']
+
+    def _get_dict_fields(self):
+        return ['totalrecords','direction']
     
     def parse(self, api_response):
         """Parse an API response."""
@@ -28,6 +31,15 @@ class HostpairHistory(RecordList, PagedRecordList):
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(HostpairRecord(result))
+    
+    @property
+    def as_dict(self):
+        d = super().as_dict
+        d.update({
+            'distinct_causes': self.causes,
+            'distinct_hosts': [ str(h) for h in self.hosts ],
+        })
+        return d
     
     @property
     def direction(self):
@@ -43,21 +55,17 @@ class HostpairHistory(RecordList, PagedRecordList):
     def children(self):
         """Set of unique child hostnames in the hostpairs record list."""
         from passivetotal.analyzer import Hostname
-        return set(
-            Hostname(host) for host in set([record.child for record in self])
-        )
+        return set([record.child for record in self])
     
     @property
     def parents(self):
         """Set of unique parent hostnames in the hostpairs record list."""
         from passivetotal.analyzer import Hostname
-        return set(
-            Hostname(host) for host in set([record.parent for record in self])
-        )
+        return set([record.parent for record in self])
     
     @property
-    def hostnames(self):
-        """List of unique paired hostnames.
+    def hosts(self):
+        """List of unique paired hosts (IPs or hostnames).
 
         Returns `Hostpairs.children` or `Hostpairs.parents` depending on
         the value of `Hostpairs.direction`
@@ -82,16 +90,9 @@ class HostpairRecord(Record, FirstLastSeen):
     
     def __repr__(self):
         return '<HostpairRecord [{0.cause}]>'.format(self)
-
-    @property
-    def as_dict(self):
-        """Component data as a mapping."""
-        return {
-            field: str(getattr(self, field)) for field in [
-                'firstseen','lastseen','child','parent',
-                'cause'
-            ]
-        }
+    
+    def _get_dict_fields(self):
+        return ['str:firstseen','str:lastseen','str:child','str:parent','cause']
     
     @property
     def cause(self):
