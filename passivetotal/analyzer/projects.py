@@ -71,7 +71,7 @@ class Project(Record):
         return self.name
     
     def __repr__(self):
-        return f"<Project {self.guid} '{self.name}'"
+        return "<Project {0.guid} '{0.name}'".format(self)
 
     def _get_dict_fields(self):
         return ['project_guid','name','description','visibility','is_featured',
@@ -260,7 +260,7 @@ class Artifact(Record):
         return self.name
 
     def __repr__(self):
-        return f"<Artifact {self.guid} '{self.name}'>"
+        return "<Artifact {0.guid} '{0.name}'>".format(self)
 
     def _get_dict_fields(self):
         return ['type','project_guid','artifact_guid','is_monitored',
