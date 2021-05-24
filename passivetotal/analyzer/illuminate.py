@@ -2,10 +2,11 @@ from datetime import datetime
 import pprint
 from functools import total_ordering
 from passivetotal.analyzer import get_api, get_config
+from passivetotal.analyzer._common import AsDictionary
 
 
 @total_ordering
-class ReputationScore:
+class ReputationScore(AsDictionary):
 
     """RiskIQ Illuminate Reputation profile for a hostname or an IP."""
 
@@ -26,6 +27,15 @@ class ReputationScore:
     
     def __eq__(self, other):
         return self.score == other
+    
+    @property
+    def as_dict(self):
+        """Representation as a dictionary object."""
+        return {
+            'score': self.score,
+            'classification': self.classification,
+            'rules': self.rules,
+        }
 
     @property
     def score(self):

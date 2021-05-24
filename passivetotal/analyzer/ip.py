@@ -3,6 +3,7 @@
 
 from passivetotal.analyzer import get_api, get_config
 from passivetotal.analyzer._common import is_ip, AnalyzerError
+from passivetotal.analyzer.whois import IPWhois
 from passivetotal.analyzer.pdns import HasResolutions
 from passivetotal.analyzer.services import Services
 from passivetotal.analyzer.ssl import Certificates
@@ -14,12 +15,13 @@ from passivetotal.analyzer.components import HasComponents
 from passivetotal.analyzer.illuminate import HasReputation
 from passivetotal.analyzer.articles import HasArticles
 from passivetotal.analyzer.enrich import HasMalware
+from passivetotal.analyzer.projects import IsArtifact
 
 
 
 class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, 
                 HasReputation, HasArticles, HasResolutions, HasSummary,
-                HasMalware):
+                HasMalware, IsArtifact):
 
     """Represents an IPv4 address such as 8.8.8.8
     
@@ -101,7 +103,8 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
 
     def _api_get_whois(self):
         """Query the pDNS API for resolution history."""
-        self._whois = get_api('Whois').get_whois_details(query=self._ip)
+        response = get_api('Whois').get_whois_details(query=self._ip)
+        self._whois = IPWhois(response)
         return self._whois
     
     @property
@@ -124,9 +127,13 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
             return self._services
         return self._api_get_services()
     
+    
     @property
     def whois(self):
-        """Whois record details for this IP."""
+        """Most recently available Whois record for IP.
+
+        :rtype: :class:`passivetotal.analyzer.whois.IPWhois`
+        """
         if getattr(self, '_whois', None) is not None:
             return self._whois
         return self._api_get_whois()

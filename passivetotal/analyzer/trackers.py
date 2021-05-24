@@ -17,6 +17,19 @@ class TrackerHistory(RecordList, PagedRecordList):
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','category','label','hostname']
     
+    def _get_dict_fields(self):
+        return ['totalrecords']
+    
+    @property
+    def as_dict(self):
+        d = super().as_dict
+        d.update({
+            'distinct_hostnames': [ str(host) for host in self.hostnames ],
+            'distinct_categories': self.categories,
+            'distinct_values': self.values
+        })
+        return d
+    
     def parse(self, api_response):
         """Parse an API response."""
         self._totalrecords = api_response.get('totalRecords')
@@ -59,16 +72,9 @@ class TrackerRecord(Record, FirstLastSeen):
     
     def __repr__(self):
         return '<ComponentRecord "{0.value}">'.format(self)
-
-    @property
-    def as_dict(self):
-        """Component data as a mapping."""
-        return {
-            field: getattr(self, field) for field in [
-                'firstseen','lastseen','value','trackertype',
-                'hostname'
-            ]
-        }
+    
+    def _get_dict_fields(self):
+        return ['str:firstseen','str:lastseen','value','trackertype','hostname']
     
     @property
     def value(self):

@@ -23,6 +23,9 @@ class ComponentHistory(RecordList, PagedRecordList):
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','category','label','hostname']
     
+    def _get_dict_fields(self):
+        return ['totalrecords']
+    
     def parse(self, api_response):
         """Parse an API response."""
         self._totalrecords = api_response.get('totalRecords')
@@ -30,6 +33,15 @@ class ComponentHistory(RecordList, PagedRecordList):
         for result in api_response.get('results', []):
             self._records.append(ComponentRecord(result))
     
+    @property
+    def as_dict(self):
+        d = super().as_dict
+        d.update({
+            'distinct_hostnames': [ str(h) for h in self.hostnames ],
+            'distinct_categories': [ cat for cat in self.categories ],
+            'distinct_values': [ val for val in self.values ],
+        })
+        return d
 
     @property
     def hostnames(self):
@@ -70,15 +82,8 @@ class ComponentRecord(Record, FirstLastSeen):
     def __repr__(self):
         return '<ComponentRecord "{0.label}">'.format(self)
 
-    @property
-    def as_dict(self):
-        """Component data as a mapping."""
-        return {
-            field: getattr(self, field) for field in [
-                'firstseen','lastseen','version','category',
-                'label','hostname'
-            ]
-        }
+    def _get_dict_fields(self):
+        return ['category','str:firstseen','str:lastseen','label','version','str:hostname']
     
     @property
     def category(self):

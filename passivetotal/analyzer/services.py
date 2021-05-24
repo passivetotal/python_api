@@ -1,10 +1,10 @@
 from datetime import datetime
-from passivetotal.analyzer._common import RecordList, Record, PrettyRecord, PrettyList, FirstLastSeen
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
 from passivetotal.analyzer.ssl import CertHistoryRecord
 from passivetotal.analyzer import get_api
 
 
-class Services(RecordList, PrettyList):
+class Services(RecordList):
 
     """Historical port, service and banner data."""
 
@@ -12,7 +12,10 @@ class Services(RecordList, PrettyList):
         return ['_totalrecords']
     
     def _get_sortable_fields(self):
-        return ['firstseen','lastseen','duration','port','count','status','protocol']
+        return ['str:firstseen','str:lastseen','duration','port','count','status','protocol']
+    
+    def _get_dict_fields(self):
+        return ['totalrecords']
     
     def parse(self, api_response):
         """Parse an API response."""
@@ -52,7 +55,7 @@ class Services(RecordList, PrettyList):
     
 
 
-class ServiceRecord(Record, FirstLastSeen, PrettyRecord):
+class ServiceRecord(Record, FirstLastSeen):
 
     """Record of an observed port with current and recent services."""
 
@@ -74,16 +77,10 @@ class ServiceRecord(Record, FirstLastSeen, PrettyRecord):
     def __repr__(self):
         return "<ServiceRecord {0.protocol} {0.port}>".format(self)
 
-    @property
-    def as_dict(self):
-        """Services data as a mapping."""
-        return {
-            field: getattr(self, field) for field in [
-                'port','count','status','protocol','banners',
-                'current_services','recent_services', 'firstseen',
-                'lastseen'
-            ]
-        }
+    def _get_dict_fields(self):
+        return ['port','count','status','protocol','banners',
+                'current_services','recent_services', 'str:firstseen',
+                'str:lastseen']
 
     @property
     def port(self):

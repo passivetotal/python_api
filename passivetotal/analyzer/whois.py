@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from collections import namedtuple
-from passivetotal.analyzer import get_api, get_config
-from passivetotal.analyzer._common import RecordList, Record
+import pprint
+from passivetotal.analyzer import get_api, get_object
+from passivetotal.analyzer._common import RecordList
 
 
 
@@ -105,29 +106,9 @@ class WhoisRecords(RecordList):
     
 
 
+class WhoisRecord:
+    """Base type for IP and Domain Whois."""
 
-
-class DomainWhois(Record):
-
-    """Whois record for an Internet domain name."""
-
-    _instances = {}
-
-    def __new__(cls, record):
-        domain = record['domain']
-        self = cls._instances.get(domain)
-        if self is None:
-            self = cls._instances[domain] = object.__new__(DomainWhois)
-            self._domain = domain
-            self._rawrecord = record
-        return self
-    
-    def __str__(self):
-        return 'registrant: "{0.organization} | {0.registrant_name} | {0.registrant_email}"'.format(self)
-
-    def __repr__(self):
-        return "DomainWhois('{}')".format(self.domain)
-    
     def _get_contacts(self, contact_type):
         """Build a contact record from part of the API response."""
         if not self._rawrecord:
@@ -154,14 +135,19 @@ class DomainWhois(Record):
         return None
     
     @property
-    def domain(self):
-        """The domain name as returned by the API."""
-        from passivetotal.analyzer import Hostname
-        return Hostname(self._domain)
+    def as_dict(self):
+        return self._rawrecord
     
     @property
+    def pretty(self):
+        """Pretty printed version of this object's dictionary representation."""
+        from passivetotal.analyzer import get_config
+        config = get_config('pprint')
+        return pprint.pformat(self.as_dict, **config)
+
+    @property
     def registrant(self):
-        """Domain registrant contact record.
+        """Whois registrant contact record.
 
         :rtype: WhoisContact
         """
@@ -174,6 +160,14 @@ class DomainWhois(Record):
         :rtype: WhoisContact
         """
         return self._get_contacts('tech')
+
+    @property
+    def contacts(self):
+        """Primary domain contact records.
+
+        :rtype: WhoisContact
+        """
+        return self._get_contacts('root')
     
     @property
     def billing(self):
@@ -190,15 +184,7 @@ class DomainWhois(Record):
         :rtype: WhoisContact
         """
         return self._get_contacts('admin')
-    
-    @property
-    def contacts(self):
-        """Primary domain contact records.
 
-        :rtype: WhoisContact
-        """
-        return self._get_contacts('root')
-    
     @property
     def name(self):
         """Primary registrant name."""
@@ -238,15 +224,10 @@ class DomainWhois(Record):
     def registrant_phone(self):
         """Registrant telephone number from the registrant contact record."""
         return self.registrant.telephone
-    
-    @property
-    def nameservers(self):
-        """List of nameservers."""
-        return self._rawrecord.get('nameServers', [])
-    
+
     @property
     def registrar(self):
-        """Registrar of record for the domain name."""
+        """Registrar of record for the domain or IP."""
         return self._rawrecord.get('registrar')
     
     @property
@@ -256,7 +237,7 @@ class DomainWhois(Record):
     
     @property
     def date_registered(self):
-        """Date the domain was registered.
+        """Date the domain or IP was registered.
 
         :rtype: datetime
         """
@@ -264,7 +245,7 @@ class DomainWhois(Record):
     
     @property
     def date_loaded(self):
-        """Date when the domain was loaded into the database.
+        """Date when the domain or IP was loaded into the database.
 
         :rtype: datetime
         """
@@ -272,7 +253,7 @@ class DomainWhois(Record):
     
     @property
     def date_updated(self):
-        """Date when the domain was updated at the registrar or registry.
+        """Date when the domain or IP was updated at the registrar or registry.
 
         Be aware that registrars and registries may not reliably update this date
         when the contents of the record changes. Even when they do, it usually only
@@ -281,6 +262,49 @@ class DomainWhois(Record):
         :rtype: datetime
         """
         return self._parsedate('registryUpdatedAt')
+
+    @property
+    def record(self):
+        """Raw Whois record as text."""
+        return self._rawrecord.get('rawText')
+    
+    @property
+    def raw(self):
+        """Raw API response."""
+        return self._rawrecord
+
+
+
+class DomainWhois(WhoisRecord):
+
+    """Whois record for an Internet domain name."""
+
+    _instances = {}
+
+    def __new__(cls, record):
+        domain = record['domain']
+        self = cls._instances.get(domain)
+        if self is None:
+            self = cls._instances[domain] = object.__new__(DomainWhois)
+            self._domain = domain
+            self._rawrecord = record
+        return self
+    
+    def __str__(self):
+        return 'registrant: "{0.organization} | {0.registrant_name} | {0.registrant_email}"'.format(self)
+
+    def __repr__(self):
+        return "DomainWhois('{}')".format(self.domain)
+    
+    @property
+    def domain(self):
+        """The domain name as returned by the API."""
+        return get_object(self._domain,type='Hostname')
+    
+    @property
+    def nameservers(self):
+        """List of nameservers."""
+        return self._rawrecord.get('nameServers', [])
     
     @property
     def date_expires(self):
@@ -298,16 +322,30 @@ class DomainWhois(Record):
         now = datetime.now(timezone.utc)
         interval = now - self.date_registered
         return interval.days
-    
-    @property
-    def record(self):
-        """Raw Whois record as text."""
-        return self._rawrecord.get('rawText')
-    
-    @property
-    def raw(self):
-        """Raw API response."""
-        return self._rawrecord
-    
 
+
+
+class IPWhois(WhoisRecord):
+    """Whois record for an IP Address."""
+
+    _instances = {}
+
+    def __new__(cls, record):
+        domain = record['domain'] # yes, it's an IP, but this is where the data is
+        self = cls._instances.get(domain)
+        if self is None:
+            self = cls._instances[domain] = object.__new__(IPWhois)
+            self._domain = domain
+            self._rawrecord = record
+        return self
+    
+    def __str__(self):
+        return 'registrant: "{0.organization} | {0.registrant_name} | {0.registrant_email}"'.format(self)
+
+    def __repr__(self):
+        return "IPWhois('{}')".format(self.ip)
+    
+    @property
+    def ip(self):
+        return get_object(self._domain, type='IPAddress')
 

@@ -20,6 +20,9 @@ class PdnsResolutions(RecordList):
     def _get_sortable_fields(self):
         return ['firstseen', 'lastseen', 'duration', 'collected']
     
+    def _get_dict_fields(self):
+        return ['totalrecords','str:lastseen','str:firstseen','str:datestart','str:dateend','querytype','queryvalue','pager']
+    
     def parse(self, api_response):
         self._queryvalue = api_response.get('queryValue')
         self._querytype = api_response.get('queryType')
@@ -31,6 +34,54 @@ class PdnsResolutions(RecordList):
         for result in api_response.get('results',[]):
             self._records.append(PdnsRecord(result))
     
+    @property
+    def firstseen(self):
+        """Earliest data available for this host."""
+        if getattr(self, '_firstseen', None) is None:
+            return None
+        return datetime.fromisoformat(self._firstseen)
+    
+    @property
+    def lastseen(self):
+        """Most recent data available for this host."""
+        if getattr(self, '_lastseen', None) is None:
+            return None
+        return datetime.fromisoformat(self._lastseen)
+    
+    @property
+    def datestart(self):
+        """Start date of API query range."""
+        if not self._datestart:
+            return None
+        return datetime.fromisoformat(self._datestart)
+    
+    @property
+    def dateend(self):
+        """End date of API query range."""
+        if not self._dateend:
+            return None
+        return datetime.fromisoformat(self._dateend)
+    
+    @property
+    def pager(self):
+        """Pager value from API response."""
+        return self._pager
+    
+    @property
+    def queryvalue(self):
+        """Interpreted query value from API response."""
+        return self._queryvalue
+
+    @property
+    def querytype(self):
+        """Interpreted query type form API response."""
+        return self._querytype
+    
+    @property
+    def totalrecords(self):
+        """Total number of records available for this query."""
+        return self._totalrecords
+
     @property
     def newest(self):
         """Most recently seen pDNS record.
@@ -102,6 +153,10 @@ class PdnsRecord(Record, FirstLastSeen):
     def __repr__(self):
         return "<PdnsRecord '{0.value}' : '{0.resolve}'>".format(self)
     
+    def _get_dict_fields(self):
+        return ['str:firstseen','str:lastseen','sources','value','str:collected','recordtype',
+                'resolve','resolvetype','str:ip','str:hostname']
+
     @property
     def sources(self):
         """Sources of API data."""
@@ -144,7 +199,7 @@ class PdnsRecord(Record, FirstLastSeen):
         Will return None if the resolvetype is not 'ip'.
         """
         from passivetotal.analyzer import IPAddress
-        if self._resolvetype != 'ip':
+        if self._resolvetype != 'ip' or self._recordtype != 'A':
             return None
         return IPAddress(self._resolve)
     

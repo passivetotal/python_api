@@ -1,8 +1,8 @@
+from passivetotal.analyzer._common import AsDictionary
 
 
 
-
-class Summary:
+class Summary(AsDictionary):
 
     """Summary of available PassiveTotal data and key facts for hostnames & IPs."""
 
@@ -21,21 +21,22 @@ class Summary:
     def __repr__(self):
         return "<{clsname} '{id}'>".format(clsname=self.__class__.__name__, id=self.name)
 
-    @property
-    def as_dict(self):
-        """All data counts as a mapping."""
-        fields = ['resolutions','certificates','malware_hashes','projects','articles']
-        return { field: getattr(self, field) for field in fields }
+    def _get_dict_fields(self):
+        return ['resolutions','certificates','malware_hashes','projects','articles',
+                'total','netblock','os','asn','hosting_provider']
+    
+    def _get_dataset_fields(self):
+        return ['resolutions','certificates','malware_hashes','projects','articles']
     
     @property
     def available(self):
         """List of datasets with at least one record."""
-        return [ field for field, count in self.as_dict.items() if count > 0 ]
+        return [ field for field, count in self._get_dataset_fields() if count > 0 ]
     
     @property
     def total(self):
         """Sum of all available records."""
-        return sum([ count for count in self.as_dict.values() ])
+        return sum([ getattr(self, dataset, 0) for dataset in self._get_dataset_fields() ])
 
     @property
     def name(self):
@@ -114,14 +115,15 @@ class HostnameSummary(Summary):
             self._summary = api_response
         return self
     
-    @property
-    def as_dict(self):
-        """All data counts as a mapping."""
-        counts = super().as_dict
-        counts.update({
-            field: getattr(self, field) for field in ['trackers','components','hostpairs','cookies']
-        })
-        return counts
+    def _get_dict_fields(self):
+        fields = super()._get_dict_fields()
+        fields.extend(['trackers','components','hostpairs','cookies'])
+        return fields
+    
+    def _get_dataset_fields(self):
+        fields = super()._get_dataset_fields()
+        fields.extend(['trackers','components','hostpairs','cookies'])
+        return fields
 
     @property
     def trackers(self):
@@ -159,12 +161,15 @@ class IPSummary(Summary):
             self._summary = api_response
         return self
     
-    @property
-    def as_dict(self):
-        """All data counts as a mapping."""
-        counts = super().as_dict
-        counts['services'] = self.services
-        return counts
+    def _get_dict_fields(self):
+        fields = super()._get_dict_fields()
+        fields.append('services')
+        return fields
+    
+    def _get_dataset_fields(self):
+        fields = super()._get_dataset_fields()
+        fields.append('services')
+        return fields
     
     @property
     def services(self):
