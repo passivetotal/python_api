@@ -157,7 +157,10 @@ def set_dateorder_descending():
     config['dateorder'] = 'desc'
 
 def get_project():
-    """Get the active project."""
+    """Get the active project.
+    
+    :rtype: :class:`passivetotal.analyzer.projects.Project` 
+    """
     if config['project_guid'] is None:
         return None
     return Project.find(config['project_guid'])

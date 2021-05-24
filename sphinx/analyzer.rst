@@ -317,3 +317,23 @@ Malware Lists
 .. autoclass:: passivetotal.analyzer.enrich.MalwareRecord
     :members:
     :inherited-members:
+
+Project Lists
+^^^^^^^^^^^^^^
+    .. autoclass:: passivetotal.analyzer.projects.ProjectList
+        :members:
+        :inherited-members:
+    
+    .. autoclass:: passivetotal.analyzer.projects.Project
+        :members:
+        :inherited-members:
+
+Artifact Lists
+^^^^^^^^^^^^^^
+    .. autoclass:: passivetotal.analyzer.projects.ArtifactList
+        :members:
+        :inherited-members:
+    
+    .. autoclass:: passivetotal.analyzer.projects.Artifact
+        :members:
+        :inherited-members:

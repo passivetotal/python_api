@@ -113,6 +113,10 @@ class Project(Record):
 
     @property
     def artifacts(self):
+        """List of artifacts in this project.
+
+        :rtype: :class:`passivetotal.analyzer.projects.ArtifactList` 
+        """
         if getattr(self, '_artifacts', None) is not None:
             return self._artifacts
         return self._api_get_artifacts()
@@ -438,12 +442,20 @@ class IsArtifact:
 
     @property
     def projects(self):
+        """List of projects that reference this object as an artifact.
+        
+        :rtype: :class:`passivetotal.analyzer.projects.ProjectList` 
+        """
         if getattr(self, '_projects', None) is not None:
             return self._projects
         return self._api_get_projects()
     
     @property
     def artifacts(self):
+        """List of project artifacts that correspond with this object.
+        
+        :rtype: :class:`passivetotal.analyzer.projects.ArtifactList` 
+        """
         if getattr(self, '_artifacts', None) is not None:
             return self._artifacts
         return self._api_get_artifacts()
