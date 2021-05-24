@@ -1,5 +1,6 @@
 """PassiveTotal API Interface."""
 
+import re
 from passivetotal.api import Client
 from passivetotal.response import Response
 
@@ -12,11 +13,59 @@ class ProjectsRequest(Client):
     def __init__(self, *args, **kwargs):
         """Setup the primary client instance."""
         super(ProjectsRequest, self).__init__(*args, **kwargs)
+    
+    @classmethod
+    def is_guid(cls, test):
+        pattern = re.compile(r"^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$")
+        return len(pattern.findall(test))==1
+    
+    def find_projects(self, name_or_guid, visibility='analyst', owner=None, creator=None, org=None):
+        """Obtain a list of all projects and find the one project that match the other criteria.
+
+        Set owner='me' or creator='me' to use the API username.
+
+        :param name_or_guid: Project name or project guid
+        :param visibility: Project visiblity: public, private, or analyst (default), optional
+        :param owner: Project owner, optional
+        :param creator: Project creater, optional
+        :param org: Project owner, optional
+        """
+        if owner == 'me':
+            owner = self.username
+        if creator == 'me':
+            creator = self.username
+        params = { 
+            'visibility': visibility,
+            'owner': self.username if owner=='me' else owner,
+            'creator': self.username if creator=='me' else creator,
+            'organization': org
+        }
+        if self.is_guid(name_or_guid):
+            guid = name_or_guid
+            name = None
+            params['guid'] = name_or_guid
+        else:
+            guid = None
+            name = name_or_guid
+        results = self.get_projects(**params)
+        if 'results' not in results:          # because only one project matched
+            results = {'results': [results]} # synthesize a list of results 
+        if len(results['results'])==0:
+            return []
+        def test(project):
+            if guid is None:
+                return project['name']==name
+            else:
+                return project['guid']==guid
+        return list(filter(test, results.get('results',[])))
 
     def get_projects(self, **kwargs):
         """Get all projects with optional filters.
 
         Reference: https://api.passivetotal.org/index.html#api-Project-GetV2Project
+
+        IMPORTANT: If only one project matches the search, the API will return a
+        single result instead of a list.
 
         :param project: Project UUID, optional
         :param owner: filter by owner (email or org id), optional

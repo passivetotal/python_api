@@ -17,6 +17,9 @@ config = {
     'pprint': { 'indent': 2 },
     'datesort': None,
     'dateorder': None,
+    'project_name': None,
+    'project_visiblity': 'analyzer',
+    'project_guid': None
 }
 
 
@@ -43,6 +46,9 @@ def init(**kwargs):
         (SslRequest, 'SSL'), 
         (WhoisRequest, 'Whois'),
         (IlluminateRequest, 'Illuminate'),
+        (ArticlesRequest, 'Articles'),
+        (ProjectsRequest, 'Projects'),
+        (ArtifactsRequest, 'Artifacts'),
     ]
     for c, name in api_classes:
         if 'username' in kwargs and 'api_key' in kwargs:
@@ -149,6 +155,36 @@ def set_dateorder_descending():
     cookies, hostpairs, and trackers.
     """
     config['dateorder'] = 'desc'
+
+def set_project(name_or_guid, visibility='analyst', description='', tags=None, create_if_missing=True):
+    """Set the active Illuminate Project for this investigation. 
+
+    Used by Analyzer objects to persist results to projects. Performs an API query to determine if project
+    exists, create it if it is missing, and obtain necessary details.
+
+    :param name_or_guid: Project name or project GUID.
+    :param visibility: Who can see the project: public, private or analyst (optional, defaults to 'analyst').
+    :param description: Description of the project (optional).
+    :param tags: List of tags to apply to the project (optional).
+    :param create_if_missing: Whether to auto-create the project if it doesn't exist (optional, defaults to true)."""
+    projreq = get_api('Projects')
+    projects = projreq.find_projects(name_or_guid, visibility)
+    if len(projects) == 0:
+        if projreq.is_guid(name_or_guid):
+            raise AnalyzerError('No project found with that GUID')
+        if create_if_missing:
+            result = projreq.create_project(name_or_guid, visibility, description=description, tags=tags)
+            config['project_name'] = name_or_guid
+            config['project_guid'] = result['guid']
+            config['project_visibility'] = visibility
+        else:
+            raise AnalyzerError('Project does not exist and create_if_missing is False.')
+    elif len(projects) == 1:
+        config['project_name'] = projects[0]['name']
+        config['project_guid'] = projects[0]['guid']
+        config['project_visibility'] = projects[0]['visibility']
+    else:
+        raise AnalyzerError('More than one project found; narrow the search criteria or use a unique name')
 
 
 from passivetotal.analyzer.hostname import Hostname

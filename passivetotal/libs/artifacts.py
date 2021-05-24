@@ -60,6 +60,25 @@ class ArtifactsRequest(Client):
         data.update(kwargs)
         return self._send_data('PUT', 'artifact', 'bulk', data)
     
+    def upsert_artifact(self, project_guid, artifact, artifact_type=None, tags=None, monitor=None):
+        """Update a matching artifact or create it if it does not exist.
+
+        :param project_guid: Unique ID of the project containing the artifact
+        :param artifact: String of the artifact
+        :param type: Type of the artifact, optional (will be inferred if none provided)
+        :param monitor: Whether to monitor the artifact (true or false), optional
+        """
+        results = self.get_artifacts(project=project_guid, query=artifact, type=artifact_type)
+        if 'artifacts' in results: # API returned a list of more than one result
+            raise Exception('More than one artifact matched your search.')
+        if 'guid' in results: # API found one result
+            artifact = results
+        else: # API found no results
+            artifact = self.create_artifact(project_guid=project_guid, artifact=artifact, type=artifact_type, tags=None)
+        if tags is not None or monitor is not None:
+            artifact = self.update_artifact(artifact['guid'], monitor=monitor, tags=tags)
+        return artifact
+
     def update_artifact(self, artifact_guid, **kwargs):
         """Update an existing artifact.
 

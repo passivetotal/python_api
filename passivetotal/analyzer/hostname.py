@@ -15,12 +15,13 @@ from passivetotal.analyzer.components import HasComponents
 from passivetotal.analyzer.illuminate import HasReputation
 from passivetotal.analyzer.articles import HasArticles
 from passivetotal.analyzer.enrich import HasMalware
+from passivetotal.analyzer.projects import IsArtifact
 
 
 
 class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs, 
                HasReputation, HasArticles, HasResolutions, HasSummary,
-               HasMalware):
+               HasMalware, IsArtifact):
 
     """Represents a hostname such as api.passivetotal.org.
     

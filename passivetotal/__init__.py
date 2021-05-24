@@ -2,6 +2,7 @@ from .libs.account import AccountClient
 from .libs.actions import ActionsClient
 from .libs.articles import ArticlesRequest
 from .libs.attributes import AttributeRequest
+from .libs.artifacts import ArtifactsRequest
 from .libs.cards import CardsRequest
 from .libs.cookies import CookiesRequest
 from .libs.dns import DnsRequest
