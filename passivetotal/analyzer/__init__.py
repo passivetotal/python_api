@@ -156,6 +156,12 @@ def set_dateorder_descending():
     """
     config['dateorder'] = 'desc'
 
+def get_project():
+    """Get the active project."""
+    if config['project_guid'] is None:
+        return None
+    return Project.find(config['project_guid'])
+
 def set_project(name_or_guid, visibility='analyst', description='', tags=None, create_if_missing=True):
     """Set the active Illuminate Project for this investigation. 
 
@@ -191,3 +197,4 @@ from passivetotal.analyzer.hostname import Hostname
 from passivetotal.analyzer.ip import IPAddress
 from passivetotal.analyzer.ssl import CertificateField
 from passivetotal.analyzer.articles import AllArticles
+from passivetotal.analyzer.projects import Project, ProjectList

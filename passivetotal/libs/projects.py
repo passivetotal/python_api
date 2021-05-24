@@ -20,7 +20,7 @@ class ProjectsRequest(Client):
         return len(pattern.findall(test))==1
     
     def find_projects(self, name_or_guid, visibility='analyst', owner=None, creator=None, org=None):
-        """Obtain a list of all projects and find the one project that match the other criteria.
+        """Obtain a list of all projects and find any project that match the criteria.
 
         Set owner='me' or creator='me' to use the API username.
 

@@ -15,6 +15,21 @@ class ProjectList(RecordList):
     def _get_dict_fields(self):
         return []
     
+    @staticmethod
+    def find(name_or_guid, visibility='analyst', owner=None, creator=None, org=None):
+        """Obtain a list of all projects and find the one project that match the other criteria.
+
+        Set owner='me' or creator='me' to use the API username.
+
+        :param name_or_guid: Project name or project guid
+        :param visibility: Project visiblity: public, private, or analyst (default), optional
+        :param owner: Project owner, optional
+        :param creator: Project creater, optional
+        :param org: Project owner, optional
+        """
+        results = get_api('Projects').find_projects(name_or_guid, visibility, owner, creator, org)
+        return ProjectList(results)
+
     def parse(self, api_response):
         """Parse an API response."""
         self._records = []
@@ -27,23 +42,30 @@ class Project(Record):
 
     """Project record with collection of artifacts."""
 
-    def __init__(self, api_response):
-        self._guid = api_response['guid']
-        self._active = api_response['active']
-        self._name = api_response['name']
-        self._description = api_response['description']
-        self._visiblity = api_response['visibility']
-        self._featured = api_response['featured']
-        self._tags = api_response['tags']
-        self._owner = api_response['owner']
-        self._creator = api_response['creator']
-        self._created = api_response['created']
-        self._organization = api_response['organization']
-        self._collaborators = api_response['collaborators']
-        self._link = api_response['link']
-        self._links = api_response['links']
-        self._subscribers = api_response['subscribers']
-        self._can_edit = api_response['can_edit']
+    _instances = {}
+
+    def __new__(cls, api_response):
+        guid = api_response['guid']
+        self = cls._instances.get(guid)
+        if self is None:
+            self = cls._instances[guid] = object.__new__(Project)
+            self._guid = api_response['guid']
+            self._active = api_response['active']
+            self._name = api_response['name']
+            self._description = api_response['description']
+            self._visiblity = api_response['visibility']
+            self._featured = api_response['featured']
+            self._tags = api_response['tags']
+            self._owner = api_response['owner']
+            self._creator = api_response['creator']
+            self._created = api_response['created']
+            self._organization = api_response['organization']
+            self._collaborators = api_response['collaborators']
+            self._link = api_response['link']
+            self._links = api_response['links']
+            self._subscribers = api_response['subscribers']
+            self._can_edit = api_response['can_edit']
+        return self
 
     def __str__(self):
         return self.name
@@ -56,6 +78,45 @@ class Project(Record):
                 'tags','owner','creator','str:created','organization','link',
                 'collaborators','links','subscribers','can_edit']
     
+    def _api_get_artifacts(self):
+        """Query the artifacts API to load a list of artifacts for this project."""
+        self._artifacts = []
+        result = get_api('Artifacts').get_artifacts(project=self.guid)
+        if 'message' in result:
+            return
+        self._artifacts = ArtifactList(result)
+        return self._artifacts
+    
+    @staticmethod
+    def find(name_or_guid, visibility='analyst', owner=None, creator=None, org=None):
+        """Find one project that matches the other criteria.
+
+        Raises AnalyzerError if more than one project is found.
+
+        Set owner='me' or creator='me' to use the API username.
+
+        :param name_or_guid: Project name or project guid
+        :param visibility: Project visiblity: public, private, or analyst (default), optional
+        :param owner: Project owner, optional
+        :param creator: Project creater, optional
+        :param org: Project owner, optional
+        """
+        project = Project._instances.get(name_or_guid)
+        if project is not None:
+            return project
+        results = get_api('Projects').find_projects(name_or_guid, visibility, owner, creator, org)
+        if len(results) == 0:
+            return None
+        if len(results) > 1:
+            raise AnalyzerError('More than one project matched the search criteria.')
+        return Project(results[0])
+
+    @property
+    def artifacts(self):
+        if getattr(self, '_artifacts', None) is not None:
+            return self._artifacts
+        return self._api_get_artifacts()
+
     @property
     def guid(self):
         """Alias for project_guid; project's unique identifier."""
@@ -167,22 +228,29 @@ class Artifact(Record):
 
     """An artifact in a project."""
 
-    def __init__(self, api_response):
-        self._type = api_response.get('type')
-        self._project_guid = api_response.get('project')
-        self._artifact_guid = api_response.get('guid')
-        self._monitor = api_response.get('monitor')
-        self._monitorable = api_response.get('monitorable')
-        self._organization = api_response.get('organization')
-        self._links = api_response.get('links')
-        self._owner = api_response.get('owner')
-        self._query = api_response.get('query')
-        self._creator = api_response.get('creator')
-        self._created = api_response.get('created')
-        self._tags_meta = api_response.get('tag_meta')
-        self._tags_global = api_response.get('global_tags')
-        self._tags_system = api_response.get('system_tags')
-        self._tags_user = api_response.get('user_tags')
+    _instances = {}
+
+    def __new__(cls, api_response):
+        guid = api_response['guid']
+        self = cls._instances.get('guid')
+        if self is None:
+            self = cls._instances[guid] = object().__new__(Artifact)
+            self._type = api_response.get('type')
+            self._project_guid = api_response.get('project')
+            self._artifact_guid = api_response.get('guid')
+            self._monitor = api_response.get('monitor')
+            self._monitorable = api_response.get('monitorable')
+            self._organization = api_response.get('organization')
+            self._links = api_response.get('links')
+            self._owner = api_response.get('owner')
+            self._query = api_response.get('query')
+            self._creator = api_response.get('creator')
+            self._created = api_response.get('created')
+            self._tags_meta = api_response.get('tag_meta')
+            self._tags_global = api_response.get('global_tags')
+            self._tags_system = api_response.get('system_tags')
+            self._tags_user = api_response.get('user_tags')
+        return self
 
     def __str__(self):
         return self.name
@@ -247,6 +315,10 @@ class Artifact(Record):
             raise AnalyzerError('Cannot set tags: {}'.format(result['message']))
         self._tags_user = result['user_tags']
         return True
+    
+    @property
+    def project(self):
+        pass
 
     @property
     def type(self):
