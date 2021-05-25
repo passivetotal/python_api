@@ -19,6 +19,13 @@ class MalwareList(RecordList):
     def _get_sortable_fields(self):
         return ['date_collected','source']
     
+    def _get_dict_fields(self):
+        return ['totalrecords']
+    
+    @property
+    def totalrecords(self):
+        return len(self._records)
+    
     def parse(self, api_response):
         """Parse an API response into a list of records."""
         self._api_success = api_response.get('success',None)

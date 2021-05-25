@@ -25,8 +25,8 @@ class TrackerHistory(RecordList, PagedRecordList):
         d = super().as_dict
         d.update({
             'distinct_hostnames': [ str(host) for host in self.hostnames ],
-            'distinct_categories': self.categories,
-            'distinct_values': self.values
+            'distinct_categories': list(self.categories),
+            'distinct_values': list(self.values)
         })
         return d
     

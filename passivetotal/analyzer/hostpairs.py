@@ -36,7 +36,7 @@ class HostpairHistory(RecordList, PagedRecordList):
     def as_dict(self):
         d = super().as_dict
         d.update({
-            'distinct_causes': self.causes,
+            'distinct_causes': list(self.causes),
             'distinct_hosts': [ str(h) for h in self.hosts ],
         })
         return d

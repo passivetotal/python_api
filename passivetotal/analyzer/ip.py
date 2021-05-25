@@ -114,8 +114,9 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
     
     @property
     def certificates(self):
-        """History of :class:`passivetotal.analyzer.ssl.Certificates` 
-        presented by services hosted on this IP address.
+        """History of TLS certificates presented by services hosted on this IP address.
+
+        :rtype: :class:`passivetotal.analyzer.ssl.Certificates`
         """
         if getattr(self, '_ssl_history', None) is not None:
             return self._ssl_history
@@ -123,6 +124,10 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
     
     @property
     def services(self):
+        """Record of services observed on this host.
+
+        :rtype: :class:`passivetotal.analyzer.services.Services`
+        """
         if getattr(self, '_services', None) is not None:
             return self._services
         return self._api_get_services()

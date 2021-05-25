@@ -31,8 +31,8 @@ class CookieHistory(RecordList, PagedRecordList):
     def as_dict(self):
         d = super().as_dict
         d.update({
-            'distinct_domains': self.domains,
-            'distinct_names': self.names,
+            'distinct_domains': list(self.domains),
+            'distinct_names': list(self.names),
         })
         return d
     

@@ -4,6 +4,20 @@
 
 #### Enhancements:
 
+
+#### Bug Fixes
+
+- Added missing docstring for `services` property
+- Fixed various issues with `as_dict` property to ensure only serializable
+  types made it into the dictionary. 
+- Ensured Projects would load by GUID regardless of visiblity.
+
+
+
+## v2.4.1
+
+#### Enhancements:
+
 - Added an `as_dict` property across all Analyzer objects to simplify integration
   with other systems. Returns a dictionary representation of the object or the list.
 - New `projects` attribute on IPAddress and Hostname objects returns list of projects
