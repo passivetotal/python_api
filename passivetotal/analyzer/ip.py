@@ -48,7 +48,7 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
         return self
 
     def __str__(self):
-        return self._ip
+        return '' if self._ip is None else self._ip
     
     def __repr__(self):
         return "IPAddress('{}')".format(self.ip)

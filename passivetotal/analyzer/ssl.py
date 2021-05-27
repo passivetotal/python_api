@@ -80,7 +80,7 @@ class CertificateField:
         return self
     
     def __str__(self):
-        if not self._value:
+        if self._value is None:
             return ''
         if type(self._value) == list:
             return ','.join(self._value)

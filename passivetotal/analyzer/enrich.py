@@ -9,9 +9,6 @@ from passivetotal.analyzer._common import (
 class MalwareList(RecordList):
 
     """List of malware hashes associated with a host or domain."""
-
-    def __str__(self):
-        pass
     
     def _get_shallow_copy_fields(self):
         return []
@@ -44,9 +41,9 @@ class MalwareRecord(Record):
         self._sample = api_response.get('sample')
         self._source = api_response.get('source')
         self._source_url = api_response.get('sourceUrl')
-    
+
     def __str__(self):
-        return self.hash
+        return '' if self.hash is None else self.hash
     
     def __repr__(self):
         return "<MalwareRecord {0.hash}>".format(self)

@@ -4,6 +4,9 @@
 
 #### Enhancements:
 
+- Throw `AnalyzerError` when a hostname cannot be resolved to an IP
+
+
 
 #### Bug Fixes
 
@@ -11,6 +14,8 @@
 - Fixed various issues with `as_dict` property to ensure only serializable
   types made it into the dictionary. 
 - Ensured Projects would load by GUID regardless of visiblity.
+- Removed a partially-implemented __str__ method in `MalwareList` method
+- Ensured all __str__ methods in `analyzer` objects always return a string
 
 
 

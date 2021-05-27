@@ -38,7 +38,7 @@ class WhoisField:
         return self
 
     def __str__(self):
-        if not self._value:
+        if self._value is None:
             return ''
         return self._value
 

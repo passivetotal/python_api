@@ -72,7 +72,7 @@ class Project(Record):
         return self
 
     def __str__(self):
-        return self.name
+        return '' if self.name is None else self.name
     
     def __repr__(self):
         return "<Project {0.guid} '{0.name}'".format(self)
@@ -265,7 +265,7 @@ class Artifact(Record):
         return self
 
     def __str__(self):
-        return self.name
+        return '' if self.name is None else self.name
 
     def __repr__(self):
         return "<Artifact {0.guid} '{0.name}'>".format(self)
