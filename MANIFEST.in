@@ -1,0 +1,4 @@
+include CHANGELOG.md
+graft docs
+graft examples
+graft sphinx
