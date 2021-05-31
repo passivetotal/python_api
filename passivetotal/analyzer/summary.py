@@ -23,7 +23,7 @@ class Summary(AsDictionary):
 
     def _get_dict_fields(self):
         return ['resolutions','certificates','malware_hashes','projects','articles',
-                'total','netblock','os','asn','hosting_provider']
+                'total','netblock','os','asn','hosting_provider', 'link', 'links']
     
     def _get_dataset_fields(self):
         return ['resolutions','certificates','malware_hashes','projects','articles']
@@ -97,6 +97,18 @@ class Summary(AsDictionary):
     def articles(self):
         """Count of open-source intelligence (OSINT) articles referencing this IP or hostname."""
         return self._count_or_none('articles')
+    
+    @property
+    def link(self):
+        """Link to the entire summary card in the UI."""
+        return self._summary['link']
+    
+    @property
+    def links(self):
+        """Dictionary of links to continue research on a dataset in the UI."""
+        summaries = self._summary['data_summary']
+        summaries['malware_hashes'] = summaries['hashes']
+        return { name: summary['link'] for name, summary in summaries.items() if name != 'hashes' }
     
 
 

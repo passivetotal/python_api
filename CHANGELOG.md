@@ -1,10 +1,11 @@
 # Changelog
 
-## v2.4.1
+## v2.4.2
 
 #### Enhancements:
 
 - Throw `AnalyzerError` when a hostname cannot be resolved to an IP
+- Add links to summary card as_dict method
 
 
 
@@ -16,6 +17,7 @@
 - Ensured Projects would load by GUID regardless of visiblity.
 - Removed a partially-implemented __str__ method in `MalwareList` method
 - Ensured all __str__ methods in `analyzer` objects always return a string
+- Upserting an artifact triggered an API error when setting a tag
 
 
 
