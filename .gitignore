@@ -12,5 +12,5 @@ libpassivetotal.egg-info/
 .pypirc
 .*
 pip-wheel-metadata
-sphinx/_build
+docs/_build
 *.vscode
