@@ -32,7 +32,7 @@ class TrackerHistory(RecordList, PagedRecordList):
     
     def parse(self, api_response):
         """Parse an API response."""
-        self._totalrecords = api_response.get('totalRecords')
+        self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(TrackerRecord(result))
@@ -41,18 +41,18 @@ class TrackerHistory(RecordList, PagedRecordList):
     def hostnames(self):
         """List of unique hostnames in the tracker record list."""
         return set(
-            get_object(host) for host in set([record.hostname for record in self])
+            get_object(host) for host in set([record.hostname for record in self if record.hostname is not None])
         )
     
     @property
     def categories(self):
         """List of unique categories (types) in the tracker record list."""
-        return set([record.category for record in self])
+        return set([record.category for record in self if record.category is not None])
     
     @property
     def values(self):
         """List of unique tracker values in the tracker record list."""
-        return set([record.value for record in self])
+        return set([record.value for record in self if record.value is not None])
 
 
 

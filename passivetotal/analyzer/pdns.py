@@ -29,7 +29,7 @@ class PdnsResolutions(RecordList):
         self._pager = api_response.get('pager')
         self._firstseen = api_response.get('firstSeen')
         self._lastseen = api_response.get('lastSeen')
-        self._totalrecords = api_response.get('totalRecords')
+        self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results',[]):
             self._records.append(PdnsRecord(result))

@@ -22,7 +22,7 @@ class CookieHistory(RecordList, PagedRecordList):
     
     def parse(self, api_response):
         """Parse an API response."""
-        self._totalrecords = api_response.get('totalRecords')
+        self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(CookieRecord(result))
@@ -39,12 +39,12 @@ class CookieHistory(RecordList, PagedRecordList):
     @property
     def domains(self):
         """Set of unique cookie domains in the record list."""
-        return set([cookie.domain for cookie in self])
+        return set([cookie.domain for cookie in self if cookie.domain is not None])
     
     @property
     def names(self):
         """Set of unique cookie names in the record list."""
-        return set([cookie.name for cookie in self])
+        return set([cookie.name for cookie in self if cookie.name is not None])
 
 
 

@@ -28,7 +28,7 @@ class ComponentHistory(RecordList, PagedRecordList):
     
     def parse(self, api_response):
         """Parse an API response."""
-        self._totalrecords = api_response.get('totalRecords')
+        self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(ComponentRecord(result))
@@ -48,18 +48,18 @@ class ComponentHistory(RecordList, PagedRecordList):
         """List of unique hostnames in the component record list."""
         from passivetotal.analyzer import Hostname
         return set(
-            Hostname(host) for host in set([record.hostname for record in self])
+            Hostname(host) for host in set([record.hostname for record in self if record.hostname is not None])
         )
     
     @property
     def categories(self):
         """List of unique categories in the component record list."""
-        return set([record.category for record in self])
+        return set([record.category for record in self if record.category is not None])
     
     @property
     def values(self):
         """List of unique values (labels) in the component record list."""
-        return set([record.label for record in self])
+        return set([record.label for record in self if record.label is not None])
 
 
 

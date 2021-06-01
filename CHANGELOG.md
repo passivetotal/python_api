@@ -18,7 +18,9 @@
 - Removed a partially-implemented __str__ method in `MalwareList` method
 - Ensured all __str__ methods in `analyzer` objects always return a string
 - Upserting an artifact triggered an API error when setting a tag
-
+- Ensure `summary` property returns ints, not None, when fields are missing
+- Properly handle defanged ip addresses 
+- Exclude Nones from sets in various properties to avoid problems with `NoneTypes`
 
 
 ## v2.4.1

@@ -6,14 +6,14 @@ class Summary(AsDictionary):
 
     """Summary of available PassiveTotal data and key facts for hostnames & IPs."""
 
-    def _count_or_none(self, field):
+    def _count_or_zero(self, field):
         data_summary = self._summary.get('data_summary')
-        if not data_summary:
-            return None
+        if data_summary is None:
+            return 0
         field_summary = data_summary.get(field)
-        if not field_summary:
-            return None
-        return field_summary.get('count')
+        if field_summary is None:
+            return 0
+        return field_summary.get('count', 0)
     
     def __str__(self):
         return "{0.total} records available for {0.name}".format(self)
@@ -71,7 +71,7 @@ class Summary(AsDictionary):
     @property
     def resolutions(self):
         """Count of available pDNS historical resolutions."""
-        return self._count_or_none('resolutions')
+        return self._count_or_zero('resolutions')
     
     @property
     def pdns(self):
@@ -81,22 +81,22 @@ class Summary(AsDictionary):
     @property
     def certificates(self):
         """Count of available SSL certificate historical records."""
-        return self._count_or_none('certificates')
+        return self._count_or_zero('certificates')
     
     @property
     def malware_hashes(self):
         """Count of available malware hash records."""
-        return self._count_or_none('hashes')
+        return self._count_or_zero('hashes')
     
     @property
     def projects(self):
         """Count of PassiveTotal projects containing this IP or hostname."""
-        return self._count_or_none('projects')
+        return self._count_or_zero('projects')
     
     @property
     def articles(self):
         """Count of open-source intelligence (OSINT) articles referencing this IP or hostname."""
-        return self._count_or_none('articles')
+        return self._count_or_zero('articles')
     
     @property
     def link(self):
@@ -107,7 +107,10 @@ class Summary(AsDictionary):
     def links(self):
         """Dictionary of links to continue research on a dataset in the UI."""
         summaries = self._summary['data_summary']
-        summaries['malware_hashes'] = summaries['hashes']
+        try:
+            summaries['malware_hashes'] = summaries['hashes']
+        except KeyError:
+            pass
         return { name: summary['link'] for name, summary in summaries.items() if name != 'hashes' }
     
 
@@ -140,22 +143,22 @@ class HostnameSummary(Summary):
     @property
     def trackers(self):
         """Count of available trackers records for this hostname."""
-        return self._count_or_none('trackers')
+        return self._count_or_zero('trackers')
     
     @property
     def components(self):
         """Count of available web component records for this hostname."""
-        return self._count_or_none('components')
+        return self._count_or_zero('components')
     
     @property
     def hostpairs(self):
         """Count of available hostpair records for this hostname."""
-        return self._count_or_none('host_pairs')
+        return self._count_or_zero('host_pairs')
     
     @property
     def cookies(self):
         """Count of available cookies records for this hostname."""
-        return self._count_or_none('cookies')
+        return self._count_or_zero('cookies')
     
 
 
@@ -186,7 +189,7 @@ class IPSummary(Summary):
     @property
     def services(self):
         """Number of service (port) history records for this IP."""
-        return self._count_or_none('services')
+        return self._count_or_zero('services')
 
 
 
