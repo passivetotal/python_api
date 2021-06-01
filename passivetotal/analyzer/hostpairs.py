@@ -27,7 +27,7 @@ class HostpairHistory(RecordList, PagedRecordList):
     
     def parse(self, api_response):
         """Parse an API response."""
-        self._totalrecords = api_response.get('totalRecords')
+        self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(HostpairRecord(result))
@@ -36,7 +36,7 @@ class HostpairHistory(RecordList, PagedRecordList):
     def as_dict(self):
         d = super().as_dict
         d.update({
-            'distinct_causes': self.causes,
+            'distinct_causes': list(self.causes),
             'distinct_hosts': [ str(h) for h in self.hosts ],
         })
         return d
@@ -49,19 +49,19 @@ class HostpairHistory(RecordList, PagedRecordList):
     @property
     def causes(self):
         """Set of unique causes in the hostpair record list."""
-        return set([record.cause for record in self])
+        return set([record.cause for record in self if record.cause is not None])
 
     @property
     def children(self):
         """Set of unique child hostnames in the hostpairs record list."""
         from passivetotal.analyzer import Hostname
-        return set([record.child for record in self])
+        return set([record.child for record in self if record.child is not None])
     
     @property
     def parents(self):
         """Set of unique parent hostnames in the hostpairs record list."""
         from passivetotal.analyzer import Hostname
-        return set([record.parent for record in self])
+        return set([record.parent for record in self if record.parent is not None])
     
     @property
     def hosts(self):

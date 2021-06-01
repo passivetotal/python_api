@@ -43,6 +43,7 @@ class ProjectsRequest(Client):
         if self.is_guid(name_or_guid):
             guid = name_or_guid
             name = None
+            params['visibility'] = None
             params['guid'] = name_or_guid
         else:
             guid = None

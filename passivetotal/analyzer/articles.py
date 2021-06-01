@@ -103,7 +103,7 @@ class Article(Record):
         self._indicators = api_response.get('indicators')
     
     def __str__(self):
-        return self.title
+        return '' if self.title is None else self.title
     
     def __repr__(self):
         return '<Article {}>'.format(self.guid)

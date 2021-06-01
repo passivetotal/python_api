@@ -15,11 +15,18 @@ class Certificates(RecordList):
     def _get_sortable_fields(self):
         return ['firstseen','lastseen', 'duration']
     
+    def _get_dict_fields(self):
+        return ['totalrecords']
+    
     def parse(self, api_response):
         self._records = []
         for result in api_response.get('results',[]):
             self._records.append(CertHistoryRecord(result))
     
+    @property
+    def totalrecords(self):
+        return len(self._records)
+
     @property
     def newest(self):
         """Most recently seen :class:`CertificateRecord`."""
@@ -73,7 +80,7 @@ class CertificateField:
         return self
     
     def __str__(self):
-        if not self._value:
+        if self._value is None:
             return ''
         if type(self._value) == list:
             return ','.join(self._value)
@@ -167,7 +174,7 @@ class CertificateRecord(Record, FirstLastSeen):
         return self._ip_history
     
     def _get_dict_fields(self):
-        fields = self.__class__._fields
+        fields = ['str:{}'.format(f) for f in self.__class__._fields]
         fields.extend(['days_valid','expired'])
         return fields
     

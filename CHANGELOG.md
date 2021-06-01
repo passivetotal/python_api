@@ -1,5 +1,28 @@
 # Changelog
 
+## v2.4.2
+
+#### Enhancements:
+
+- Throw `AnalyzerError` when a hostname cannot be resolved to an IP
+- Add links to summary card as_dict method
+
+
+
+#### Bug Fixes
+
+- Added missing docstring for `services` property
+- Fixed various issues with `as_dict` property to ensure only serializable
+  types made it into the dictionary. 
+- Ensured Projects would load by GUID regardless of visiblity.
+- Removed a partially-implemented __str__ method in `MalwareList` method
+- Ensured all __str__ methods in `analyzer` objects always return a string
+- Upserting an artifact triggered an API error when setting a tag
+- Ensure `summary` property returns ints, not None, when fields are missing
+- Properly handle defanged ip addresses 
+- Exclude Nones from sets in various properties to avoid problems with `NoneTypes`
+
+
 ## v2.4.1
 
 #### Enhancements:

@@ -38,7 +38,7 @@ class WhoisField:
         return self
 
     def __str__(self):
-        if not self._value:
+        if self._value is None:
             return ''
         return self._value
 
@@ -136,8 +136,20 @@ class WhoisRecord:
     
     @property
     def as_dict(self):
-        return self._rawrecord
+        d = self._rawrecord
+        d['age'] = self.age
+        d['emails'] = list(self.emails)
+        return d
     
+    @property
+    def age(self):
+        """Number of days between now and when the domain was registered."""
+        if not self.date_registered:
+            return None
+        now = datetime.now(timezone.utc)
+        interval = now - self.date_registered
+        return interval.days
+
     @property
     def pretty(self):
         """Pretty printed version of this object's dictionary representation."""
@@ -199,6 +211,18 @@ class WhoisRecord:
     def email(self):
         """Primary contact email address."""
         return self.contacts.email
+    
+    @property
+    def emails(self):
+        """Set of all email addresses in the Whois record."""
+        all_emails = [
+            self.email, 
+            self.registrant_email,
+            self.billing.email,
+            self.admin.email,
+            self.tech.email
+        ]
+        return set([ str(e) for e in all_emails if e.value is not None ])
     
     @property
     def telephone(self):
@@ -313,15 +337,6 @@ class DomainWhois(WhoisRecord):
         :rtype: datetime
         """
         return self._parsedate('expiresAt')
-    
-    @property
-    def age(self):
-        """Number of days between now and when the domain was registered."""
-        if not self.date_registered:
-            return None
-        now = datetime.now(timezone.utc)
-        interval = now - self.date_registered
-        return interval.days
 
 
 

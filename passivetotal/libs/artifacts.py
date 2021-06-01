@@ -74,7 +74,7 @@ class ArtifactsRequest(Client):
         if 'guid' in results: # API found one result
             artifact = results
         else: # API found no results
-            artifact = self.create_artifact(project_guid=project_guid, artifact=artifact, type=artifact_type, tags=None)
+            artifact = self.create_artifact(project_guid, artifact, type=artifact_type)
         if tags is not None or monitor is not None:
             artifact = self.update_artifact(artifact['guid'], monitor=monitor, tags=tags)
         return artifact

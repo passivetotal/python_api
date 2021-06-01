@@ -13,10 +13,10 @@ class ProjectList(RecordList):
         pass
 
     def _get_dict_fields(self):
-        return []
+        return ['totalrecords']
     
     @staticmethod
-    def find(name_or_guid, visibility='analyst', owner=None, creator=None, org=None):
+    def find(name_or_guid, visibility=None, owner=None, creator=None, org=None):
         """Obtain a list of all projects and find the one project that match the other criteria.
 
         Set owner='me' or creator='me' to use the API username.
@@ -29,6 +29,10 @@ class ProjectList(RecordList):
         """
         results = get_api('Projects').find_projects(name_or_guid, visibility, owner, creator, org)
         return ProjectList(results)
+
+    @property
+    def totalrecords(self):
+        return len(self._records)
 
     def parse(self, api_response):
         """Parse an API response."""
@@ -68,7 +72,7 @@ class Project(Record):
         return self
 
     def __str__(self):
-        return self.name
+        return '' if self.name is None else self.name
     
     def __repr__(self):
         return "<Project {0.guid} '{0.name}'".format(self)
@@ -214,7 +218,11 @@ class ArtifactList(RecordList):
         return []
 
     def _get_dict_fields(self):
-        return []
+        return ['totalrecords']
+    
+    @property
+    def totalrecords(self):
+        return len(self._records)
     
     def parse(self, api_response):
         """Parse an API response."""
@@ -257,7 +265,7 @@ class Artifact(Record):
         return self
 
     def __str__(self):
-        return self.name
+        return '' if self.name is None else self.name
 
     def __repr__(self):
         return "<Artifact {0.guid} '{0.name}'>".format(self)

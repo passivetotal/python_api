@@ -50,7 +50,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs,
         return self
     
     def __str__(self):
-        return self._hostname
+        return '' if self._hostname is None else self._hostname
     
     def __repr__(self):
         return "Hostname('{}')".format(self.hostname)
@@ -98,7 +98,10 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs,
     
     def _query_dns(self):
         """Perform a DNS lookup."""
-        ip = socket.gethostbyname(self._hostname)
+        try:
+            ip = socket.gethostbyname(self._hostname)
+        except Exception:
+            raise AnalyzerError('Cannot resolve IP for hostname {}'.format(self._hostname))
         self._current_ip = get_object(ip,'IPAddress')
         return self._current_ip
     

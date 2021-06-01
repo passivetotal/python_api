@@ -2,7 +2,7 @@
 
 
 from passivetotal.analyzer import get_api, get_config
-from passivetotal.analyzer._common import is_ip, AnalyzerError
+from passivetotal.analyzer._common import is_ip, refang, AnalyzerError
 from passivetotal.analyzer.whois import IPWhois
 from passivetotal.analyzer.pdns import HasResolutions
 from passivetotal.analyzer.services import Services
@@ -36,6 +36,7 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
 
     def __new__(cls, ip):
         """Create or find an instance for the given IP."""
+        ip = refang(ip)
         if not is_ip(ip):
             raise AnalyzerError('Invalid IP address')
         self = cls._instances.get(ip)
@@ -48,7 +49,7 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
         return self
 
     def __str__(self):
-        return self._ip
+        return '' if self._ip is None else self._ip
     
     def __repr__(self):
         return "IPAddress('{}')".format(self.ip)
@@ -114,8 +115,9 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
     
     @property
     def certificates(self):
-        """History of :class:`passivetotal.analyzer.ssl.Certificates` 
-        presented by services hosted on this IP address.
+        """History of TLS certificates presented by services hosted on this IP address.
+
+        :rtype: :class:`passivetotal.analyzer.ssl.Certificates`
         """
         if getattr(self, '_ssl_history', None) is not None:
             return self._ssl_history
@@ -123,6 +125,10 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
     
     @property
     def services(self):
+        """Record of services observed on this host.
+
+        :rtype: :class:`passivetotal.analyzer.services.Services`
+        """
         if getattr(self, '_services', None) is not None:
             return self._services
         return self._api_get_services()

@@ -11,9 +11,9 @@ def is_ip(test):
     pattern = re.compile(r"(\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3})")
     return len(pattern.findall(test)) > 0
 
-def refang(hostname):
-    """Remove square braces around dots in a hostname."""
-    return re.sub(r'[\[\]]','', hostname)
+def refang(host):
+    """Remove square braces around dots in a host."""
+    return re.sub(r'[\[\]]','', host)
 
 
 

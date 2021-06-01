@@ -19,7 +19,7 @@ class Services(RecordList):
     
     def parse(self, api_response):
         """Parse an API response."""
-        self._totalrecords = api_response.get('totalRecords')
+        self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
             self._records.append(ServiceRecord(result))
