@@ -8,12 +8,13 @@ import re
 
 def is_ip(test):
     """Test to see if a string contains an IPv4 address."""
-    pattern = re.compile(r"(\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3})")
+    pattern = re.compile(r"^(\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3}(?:\.|\]\.\[|\[\.\]|\(\.\)|{\.})\d{1,3})$")
     return len(pattern.findall(test)) > 0
 
 def refang(host):
     """Remove square braces around dots in a host."""
     return re.sub(r'[\[\]]','', host)
+
 
 
 
@@ -285,4 +286,8 @@ class PagedRecordList:
 
 class AnalyzerError(Exception):
     """Base error class for Analyzer objects."""
+    pass
+
+class AnalyzerAPIError(AnalyzerError):
+    """Raised when the API reports an error condition."""
     pass

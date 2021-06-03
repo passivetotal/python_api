@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.4.3
+
+#### Enhancements:
+
+
+
+#### Bug Fixes
+
+- `is_ip()` regex fix to avoid matching on hostnames with embedded IPs 
+
+
+
+
 ## v2.4.2
 
 #### Enhancements:
