@@ -3,7 +3,7 @@
 from collections import namedtuple
 from datetime import datetime, timezone, timedelta
 from passivetotal import *
-from passivetotal.analyzer._common import AnalyzerError, is_ip
+from passivetotal.analyzer._common import AnalyzerError, AnalyzerAPIError, is_ip
 
 DEFAULT_DAYS_BACK = 90
 
@@ -55,6 +55,7 @@ def init(**kwargs):
             api_clients[name] = c(**kwargs)
         else:
             api_clients[name] = c.from_config()
+        api_clients[name].exception_class = AnalyzerAPIError
     config['is_ready'] = True
 
 def get_api(name):

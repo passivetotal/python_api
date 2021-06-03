@@ -288,6 +288,23 @@ class AnalyzerError(Exception):
     """Base error class for Analyzer objects."""
     pass
 
+
+
 class AnalyzerAPIError(AnalyzerError):
     """Raised when the API reports an error condition."""
-    pass
+    
+    def __init__(self, response):
+        self.response = response
+        self.status_code = response.status_code
+        try:
+            self.url = response.request.url
+        except Exception:
+            self.url = 'unknown url'
+        try:
+            self.json = self.response.json()
+        except Exception:
+            self.json = {}
+        self.message = self.json.get('error', self.json.get('message', str(response)))
+    
+    def __str__(self):
+        return 'Error #{0.status_code} "{0.message}" ({0.url})'.format(self)

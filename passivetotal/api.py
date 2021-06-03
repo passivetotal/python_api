@@ -20,7 +20,7 @@ class Client(object):
 
     def __init__(self, username, api_key, server=DEFAULT_SERVER,
                  version=DEFAULT_VERSION, http_proxy=None, https_proxy=None,
-                 verify=True, headers=None, debug=False):
+                 verify=True, headers=None, debug=False, exception_class=None):
         """Initial loading of the client.
 
         :param str username: API username in email address format
@@ -32,6 +32,7 @@ class Client(object):
         :param bool verify: Whether to verify the SSL certificate, defaults to True
         :param dict headers: Additional HTTP headers to add to the request
         :param bool debug: Whether to activate debugging
+        :param class exception_class: Class of exception to raise on non-200 API responses (optional, defaults to None)
         """
         self.logger = logging.getLogger('pt-base-request')
         self.logger.setLevel('INFO')
@@ -56,6 +57,7 @@ class Client(object):
         self.verify = verify
         if '127.0.0.1' in server:
             self.verify = False
+        self.exception_class = exception_class
 
     @classmethod
     def from_config(cls):
@@ -106,6 +108,8 @@ class Client(object):
         """
         if response.status_code == 204:
             return None
+        if response.status_code != 200 and self.exception_class is not None:
+            raise self.exception_class(response)
         try:
             return response.json()
         except ValueError as e:
