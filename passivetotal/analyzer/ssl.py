@@ -175,7 +175,7 @@ class CertificateRecord(Record, FirstLastSeen):
     
     def _get_dict_fields(self):
         fields = ['str:{}'.format(f) for f in self.__class__._fields]
-        fields.extend(['days_valid','expired'])
+        fields.extend(['days_valid','expired','sha1'])
         return fields
     
     @property
