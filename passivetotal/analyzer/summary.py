@@ -31,7 +31,7 @@ class Summary(AsDictionary):
     @property
     def available(self):
         """List of datasets with at least one record."""
-        return [ field for field, count in self._get_dataset_fields() if count > 0 ]
+        return [ field for field in self._get_dataset_fields() if getattr(self, field) > 0 ]
     
     @property
     def total(self):
