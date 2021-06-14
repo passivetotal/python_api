@@ -26,6 +26,9 @@ setup(
             'pt-client = passivetotal.cli.client:main',
         ],
     },
+    extras_require={
+        'pandas': ['pandas']
+    },
     package_data={
         'passivetotal': [],
     },

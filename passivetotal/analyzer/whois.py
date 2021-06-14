@@ -1,8 +1,8 @@
 from datetime import datetime, timezone
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 import pprint
 from passivetotal.analyzer import get_api, get_object
-from passivetotal.analyzer._common import RecordList
+from passivetotal.analyzer._common import RecordList, ForPandas
 
 
 
@@ -106,7 +106,7 @@ class WhoisRecords(RecordList):
     
 
 
-class WhoisRecord:
+class WhoisRecord(ForPandas):
     """Base type for IP and Domain Whois."""
 
     def _get_contacts(self, contact_type):
@@ -133,6 +133,48 @@ class WhoisRecord:
         except ValueError:
             return None
         return None
+    
+    def _dict_for_df(self, include_record=False, only_registrant=True):
+        """Build a dictionary object to represent this object as a dataframe.
+        
+        :param bool include_record: Whether to include raw Whois record (optional, defaults to False)
+        :param bool only_registrant: Whether to only include top-level and registrant contact details
+        """
+        as_d = OrderedDict(
+            organization        = self.organization,
+            name                = self.name,
+            telephone           = self.telephone,
+            email               = self.email,
+            registrant_org      = self.registrant_org,
+            registrant_name     = self.registrant_name,
+            registrant_phone    = self.registrant_phone,
+            registrant_email    = self.registrant_email,
+            registrar           = self.registrar,
+            server              = self.server,
+            age                 = self.age,
+            date_registered     = self.date_registered,
+            date_updated        = self.date_updated,
+            date_loaded         = self.date_loaded
+        )
+        if not only_registrant:
+            for contact in ['billing','tech','admin']:
+                for field in ['organization','name','telephone','email']:
+                    key = '{0}_{1}'.format(contact, field)
+                    as_d[key] = getattr( getattr(self, contact), field)
+        if include_record:
+            as_d['record'] = self.record
+        return as_d
+    
+    def to_dataframe(self, include_record=False, only_registrant=True):
+        """Render this object as a Pandas DataFrame.
+
+        :param bool include_record: Whether to include raw Whois record (optional, defaults to False)
+        :param bool only_registrant: Whether to only include top-level and registrant contact details
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        as_d = self._dict_for_df(only_registrant=only_registrant, include_record=include_record)
+        return pd.DataFrame([as_d], columns=as_d.keys())
     
     @property
     def as_dict(self):
@@ -320,6 +362,13 @@ class DomainWhois(WhoisRecord):
     def __repr__(self):
         return "DomainWhois('{}')".format(self.domain)
     
+    def _dict_for_df(self, **kwargs):
+        as_d = OrderedDict(query=self.domain)
+        as_d.update(super()._dict_for_df(**kwargs))
+        as_d['nameservers'] = self.nameservers
+        as_d['date_expires'] = self.date_expires
+        return as_d
+    
     @property
     def domain(self):
         """The domain name as returned by the API."""
@@ -360,6 +409,11 @@ class IPWhois(WhoisRecord):
     def __repr__(self):
         return "IPWhois('{}')".format(self.ip)
     
+    def _dict_for_df(self, **kwargs):
+        as_d = OrderedDict(query=self.ip)
+        as_d.update(super()._dict_for_df(**kwargs))
+        return as_d
+
     @property
     def ip(self):
         return get_object(self._domain, type='IPAddress')

@@ -1,24 +1,24 @@
 from datetime import date
 from passivetotal.analyzer import get_api
 from passivetotal.analyzer._common import (
-    Record, RecordList, AnalyzerError
+    Record, RecordList, AnalyzerError, ForPandas
 )
 
 
 
-class MalwareList(RecordList):
+class MalwareList(RecordList, ForPandas):
 
     """List of malware hashes associated with a host or domain."""
-    
+
     def _get_shallow_copy_fields(self):
-        return []
+        return ['_query','totalrecords']
     
     def _get_sortable_fields(self):
         return ['date_collected','source']
     
     def _get_dict_fields(self):
         return ['totalrecords']
-    
+        
     @property
     def totalrecords(self):
         return len(self._records)
@@ -28,19 +28,20 @@ class MalwareList(RecordList):
         self._api_success = api_response.get('success',None)
         self._records = []
         for result in api_response.get('results',[]):
-            self._records.append(MalwareRecord(result))
+            self._records.append(MalwareRecord(result, query=self._query))
 
 
 
-class MalwareRecord(Record):
+class MalwareRecord(Record, ForPandas):
 
     """Record of malware associated with a host."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, query=None):
         self._date_collected = api_response.get('collectionDate')
         self._sample = api_response.get('sample')
         self._source = api_response.get('source')
         self._source_url = api_response.get('sourceUrl')
+        self._query = query
 
     def __str__(self):
         return '' if self.hash is None else self.hash
@@ -51,11 +52,28 @@ class MalwareRecord(Record):
     def _get_dict_fields(self):
         return ['hash','source','source_url','str:date_collected']
     
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['query','date_collected','hash','source','source_url']
+        as_d = {
+            f: getattr(self, f) for f in cols
+        }
+        return pd.DataFrame([as_d], columns=cols)
+    
     @property
     def hash(self):
         """Hash of the malware sample."""
         return self._sample
     
+    @property
+    def query(self):
+        """Query submitted to the API (typically the hostname or IP address)."""
+        return self._query
+
     @property
     def source(self):
         """Source where the malware sample was obtained."""
@@ -83,13 +101,14 @@ class HasMalware:
 
     def _api_get_malware(self):
         """Query the enrichment API for malware samples."""
+        query=self.get_host_identifier()
         try:
             response = get_api('Enrichment').get_malware(
-                query=self.get_host_identifier()
+                query=query
             )
         except Exception:
             raise AnalyzerError('Error querying enrichment API for malware samples')
-        self._malware = MalwareList(response)
+        self._malware = MalwareList(response, query=query)
         return self._malware
 
     @property

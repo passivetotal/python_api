@@ -1,13 +1,13 @@
 from datetime import datetime
 from passivetotal.analyzer import get_api, get_config, get_object
-from passivetotal.analyzer._common import RecordList, Record, AnalyzerError
+from passivetotal.analyzer._common import RecordList, Record, AnalyzerError, ForPandas
 
 
-class ProjectList(RecordList):
+class ProjectList(RecordList, ForPandas):
     """List of Projects with artifacts."""
-    
+
     def _get_shallow_copy_fields(self):
-        return []
+        return ['_query']
 
     def _get_sortable_fields(self):
         pass
@@ -17,7 +17,7 @@ class ProjectList(RecordList):
     
     @staticmethod
     def find(name_or_guid, visibility=None, owner=None, creator=None, org=None):
-        """Obtain a list of all projects and find the one project that match the other criteria.
+        """Obtain a list of all projects that match a name or GUID and optionally other criteria.
 
         Set owner='me' or creator='me' to use the API username.
 
@@ -26,6 +26,7 @@ class ProjectList(RecordList):
         :param owner: Project owner, optional
         :param creator: Project creater, optional
         :param org: Project owner, optional
+        :rtype: `passivetotal.analyzer.projects.ProjectList`
         """
         results = get_api('Projects').find_projects(name_or_guid, visibility, owner, creator, org)
         return ProjectList(results)
@@ -38,17 +39,17 @@ class ProjectList(RecordList):
         """Parse an API response."""
         self._records = []
         for project in api_response:
-            self._records.append(Project(project))
+            self._records.append(Project(project, self._query))
 
 
 
-class Project(Record):
+class Project(Record, ForPandas):
 
     """Project record with collection of artifacts."""
 
     _instances = {}
 
-    def __new__(cls, api_response):
+    def __new__(cls, api_response, query=None):
         guid = api_response['guid']
         self = cls._instances.get(guid)
         if self is None:
@@ -69,6 +70,7 @@ class Project(Record):
             self._links = api_response['links']
             self._subscribers = api_response['subscribers']
             self._can_edit = api_response['can_edit']
+            self._query = query
         return self
 
     def __str__(self):
@@ -88,7 +90,7 @@ class Project(Record):
         result = get_api('Artifacts').get_artifacts(project=self.guid)
         if 'message' in result:
             return
-        self._artifacts = ArtifactList(result)
+        self._artifacts = ArtifactList(result, query=self._query)
         return self._artifacts
     
     @staticmethod
@@ -114,6 +116,24 @@ class Project(Record):
         if len(results) > 1:
             raise AnalyzerError('More than one project matched the search criteria.')
         return Project(results[0])
+
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        as_d = {
+            'query': self._query
+        }
+        cols = ['project_guid','name','description','visibility','is_featured',
+                'tags','owner','creator','created','organization',
+                'collaborators','subscribers','can_edit']
+        as_d.update({
+            f: getattr(self, f) for f in cols
+        })
+        cols.insert(0, 'query')
+        return pd.DataFrame([as_d], columns=cols)
 
     @property
     def artifacts(self):
@@ -207,12 +227,15 @@ class Project(Record):
     
 
 
-class ArtifactList(RecordList):
+class ArtifactList(RecordList, ForPandas):
 
     """List of artifact entries."""
+    def __init__(self, api_response=None, query=None):
+        self._query = query
+        super().__init__(api_response=api_response)
 
     def _get_shallow_copy_fields(self):
-        return []
+        return ['_query']
 
     def _get_sortable_fields(self):
         return []
@@ -232,17 +255,17 @@ class ArtifactList(RecordList):
         if 'guid' in api_response: # one record
             self._records.append(Artifact(api_response))
         else:
-            self._records.extend([ Artifact(a) for a in api_response['artifacts']])
+            self._records.extend([ Artifact(a, query=self._query) for a in api_response['artifacts']])
 
 
 
-class Artifact(Record):
+class Artifact(Record, ForPandas):
 
     """An artifact in a project."""
 
     _instances = {}
 
-    def __new__(cls, api_response):
+    def __new__(cls, api_response, query=None):
         guid = api_response['guid']
         self = cls._instances.get('guid')
         if self is None:
@@ -262,6 +285,7 @@ class Artifact(Record):
             self._tags_global = api_response.get('global_tags')
             self._tags_system = api_response.get('system_tags')
             self._tags_user = api_response.get('user_tags')
+            self._query = query
         return self
 
     def __str__(self):
@@ -274,6 +298,24 @@ class Artifact(Record):
         return ['type','project_guid','artifact_guid','is_monitored',
                 'is_monitorable','organization','links','owner','name','creator',
                 'tags_meta','tags_global','tags_system','tags_user','str:created']
+
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        as_d = {
+            'query': self._query
+        }
+        cols = ['type','project_guid','artifact_guid','is_monitored',
+                'is_monitorable','organization','links','owner','name','creator',
+                'tags_meta','tags_global','tags_system','tags_user','created']
+        as_d.update({
+            f: getattr(self, f) for f in cols
+        })
+        cols.insert(0, 'query')
+        return pd.DataFrame([as_d], columns=cols)
 
     def delete(self):
         """Delete this artifact record.
@@ -438,14 +480,15 @@ class IsArtifact:
         projects = []
         for artifact in self.artifacts:
             projects.extend(get_api('Projects').find_projects(artifact.project_guid))
-        self._projects = ProjectList(projects)
+        self._projects = ProjectList(projects, query=self.get_host_identifier())
         return self._projects
         
 
     def _api_get_artifacts(self):
         """Query the artifacts API to find project artifacts that match this object."""
-        response = get_api('Artifacts').get_artifacts(query=self.get_host_identifier())
-        self._artifacts = ArtifactList(response)
+        query = self.get_host_identifier()
+        response = get_api('Artifacts').get_artifacts(query=query)
+        self._artifacts = ArtifactList(response, query=query)
         return self._artifacts
 
     @property

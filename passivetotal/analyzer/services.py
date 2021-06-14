@@ -1,10 +1,10 @@
 from datetime import datetime
-from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, ForPandas
 from passivetotal.analyzer.ssl import CertHistoryRecord
 from passivetotal.analyzer import get_api
 
 
-class Services(RecordList):
+class Services(RecordList, ForPandas):
 
     """Historical port, service and banner data."""
 
@@ -22,7 +22,7 @@ class Services(RecordList):
         self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
-            self._records.append(ServiceRecord(result))
+            self._records.append(ServiceRecord(result, self._query))
     
     @property
     def totalrecords(self):
@@ -55,11 +55,11 @@ class Services(RecordList):
     
 
 
-class ServiceRecord(Record, FirstLastSeen):
+class ServiceRecord(Record, FirstLastSeen, ForPandas):
 
     """Record of an observed port with current and recent services."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, query=None):
         self._port = api_response.get('portNumber')
         self._firstseen = api_response.get('firstSeen')
         self._lastseen = api_response.get('lastSeen')
@@ -70,6 +70,7 @@ class ServiceRecord(Record, FirstLastSeen):
         self._currents = api_response.get('currentServices', [])
         self._recents = api_response.get('recentServices', [])
         self._sslcert = api_response.get('mostRecentSslCert')
+        self._query = query
     
     def __str__(self):
         return '{0.protocol} {0.port:>5} "{0.status}"'.format(self)
@@ -81,6 +82,22 @@ class ServiceRecord(Record, FirstLastSeen):
         return ['port','count','status','protocol','banners',
                 'current_services','recent_services', 'str:firstseen',
                 'str:lastseen']
+    
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['port','count','status','protocol','banners',
+                'current_services','recent_services', 'firstseen',
+                'lastseen']
+        as_d = { 'query': self._query }
+        as_d.update({
+            k:getattr(self, k) for k in cols
+        })
+        cols.insert(0, 'query')
+        return pd.DataFrame([as_d], columns=cols)
 
     @property
     def port(self):

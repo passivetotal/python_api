@@ -1,9 +1,14 @@
 """Base classes and common methods for the analyzer package."""
-import pprint
-
-
 from datetime import datetime
+import pprint
 import re
+
+try:
+    import pandas
+    PANDAS = True
+except ImportError:
+    PANDAS = False
+
 
 
 def is_ip(test):
@@ -14,7 +19,6 @@ def is_ip(test):
 def refang(host):
     """Remove square braces around dots in a host."""
     return re.sub(r'[\[\]]','', host)
-
 
 
 
@@ -56,11 +60,56 @@ class AsDictionary:
 
 
 
+class ForPandas:
+
+    """Object designed to work with the pandas data analysis library."""
+
+    def _get_pandas(self):
+        """Get a reference to the pandas module.
+
+        Throws `AnalyzerMissingModule` if pandas is not installed.
+        """
+        if not PANDAS:
+            raise AnalyzerMissingModule('Missing "pandas" Python module')
+        return pandas
+
+    def to_dataframe(self, **kwargs):
+        """Render this object as a Pandas DataFrame.
+
+        Implementations may add additional keywords to customize building the data structure.
+
+        Default implementation tries to iterate through self and calls to_dataframe on
+        each record with the same parameters passed to this method. If that fails (usually
+        because self isn't iterable), it uses the as_dict param of self.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        try:
+            if len(self) == 0:
+                return pd.DataFrame()
+            return pd.concat([ r.to_dataframe(**kwargs) for r in self], ignore_index=True)
+        except TypeError:
+            return pd.DataFrame([self.as_dict])
+    
+    @property
+    def as_df(self):
+        """Get this object as a Pandas DataFrame.
+
+        Use `to_dataframe()' instead if you need to control how the dataframe is built.
+
+        Requires the pandas Python library. Throws `AnalyzerError` if it is missing.
+        :rtype: :class:`pandas.DataFrame`
+        """
+        return self.to_dataframe()
+
+
 class RecordList(AsDictionary):
 
     """List-like object that contains a set of records."""
 
-    def __init__(self, api_response = None):
+    def __init__(self, api_response = None, query=None):
+        self._query = query
         self._records = []
         if api_response:
             self.parse(api_response)
@@ -281,7 +330,7 @@ class PagedRecordList:
         :rtype: bool
         """
         return len(self) < self._totalrecords
-        
+                   
 
 
 class AnalyzerError(Exception):
@@ -308,3 +357,9 @@ class AnalyzerAPIError(AnalyzerError):
     
     def __str__(self):
         return 'Error #{0.status_code} "{0.message}" ({0.url})'.format(self)
+
+
+
+class AnalyzerMissingModule(AnalyzerError):
+    """Raised when a necessary module is missing."""
+    pass

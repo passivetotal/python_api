@@ -2,11 +2,11 @@ from datetime import datetime
 import pprint
 from functools import total_ordering
 from passivetotal.analyzer import get_api, get_config
-from passivetotal.analyzer._common import AsDictionary
+from passivetotal.analyzer._common import AsDictionary, ForPandas
 
 
 @total_ordering
-class ReputationScore(AsDictionary):
+class ReputationScore(AsDictionary, ForPandas):
 
     """RiskIQ Illuminate Reputation profile for a hostname or an IP."""
 

@@ -89,8 +89,7 @@ def get_object(input, type=None):
         type = 'IPAddress' if is_ip(input) else 'Hostname'
     elif type not in objs.keys():
         raise AnalyzerError('type must be IPAddress or Hostname')
-    return objs[type](input)
-        
+    return objs[type](input) 
 
 def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, end=None):
     """Set a range of dates for all date-bounded API queries.

@@ -1,23 +1,24 @@
 from datetime import datetime
 import pprint
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen, PagedRecordList
+    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas
 )
 from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
-class HostpairHistory(RecordList, PagedRecordList):
+class HostpairHistory(RecordList, PagedRecordList, ForPandas):
 
     """Historical connections between hosts."""
 
-    def __init__(self, api_response=None, direction=None):
+    def __init__(self, api_response=None, direction=None, query=None):
         self._direction = direction
+        self._query = query
         if api_response:
             self.parse(api_response)
 
     def _get_shallow_copy_fields(self):
-        return ['_totalrecords','_direction']
+        return ['_totalrecords','_direction','_query']
     
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','cause','child','parent']
@@ -30,7 +31,7 @@ class HostpairHistory(RecordList, PagedRecordList):
         self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
-            self._records.append(HostpairRecord(result))
+            self._records.append(HostpairRecord(result, direction=self._direction, query=self._query))
     
     @property
     def as_dict(self):
@@ -74,16 +75,18 @@ class HostpairHistory(RecordList, PagedRecordList):
 
 
 
-class HostpairRecord(Record, FirstLastSeen):
+class HostpairRecord(Record, FirstLastSeen, ForPandas):
 
     """Record of observed trackers."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, direction=None, query=None):
         self._firstseen = api_response.get('firstSeen')
         self._lastseen = api_response.get('lastSeen')
         self._child = api_response.get('child')
         self._parent = api_response.get('parent')
         self._cause = api_response.get('cause')
+        self._direction = direction
+        self._query = query
     
     def __str__(self):
         return '{0.parent} > {0.child} [{0.cause}] ({0.firstseen_date} to {0.lastseen_date})'.format(self)
@@ -93,6 +96,24 @@ class HostpairRecord(Record, FirstLastSeen):
     
     def _get_dict_fields(self):
         return ['str:firstseen','str:lastseen','str:child','str:parent','cause']
+    
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['query','direction','firstseen','lastseen','child','parent','cause']
+        as_d = {
+            'query': self._query,
+            'direction': self._direction,
+            'firstseen': self.firstseen,
+            'lastseen': self.lastseen,
+            'child': self._child,
+            'parent': self._parent,
+            'cause': self._cause
+        }
+        return pd.DataFrame([as_d], columns=cols)
     
     @property
     def cause(self):
@@ -128,13 +149,14 @@ class HasHostpairs:
         supported. Check the totalrecords attribute of the response object
         to determine if more records are available.
         """
+        query=self.get_host_identifier()
         response = get_api('HostAttributes').get_host_pairs(
-            query=self.get_host_identifier(),
+            query=query,
             direction=direction,
             start=start_date,
             end=end_date
         )
-        self._pairs[direction] = HostpairHistory(response, direction)
+        self._pairs[direction] = HostpairHistory(response, direction, query)
         return self._pairs[direction]
 
     @property

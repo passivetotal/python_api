@@ -1,18 +1,18 @@
 from datetime import datetime
 import pprint
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen, PagedRecordList
+    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas
 )
 from passivetotal.analyzer import get_api, get_config
 
 
 
-class CookieHistory(RecordList, PagedRecordList):
+class CookieHistory(RecordList, PagedRecordList, ForPandas):
 
     """Historical cookie data."""
 
     def _get_shallow_copy_fields(self):
-        return ['_totalrecords']
+        return ['_totalrecords','_query']
     
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','name','domain']
@@ -25,7 +25,7 @@ class CookieHistory(RecordList, PagedRecordList):
         self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
-            self._records.append(CookieRecord(result))
+            self._records.append(CookieRecord(result, self._query))
     
     @property
     def as_dict(self):
@@ -48,16 +48,17 @@ class CookieHistory(RecordList, PagedRecordList):
 
 
 
-class CookieRecord(Record, FirstLastSeen):
+class CookieRecord(Record, FirstLastSeen, ForPandas):
 
     """Record of an observed cookie."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, query):
         self._firstseen = api_response.get('firstSeen')
         self._lastseen = api_response.get('lastSeen')
         self._cookieDomain = api_response.get('cookieDomain')
         self._cookieName = api_response.get('cookieName')
         self._hostname = api_response.get('hostname')
+        self._query = query
     
     def __str__(self):
         return '"{0.name}" @ {0.domain} ({0.firstseen_date} to {0.lastseen_date})'.format(self)
@@ -67,6 +68,20 @@ class CookieRecord(Record, FirstLastSeen):
 
     def _get_dict_fields(self):
         return ['domain','str:firstseen','str:lastseen','name','hostname']
+    
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['firstseen','lastseen','domain','name','hostname']
+        as_d = {
+            f: getattr(self, f) for f in cols
+        }
+        as_d['query'] = self._query
+        cols.insert(0, 'query')
+        return pd.DataFrame([as_d], columns=cols)
     
     @property
     def domain(self):
@@ -101,12 +116,13 @@ class HasCookies:
         supported. Check the totalrecords attribute of the response object
         to determine if more records are available.
         """
+        query=self.get_host_identifier()
         response = get_api('HostAttributes').get_cookies(
-            query=self.get_host_identifier(),
+            query=query,
             start=start_date,
             end=end_date
         )
-        self._cookies = CookieHistory(response)
+        self._cookies = CookieHistory(response, query=query)
         return self._cookies
 
     @property

@@ -1,21 +1,21 @@
 from datetime import datetime
 from passivetotal.analyzer import get_config, get_api
-from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, ForPandas
 
 
 
-class PdnsResolutions(RecordList):
+class PdnsResolutions(RecordList, ForPandas):
 
     """Historical passive DNS resolution records."""
 
-    def __init__(self, api_response = None):
-        super().__init__(api_response)
+    def __init__(self, api_response = None, query=None):
+        super().__init__(api_response, query)
         if api_response:
             self._datestart = get_config()['start_date']
             self._dateend = get_config()['end_date']
     
     def _get_shallow_copy_fields(self):
-        return ['_queryvalue','_querytype','_pager','_firstseen','_lastseen','_totalrecords','_datestart','_dateend']
+        return ['_queryvalue','_querytype','_pager','_firstseen','_lastseen','_totalrecords','_datestart','_dateend', '_query']
 
     def _get_sortable_fields(self):
         return ['firstseen', 'lastseen', 'duration', 'collected']
@@ -32,7 +32,7 @@ class PdnsResolutions(RecordList):
         self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results',[]):
-            self._records.append(PdnsRecord(result))
+            self._records.append(PdnsRecord(result, self._query))
     
     @property
     def firstseen(self):
@@ -124,13 +124,13 @@ class PdnsResolutions(RecordList):
 
 
 
-class PdnsRecord(Record, FirstLastSeen):
+class PdnsRecord(Record, FirstLastSeen, ForPandas):
 
     """Individual pDNS record returned by the API."""
 
     _instances = {}
 
-    def __new__(cls, record):
+    def __new__(cls, record, query=None):
         recordhash = record['recordHash']
         self = cls._instances.get(recordhash)
         if self is None:
@@ -144,6 +144,7 @@ class PdnsRecord(Record, FirstLastSeen):
             self._resolve = record.get('resolve')
             self._resolvetype = record.get('resolveType')
             self._rawrecord = record
+            self._query = query
         return self
     
     def __str__(self):
@@ -156,7 +157,22 @@ class PdnsRecord(Record, FirstLastSeen):
     def _get_dict_fields(self):
         return ['str:firstseen','str:lastseen','sources','value','str:collected','recordtype',
                 'resolve','resolvetype','str:ip','str:hostname']
+    
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
 
+        :param exclude_links: Whether to exclude links from the dataframe (optional, defaults to True)
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        as_d = {'query':self._query}
+        as_d.update({
+            f:getattr(self,f) for f in [
+                'recordtype','resolve','resolvetype',
+                'collected','firstseen','lastseen','duration','sources']
+        })
+        return pd.DataFrame([as_d])
+    
     @property
     def sources(self):
         """Sources of API data."""
@@ -226,14 +242,15 @@ class HasResolutions:
     def _api_get_resolutions(self, unique=False, start_date=None, end_date=None, timeout=None, sources=None):
         """Query the pDNS API for resolution history."""
         meth = get_api('DNS').get_unique_resolutions if unique else get_api('DNS').get_passive_dns
+        query = self.get_host_identifier()
         response = meth(
-            query=self.get_host_identifier(),
+            query=query,
             start=start_date,
             end=end_date,
             timeout=timeout,
             sources=sources
         )
-        self._resolutions = PdnsResolutions(api_response=response)
+        self._resolutions = PdnsResolutions(api_response=response, query=query)
         return self._resolutions
     
     @property

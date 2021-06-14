@@ -87,7 +87,7 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
     def _api_get_services(self):
         """Query the services API for service and port history."""
         response = get_api('Services').get_services(query=self._ip)
-        self._services = Services(response)
+        self._services = Services(response, query=self._ip)
         return self._services
     
     def _api_get_summary(self):

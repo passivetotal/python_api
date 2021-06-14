@@ -1,11 +1,11 @@
 from datetime import datetime
 import pprint
-from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, AnalyzerError
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, AnalyzerError, ForPandas
 from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
-class Certificates(RecordList):
+class Certificates(RecordList, ForPandas):
     
     """List of historical SSL certificates."""
 
@@ -124,7 +124,7 @@ class CertificateField:
 
 
 
-class CertificateRecord(Record, FirstLastSeen):
+class CertificateRecord(Record, FirstLastSeen, ForPandas):
 
     """SSL Certificate record.
     
@@ -175,9 +175,21 @@ class CertificateRecord(Record, FirstLastSeen):
     
     def _get_dict_fields(self):
         fields = ['str:{}'.format(f) for f in self.__class__._fields]
-        fields.extend(['days_valid','expired','sha1'])
+        fields.extend(['days_valid','expired','sha1','firstseen','lastseen'])
         return fields
     
+    def to_dataframe(self, include_ips=False):
+        """Render this object as a Pandas DataFrame.
+
+        :param include_ips: Whether to include historical IP data in  the dataframe (optional, defaults to False, will likely trigger new API query for each record.)
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        as_d = self.as_dict
+        if include_ips:
+            as_d['ips'] = self.ips
+        return pd.DataFrame([as_d])
+
     @property
     def iphistory(self):
         """Get the direct API response for a history query on this certificates hash.
