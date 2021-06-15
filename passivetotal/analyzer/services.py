@@ -1,5 +1,5 @@
 from datetime import datetime
-from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, ForPandas
+from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, ForPandas, AnalyzerError
 from passivetotal.analyzer.ssl import CertHistoryRecord
 from passivetotal.analyzer import get_api
 
@@ -83,7 +83,7 @@ class ServiceRecord(Record, FirstLastSeen, ForPandas):
                 'current_services','recent_services', 'str:firstseen',
                 'str:lastseen']
     
-    def to_dataframe(self):
+    def to_dataframe(self, explode=None):
         """Render this object as a Pandas DataFrame.
 
         :rtype: :class:`pandas.DataFrame`
@@ -97,7 +97,14 @@ class ServiceRecord(Record, FirstLastSeen, ForPandas):
             k:getattr(self, k) for k in cols
         })
         cols.insert(0, 'query')
-        return pd.DataFrame([as_d], columns=cols)
+        df = pd.DataFrame([as_d], columns=cols)
+        if explode is None:
+            return df
+        if explode not in ['banners','current_services','recent_services']:
+            raise AnalyzerError('Explode param must be banners, current_services or recent_services')
+        df_exp = df.explode(explode)
+        df_wide = pd.concat([df_exp.drop(explode, axis='columns'), df_exp[explode].apply(pd.Series)], axis='columns')
+        return df_wide
 
     @property
     def port(self):
