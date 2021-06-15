@@ -97,7 +97,7 @@ class Article(Record, ForPandas):
         self._title = api_response.get('title')
         self._summary = api_response.get('summary')
         self._type = api_response.get('type')
-        self._publishdate = api_response.get('publishDate')
+        self._publishdate = api_response.get('publishedDate')
         self._link = api_response.get('link')
         self._categories = api_response.get('categories')
         self._tags = api_response.get('tags')

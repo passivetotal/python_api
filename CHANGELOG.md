@@ -19,6 +19,7 @@
 
 - `is_ip()` regex fix to avoid matching on hostnames with embedded IPs.
 - Fixed broken `available` property on summary objects.
+- Fixed missing publish date on Articles
 
 
 
