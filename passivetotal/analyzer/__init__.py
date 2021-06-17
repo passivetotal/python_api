@@ -91,13 +91,24 @@ def get_object(input, type=None):
         raise AnalyzerError('type must be IPAddress or Hostname')
     return objs[type](input) 
 
-def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, end=None):
+def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, start_date=None, end=None, end_date=None):
     """Set a range of dates for all date-bounded API queries.
+
+    By default, queries will be bounded by `analyzer.DEFAULT_DAYS_BACK`. Set `days_back` to 
+    calculate the starting and ending dates automatically relative to today's date.
+
+    Or, set the `start` and `end` params explicitly using a string in YYYY-MM-DD 00:00:00
+    format or `start_date` and `end_date` params as datetime objects. 
     
     :param days_back: Number of days back to query (optional, defaults to DEFAULT_DAYS_BACK).
-    :param start: Starting date in YYYY-MM-DD 00:00:00 format; calculated automatically when days_back is set.
-    :param end: Ending date in YYYY-MM-DD 00:00:00 format; calculated automatically when days_back is set.
+    :param start: Starting date as string in YYYY-MM-DD 00:00:00 format (optional).
+    :param start_date: Starting date as datetime object (optional).
+    :param end: Ending date as string in YYYY-MM-DD 00:00:00 format (optional).
+    :param end_date: Ending date as datetime object (optional).
     """
+    if start_date and end_date:
+        start = start_date.strftime('%Y-%m-%d %H:%m:%S')
+        end = end_date.strftime('%Y-%m-%d %H:%m:%S')
     if start and end:
         config['start_date'] = start
         config['end_date'] = end

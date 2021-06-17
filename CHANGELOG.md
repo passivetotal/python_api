@@ -12,6 +12,8 @@
 - Add firstseen and lastseen dates to SSL Certificate records.
 - Optional support for the Pandas data analysis library. Adds as_df property to all
   Analyzer objects to render the object as a Pandas dataframe. 
+- Add option to specify module-level date ranges with `datetime` objects for
+  easier integration with other libraries.
 
 
 
