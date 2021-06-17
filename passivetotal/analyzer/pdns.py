@@ -255,8 +255,7 @@ class HasResolutions:
     
     @property
     def resolutions(self):
-        """:class:`passivetotal.analyzer.pdns.PdnsResolutions` where this 
-        object was the DNS response value.
+        """Passive DNS records where this host was the DNS response value.
             
         Bounded by dates set in :meth:`passivetotal.analyzer.set_date_range`.
         `timeout` and `sources` params are also set by the analyzer configuration.
