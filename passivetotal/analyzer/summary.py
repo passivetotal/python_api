@@ -1,8 +1,8 @@
-from passivetotal.analyzer._common import AsDictionary
+from passivetotal.analyzer._common import AsDictionary, ForPandas
 
 
 
-class Summary(AsDictionary):
+class Summary(AsDictionary, ForPandas):
 
     """Summary of available PassiveTotal data and key facts for hostnames & IPs."""
 
@@ -28,10 +28,28 @@ class Summary(AsDictionary):
     def _get_dataset_fields(self):
         return ['resolutions','certificates','malware_hashes','projects','articles']
     
+    def to_dataframe(self, exclude_links=True):
+        """Render this object as a Pandas DataFrame.
+
+        :param exclude_links: Whether to exclude links from the dataframe (optional, defaults to True)
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        as_d = self.as_dict
+        as_d['host'] = self._summary['name']
+        cols = ['host','total','articles','certificates','malware_hashes','projects',
+                'resolutions','netblock','os','asn']
+        if exclude_links:
+            del(as_d['link'])
+            del(as_d['links'])
+        else:
+            cols.extend(['link','links'])
+        return pd.DataFrame([as_d], columns=cols)
+    
     @property
     def available(self):
         """List of datasets with at least one record."""
-        return [ field for field, count in self._get_dataset_fields() if count > 0 ]
+        return [ field for field in self._get_dataset_fields() if getattr(self, field) > 0 ]
     
     @property
     def total(self):

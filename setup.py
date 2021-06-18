@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name='passivetotal',
-    version='2.4.2',
+    version='2.5.0',
     description='Library for the RiskIQ PassiveTotal and Illuminate API',
     url="https://github.com/passivetotal/python_api",
     author="RiskIQ",
@@ -25,6 +25,9 @@ setup(
             'pt-config = passivetotal.cli.config:main',
             'pt-client = passivetotal.cli.client:main',
         ],
+    },
+    extras_require={
+        'pandas': ['pandas']
     },
     package_data={
         'passivetotal': [],

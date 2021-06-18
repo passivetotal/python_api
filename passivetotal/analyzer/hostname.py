@@ -2,7 +2,7 @@
 
 import socket
 import tldextract
-from passivetotal.analyzer import get_api, get_config, get_object
+from passivetotal.analyzer import get_api, get_object
 from passivetotal.analyzer._common import is_ip, refang, AnalyzerError
 from passivetotal.analyzer.pdns import HasResolutions
 from passivetotal.analyzer.summary import HostnameSummary, HasSummary

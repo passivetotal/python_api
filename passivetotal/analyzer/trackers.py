@@ -1,18 +1,18 @@
 from datetime import datetime
 import pprint
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen, PagedRecordList
+    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas
 )
 from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
-class TrackerHistory(RecordList, PagedRecordList):
+class TrackerHistory(RecordList, PagedRecordList, ForPandas):
 
     """Historical web component data."""
 
     def _get_shallow_copy_fields(self):
-        return ['_totalrecords']
+        return ['_totalrecords','_query']
     
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','category','label','hostname']
@@ -35,7 +35,7 @@ class TrackerHistory(RecordList, PagedRecordList):
         self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
-            self._records.append(TrackerRecord(result))
+            self._records.append(TrackerRecord(result, self._query))
 
     @property
     def hostnames(self):
@@ -56,16 +56,17 @@ class TrackerHistory(RecordList, PagedRecordList):
 
 
 
-class TrackerRecord(Record, FirstLastSeen):
+class TrackerRecord(Record, FirstLastSeen, ForPandas):
 
     """Record of an observed trackers."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, query=None):
         self._firstseen = api_response.get('firstSeen')
         self._lastseen = api_response.get('lastSeen')
         self._value = api_response.get('attributeValue')
         self._trackertype = api_response.get('attributeType')
         self._hostname = api_response.get('hostname')
+        self._query = query
     
     def __str__(self):
         return '[{0.trackertype}] "{0.value}" ({0.firstseen_date} to {0.lastseen_date})'.format(self)
@@ -76,6 +77,23 @@ class TrackerRecord(Record, FirstLastSeen):
     def _get_dict_fields(self):
         return ['str:firstseen','str:lastseen','value','trackertype','hostname']
     
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['query','firstseen','lastseen','trackertype','value','hostname']
+        as_d = {
+            'query': self._query,
+            'firstseen': self.firstseen,
+            'lastseen': self.lastseen,
+            'trackertype': self.trackertype,
+            'value': self.value,
+            'hostname': self.hostname,
+        }
+        return pd.DataFrame([as_d], columns=cols)
+
     @property
     def value(self):
         """Value of the tracker."""
@@ -109,12 +127,13 @@ class HasTrackers:
         supported. Check the totalrecords attribute of the response object
         to determine if more records are available.
         """
+        query=self.get_host_identifier()
         response = get_api('HostAttributes').get_trackers(
-            query=self.get_host_identifier(),
+            query=query,
             start=start_date,
             end=end_date
         )
-        self._trackers = TrackerHistory(response)
+        self._trackers = TrackerHistory(response, query)
         return self._trackers
     
     @property

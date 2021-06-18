@@ -1,13 +1,13 @@
 from datetime import datetime
 import pprint
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen, PagedRecordList
+    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas
 )
 from passivetotal.analyzer import get_api, get_config
 
 
 
-class ComponentHistory(RecordList, PagedRecordList):
+class ComponentHistory(RecordList, PagedRecordList, ForPandas):
 
     """Historical web component data.
     
@@ -18,7 +18,7 @@ class ComponentHistory(RecordList, PagedRecordList):
     """
 
     def _get_shallow_copy_fields(self):
-        return ['_totalrecords']
+        return ['_totalrecords','_query']
     
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','category','label','hostname']
@@ -31,7 +31,7 @@ class ComponentHistory(RecordList, PagedRecordList):
         self._totalrecords = api_response.get('totalRecords', 0)
         self._records = []
         for result in api_response.get('results', []):
-            self._records.append(ComponentRecord(result))
+            self._records.append(ComponentRecord(result, query=self._query))
     
     @property
     def as_dict(self):
@@ -63,17 +63,18 @@ class ComponentHistory(RecordList, PagedRecordList):
 
 
 
-class ComponentRecord(Record, FirstLastSeen):
+class ComponentRecord(Record, FirstLastSeen, ForPandas):
 
     """Record of an observed web component."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, query=None):
         self._firstseen = api_response.get('firstSeen')
         self._lastseen = api_response.get('lastSeen')
         self._version = api_response.get('version')
         self._category = api_response.get('category')
         self._label = api_response.get('label')
         self._hostname = api_response.get('hostname')
+        self._query = query
     
     def __str__(self):
         version = 'v{} '.format(self.version) if self.version else ''
@@ -83,7 +84,21 @@ class ComponentRecord(Record, FirstLastSeen):
         return '<ComponentRecord "{0.label}">'.format(self)
 
     def _get_dict_fields(self):
-        return ['category','str:firstseen','str:lastseen','label','version','str:hostname']
+        return ['query','category','str:firstseen','str:lastseen','label','version','str:hostname']
+    
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['query','firstseen','lastseen','category','label','version']
+        as_d = {
+            f: getattr(self, f) for f in cols
+        }
+        as_d['hostname'] = self._hostname
+        cols.append('hostname')
+        return pd.DataFrame([as_d], columns=cols)
     
     @property
     def category(self):
@@ -100,6 +115,11 @@ class ComponentRecord(Record, FirstLastSeen):
         """Value of the web component; alias of `ComponentRecord.value`."""
         return self._label
     
+    @property
+    def query(self):
+        """API query value (hostname or IP address)."""
+        return self._query
+
     @property
     def value(self):
         """Value of the web component."""
@@ -123,12 +143,13 @@ class HasComponents:
         supported. Check the totalrecords attribute of the response object
         to determine if more records are available.
         """
+        query = self.get_host_identifier()
         response = get_api('HostAttributes').get_components(
-            query=self.get_host_identifier(),
+            query=query,
             start=start_date,
             end=end_date
         )
-        self._components = ComponentHistory(response)
+        self._components = ComponentHistory(response, query=query)
         return self._components
         
     @property

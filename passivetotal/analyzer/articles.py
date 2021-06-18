@@ -1,19 +1,20 @@
+from collections import OrderedDict
 from datetime import datetime, timezone
 from passivetotal.analyzer._common import (
-    RecordList, Record
+    RecordList, Record, ForPandas
 )
 from passivetotal.analyzer import get_api
 
 
 
-class ArticlesList(RecordList):
+class ArticlesList(RecordList, ForPandas):
     """List of threat intelligence articles.
     
     Contains a list of :class:`passivetotal.analyzer.articles.Article` objects.
     """
 
     def _get_shallow_copy_fields(self):
-        return ['_totalrecords']
+        return ['_totalrecords', '_query']
 
     def _get_sortable_fields(self):
         return ['age','title','type']
@@ -31,7 +32,7 @@ class ArticlesList(RecordList):
         self._records = []
         if api_response.get('articles', None) is not None:
             for article in api_response.get('articles', []):
-                self._records.append(Article(article))
+                self._records.append(Article(article, self._query))
     
     def filter_tags(self, tags):
         """Filtered article list that includes articles with an exact match to one
@@ -88,19 +89,20 @@ class AllArticles(ArticlesList):
     
 
 
-class Article(Record):
+class Article(Record, ForPandas):
     """A threat intelligence article."""
 
-    def __init__(self, api_response):
+    def __init__(self, api_response, query=None):
         self._guid = api_response.get('guid')
         self._title = api_response.get('title')
         self._summary = api_response.get('summary')
         self._type = api_response.get('type')
-        self._publishdate = api_response.get('publishDate')
+        self._publishdate = api_response.get('publishedDate')
         self._link = api_response.get('link')
         self._categories = api_response.get('categories')
         self._tags = api_response.get('tags')
         self._indicators = api_response.get('indicators')
+        self._query = query
     
     def __str__(self):
         return '' if self.title is None else self.title
@@ -143,6 +145,32 @@ class Article(Record):
         except IndexError:
             return {'type': None, 'count': 0, 'values': [] }
     
+    def to_dataframe(self, ensure_details=True, include_indicators=False):
+        """Render this object as a Pandas DataFrame.
+
+        :param bool ensure_details: Whether to ensure details are available (optional, defaults to True)
+        :param bool include_indicators: Whether to include indicators (optional, defaults to False)
+        :rtype: :class:`pandas.DataFrame`
+        """
+        if ensure_details:
+            self._ensure_details()
+        pd = self._get_pandas()
+        as_d = OrderedDict(
+            query           = self._query,
+            guid            = self._guid,
+            title           = self._title,
+            type            = self._type,
+            date_published  = self._publishdate,
+            summary         = self._summary,
+            link            = self._link,
+            categories      = self._categories,
+            tags            = self._tags
+        )
+        if include_indicators:
+            as_d['indicators'] = self.indicators
+            as_d['indicator_count'] = self.indicator_count
+        return pd.DataFrame([as_d], columns=as_d.keys())
+
     def match_tags(self, tags):
         """Exact match search for one or more tags in this article's list of tags.
 
@@ -273,10 +301,9 @@ class HasArticles:
 
     def _api_get_articles(self):
         """Query the articles API for articles with this entity listed as an indicator."""
-        response = get_api('Articles').get_articles_for_indicator(
-            self.get_host_identifier()
-        )
-        self._articles = ArticlesList(response)
+        query = self.get_host_identifier()
+        response = get_api('Articles').get_articles_for_indicator(query)
+        self._articles = ArticlesList(response, query)
         return self._articles
     
     @property
