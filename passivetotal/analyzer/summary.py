@@ -37,11 +37,13 @@ class Summary(AsDictionary, ForPandas):
         pd = self._get_pandas()
         as_d = self.as_dict
         as_d['host'] = self._summary['name']
+        cols = ['host','total','articles','certificates','malware_hashes','projects',
+                'resolutions','netblock','os','asn']
         if exclude_links:
             del(as_d['link'])
             del(as_d['links'])
-        cols = ['host','total','articles','certificates','malware_hashes','projects',
-                'resolutions','netblock','os','asn','link','links']
+        else:
+            cols.extend(['link','links'])
         return pd.DataFrame([as_d], columns=cols)
     
     @property
