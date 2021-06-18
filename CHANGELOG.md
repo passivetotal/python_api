@@ -4,8 +4,6 @@
 
 #### Enhancements:
 
-- Add support to the core library API client to optionally raise a custom exception
-  class when a non-200 (and not 204) response is returned from an API request.
 - Raise `AnalyzerAPIError` when a non-200 response is returned from the API.
 - Add SSL hash field to list of SSL fields in dictionary output for more convenient
   integrations.
@@ -14,6 +12,7 @@
   Analyzer objects to render the object as a Pandas dataframe. 
 - Add option to specify module-level date ranges with `datetime` objects for
   easier integration with other libraries.
+- Subdomain API support with the `subdomains` property of Hostname objects.
 
 
 
