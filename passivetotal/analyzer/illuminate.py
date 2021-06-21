@@ -232,7 +232,7 @@ class IntelProfile(Record, ForPandas):
         self._tags = api_response.get('tags')
         self._has_details = True
     
-    @lru_cache
+    @lru_cache(maxsize=None)
     def get_indicators(self, all_pages=True, types=None, categories=None, sources=None, pagesize=INDICATOR_PAGE_SIZE):
         """Get a list of indicators associated with this intel profile.
 
