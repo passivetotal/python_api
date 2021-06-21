@@ -12,7 +12,7 @@ from passivetotal.analyzer.hostpairs import HasHostpairs
 from passivetotal.analyzer.cookies import HasCookies
 from passivetotal.analyzer.trackers import HasTrackers
 from passivetotal.analyzer.components import HasComponents
-from passivetotal.analyzer.illuminate import HasReputation
+from passivetotal.analyzer.illuminate import HasReputation, HasIntelProfiles
 from passivetotal.analyzer.articles import HasArticles
 from passivetotal.analyzer.enrich import HasMalware
 from passivetotal.analyzer.projects import IsArtifact
@@ -21,7 +21,7 @@ from passivetotal.analyzer.projects import IsArtifact
 
 class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers, 
                 HasReputation, HasArticles, HasResolutions, HasSummary,
-                HasMalware, IsArtifact):
+                HasMalware, IsArtifact, HasIntelProfiles):
 
     """Represents an IPv4 address such as 8.8.8.8
     

@@ -18,12 +18,51 @@ class IlluminateRequest(Client):
     def get_reputation(self, **kwargs):
         """Get RiskIQ Illuminate score for a domain or IP address.
 
-        Reference: 
+        Reference: https://api.riskiq.net/api/reputation/
 
         :param query: Domain or IP address to search
         :return: Dict of results
         """
         return self._get('reputation', '', **kwargs)
+    
+    def get_intel_profiles(self, **kwargs):
+        """Get RiskIQ Intel Profiles.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :return: Dict of results
+        """
+        return self._get('intel-profiles', '', **kwargs)
+    
+    def get_intel_profile_details(self, profile_id):
+        """Get intel profile details on a specific actor group.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :param profile_id: Text identifier of the actor group.
+        :return: Dict of results
+        """
+        return self._get('intel-profiles', profile_id)
+    
+    def get_intel_profile_indicators(self, profile_id, **kwargs):
+        """Get IOCs associated with an intel profile.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :param profile_id: Text identifier of the actor group.
+        :return: Dict of results
+        """
+        return self._get('intel-profiles', profile_id, 'indicators', **kwargs)
+    
+    def get_intel_profiles_for_indicator(self, indicator, **kwargs):
+        """Check whether an indicator is associated with any intel profiles.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :param indicator: String representation of the IOC.
+        :return: Dict of results
+        """
+        return self._get('intel-profiles','indicator', query=indicator, **kwargs)
 
 
 

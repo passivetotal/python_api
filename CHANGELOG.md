@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.5.1
+
+#### Enhancements
+
+- Adds support for the Illuminate CTI module with Intel Profile API library
+  calls and `analzyer` objects. Includes support for all API parameters and
+  handles pagination automatically.
+- Ability to filter all RecordList analyzer objects by a list of values using
+  new `filter_in` method.
+
+
+
+#### Bug Fixes
+
+- Filter methods on RecordList objects now consistently return lists instead of
+  filters.
+- Property return NotImplemented type for base methods.
+
+
+
+
 ## v2.5.0
 
 #### Enhancements:

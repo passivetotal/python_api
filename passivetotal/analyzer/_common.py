@@ -133,16 +133,16 @@ class RecordList(AsDictionary):
     
     def _get_shallow_copy_fields(self):
         """Implementations must return a list of fields to copy into new instances."""
-        raise NotImplemented
+        return NotImplemented
 
     def _get_sortable_fields(self):
         """Implementations must return a list of object attribues that are sortable."""
-        raise NotImplemented
+        return NotImplemented
     
     def parse(self, api_response):
         """Implementations must accept an API response and populate themselves 
         with a list of the correct record types."""
-        raise NotImplemented
+        return NotImplemented
     
     @property
     def all(self):
@@ -167,13 +167,27 @@ class RecordList(AsDictionary):
     def filter_and(self, **kwargs):
         """Return only records that match all key/value arguments."""
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.match_all(**kwargs), self._records)
+        filtered_results._records = list(filter(lambda r: r.match_all(**kwargs), self._records))
         return filtered_results
     
     def filter_or(self, **kwargs):
         """Return only records that match any key/value arguments."""
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.match_any(**kwargs), self._records)
+        filtered_results._records = list(filter(lambda r: r.match_any(**kwargs), self._records))
+        return filtered_results
+    
+    def filter_in(self, **kwargs):
+        """Return only records where a field contains one or more values.
+        
+        Usage: 
+          filter_in(fieldname=['value1','value2'])
+          filter_in(fieldname='value1,value2)
+        """
+        field, values = kwargs.popitem()
+        if isinstance(values, str):
+            values = values.split(',')
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = list(filter(lambda r: getattr(r, field) in values, self._records))
         return filtered_results
     
     def sorted_by(self, field, reverse=False):
@@ -318,6 +332,65 @@ class PagedRecordList:
     Expects a _totalrecords attribute on the object
     """
 
+    def _pagination_get_api_callable(self):
+        """Get a callable that can be used to retrieve a page of API results.
+        
+        Default implementation returns `self._pagination_callable`.
+        """
+        return self._pagination_callable
+
+    def _pagination_get_api_results(self, page):
+        """Get a page of results from the API.
+        
+        Default implementation calls `self._pagination_get_api_callable`
+        with `page` param set to `page`.
+        
+        :param page: Page of results to retrieve from the API.
+        """
+        return self._pagination_get_api_callable()(page=page)
+    
+    def _pagination_get_current_page(self):
+        """Return the current page of results.
+
+        Default implementation returns `self._pagination_current_page`.
+        """
+        return self._pagination_current_page
+    
+    def _pagination_get_page_size(self):
+        """Return the page size used in API queries.
+
+        Default implementation returns `self._pagination_page_size`.
+        """
+        return self._pagination_page_size
+    
+    def _pagination_increment_page(self):
+        """Increment the page number.
+
+        Default implementation acts on `self._pagination_current_page`.
+        """
+        self._pagination_current_page = self._pagination_current_page + 1
+    
+    def _pagination_parse_page(self, results):
+        """Parse a page of results from the API."""
+        return NotImplemented
+    
+    def load_next_page(self):
+        """Load the next page of results from the API.
+        
+        Throws `AnalyzerError` when `has_more_records` is False.
+        """
+        if not self.has_more_records:
+            raise AnalyzerError('No more pages available for this API query.')
+        page = self._pagination_get_current_page()
+        results = self._pagination_get_api_results(page)
+        self._pagination_parse_page(results)
+        self._pagination_increment_page()
+    
+    def load_all_pages(self):
+        """Load all pages of results from the API."""
+        while self.has_more_records:
+            self.load_next_page()
+
     @property
     def totalrecords(self):
         """Total number of available records as reported by the API."""
@@ -329,6 +402,8 @@ class PagedRecordList:
 
         :rtype: bool
         """
+        if self.totalrecords is None:
+            return True
         return len(self) < self._totalrecords
                    
 
