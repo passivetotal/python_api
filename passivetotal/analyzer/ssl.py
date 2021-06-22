@@ -175,7 +175,7 @@ class CertificateRecord(Record, FirstLastSeen, ForPandas):
     
     def _get_dict_fields(self):
         fields = ['str:{}'.format(f) for f in self.__class__._fields]
-        fields.extend(['days_valid','expired','sha1','firstseen','lastseen'])
+        fields.extend(['days_valid','expired','sha1','str:firstseen','str:lastseen'])
         return fields
     
     def to_dataframe(self, include_ips=False):

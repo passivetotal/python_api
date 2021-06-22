@@ -17,6 +17,9 @@
 - Filter methods on RecordList objects now consistently return lists instead of
   filters.
 - Property return NotImplemented type for base methods.
+- Ensure strings are returned for firstseen / lastseen dates in certificates
+  property. Was causing json encoding errors when trying to encode
+  `certificates.as_dict`.
 
 
 
