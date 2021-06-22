@@ -302,7 +302,10 @@ class IntelProfile(Record, ForPandas):
     
     @property
     def tags(self):
-        """List of profile tags associated with this actor group."""
+        """List of profile tags associated with this actor group.
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfile.ProfileTag`
+        """
         self._ensure_details()
         return [ self.ProfileTag(t['label'], t['countryCode']) for t in self._tags ]
     
