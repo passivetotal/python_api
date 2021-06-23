@@ -324,13 +324,7 @@ class FirstLastSeen:
 
 class PagedRecordList:
 
-    """Record list that may return more than one page of data.
-
-    Current implementation only provides a mechanism to determine if
-    more records are available. Actual pagination is not implemented yet.
-    
-    Expects a _totalrecords attribute on the object
-    """
+    """Record list that may return more than one page of data."""
 
     def _pagination_get_api_callable(self):
         """Get a callable that can be used to retrieve a page of API results.
@@ -379,13 +373,15 @@ class PagedRecordList:
         
         Throws `AnalyzerError` when `has_more_records` is False.
         """
-        if not self.has_more_records:
+        has_more = getattr(self, '_pagination_has_more', False)
+        if not has_more:
             raise AnalyzerError('No more pages available for this API query.')
         page = self._pagination_get_current_page()
         results = self._pagination_get_api_results(page)
         self._pagination_parse_page(results)
         self._pagination_increment_page()
-    
+        self._pagination_has_more = len(self) < self.totalrecords
+     
     def load_all_pages(self):
         """Load all pages of results from the API."""
         while self.has_more_records:
@@ -402,9 +398,7 @@ class PagedRecordList:
 
         :rtype: bool
         """
-        if self.totalrecords is None:
-            return True
-        return len(self) < self._totalrecords
+        return self._pagination_has_more
                    
 
 
