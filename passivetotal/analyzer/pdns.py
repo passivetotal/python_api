@@ -155,8 +155,8 @@ class PdnsRecord(Record, FirstLastSeen, ForPandas):
         return "<PdnsRecord '{0.value}' : '{0.resolve}'>".format(self)
     
     def _get_dict_fields(self):
-        return ['str:firstseen','str:lastseen','sources','value','str:collected','recordtype',
-                'resolve','resolvetype','str:ip','str:hostname']
+        return ['str:firstseen','str:lastseen','duration','sources','value','str:collected',
+                'recordtype','resolve','resolvetype','str:ip','str:hostname']
     
     def to_dataframe(self):
         """Render this object as a Pandas DataFrame.
