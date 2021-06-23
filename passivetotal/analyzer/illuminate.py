@@ -338,6 +338,7 @@ class IntelProfileIndicatorList(RecordList, PagedRecordList, ForPandas):
         self._types = []
         self._pagination_current_page = 0
         self._pagination_page_size = pagesize
+        self._pagination_has_more = True
         self._records = []
         self._profile_id = profile_id
         self._pagination_callable = partial(
@@ -352,7 +353,10 @@ class IntelProfileIndicatorList(RecordList, PagedRecordList, ForPandas):
     
     def _get_shallow_copy_fields(self):
         return ['_totalrecords','_pagination_current_page','_pagination_page_size',
-                '_types', '_pagination_callable', '_profile_id']
+                '_types', '_pagination_callable', '_pagination_has_more', '_profile_id']
+    
+    def _get_sortable_fields(self):
+        return ['id','firstseen','lastseen','type','category','value','is_osint','profile_id']
 
     def _pagination_parse_page(self, api_response):
         """Parse a page of API response data."""

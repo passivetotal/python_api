@@ -157,7 +157,7 @@ the profile you want to focus on, you can instantiate it directly using that id.
 
 .. autoclass:: passivetotal.analyzer.illuminate.IntelProfile
     :members:
-    :inherited-members:
+    :inherited-members: tuple
 
 
 Indicator Lists
