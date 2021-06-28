@@ -180,7 +180,7 @@ class RecordList(AsDictionary):
         """Return only records where a field contains one or more values.
         
         Usage: 
-          filter_in(fieldname=['value1','value2'])
+          filter_in(fieldname=['value1','value2']) or
           filter_in(fieldname='value1,value2)
         """
         field, values = kwargs.popitem()
@@ -188,6 +188,13 @@ class RecordList(AsDictionary):
             values = values.split(',')
         filtered_results = self._make_shallow_copy()
         filtered_results._records = list(filter(lambda r: getattr(r, field) in values, self._records))
+        return filtered_results
+    
+    def filter_substring(self, **kwargs):
+        """Return only records where a case-insensitive match on the field returns true."""
+        field, value = kwargs.popitem()
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = list(filter(lambda r: value.casefold() in getattr(r, field).casefold(), self._records))
         return filtered_results
     
     def sorted_by(self, field, reverse=False):
