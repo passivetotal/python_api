@@ -819,6 +819,9 @@ class AttackSurfaceInsight(Record, ForPandas):
         self._level = level
         self._parse(api_response)
     
+    def __str__(self):
+        return '{0.name}'.format(self)
+    
     def _get_dict_fields(self):
         return ['id','name','level','description','observation_count','link']
     

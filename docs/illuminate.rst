@@ -104,6 +104,193 @@ API.
 
 
 
+
+Attack Surface Intelligence
+---------------------------
+
+RiskIQ Illuminate offers Attack Surface Intelligence (ASI) that delivers prioritized
+insights on an organization's attack surface, including impact assets (observations).
+
+ASI is available to licensed users of the RiskIQ Illuminate API.
+
+The `analyzer` module provides an easy-to-use overlay to interact with the Attack Surface
+API endpoints and quickly obtain a list of impacted hosts.
+
+Review the :doc:`getting-started` guide for details on setting up your
+credentials and development environment.
+
+
+
+Your Attack Surface
+^^^^^^^^^^^^^^^^^^^
+
+An essential use case for the RiskIQ Illuminate ASI API is to understand your own 
+organization's attack surface. 
+
+.. code-block:: python
+
+    >>> from passivetotal import analyzer
+    >>> analyzer.init()
+    >>> my_asi = analyzer.illuminate.AttackSurface.load()
+    >>> my_asi
+    <AttackSurface #99901 "RiskIQ, Inc.">
+    >>> my_asi.name
+    'RiskIQ, Inc.'
+    >>> my_asi.high_priority_observation_count
+    0
+
+For a complete reference of the properties available in an AttackSurface object, see
+:class:`passivetotal.analyzer.illuminate.AttackSurface`
+
+Attack Surfaces contain a list of insights organized by priority. Insights are included
+in the response even if there are no impacted assets, but it is easy to filter the list
+to focus on only the insights with "observations". 
+
+.. code-block:: python
+
+    >>> for insight in my_asi.medium_priority_insights:
+            print(insight.name, insight.observation_count)
+    ASI: CVE-2021-123 Potential vulnerability 0
+    ...
+    ASI: Multiple vulnerabilities in System X 1
+    >>> for insight in my_asi.medium_priority_insights.only_active_insights:
+            print(insight.name)
+    ASI: Multiple vulnerabilities in System Q
+
+Insight lists are of type
+:class:`passivetotal.analyzer.illuminate.AttackSurfaceInsights` and contain a list of
+:class:`passivetotal.analyzer.illuminate.AttackSurfaceInsight` objects. Each of
+these objects provide properties to filter, sort, and render a list of insights.
+See the API reference below or click the class references here to see other options.
+
+You can obtain the entire list of insights across all three priority
+levels (high, medium, and low) at once. Use the 
+:class:`passivetotal.analyzer.illuminate.AttackSurface.all_insights` or 
+:class:`passivetotal.analyzer.illuminate.AttackSurface.all_active_insights` properties 
+to get the complete list.
+
+
+Attack Surface Observations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Attack Surface Observations are assets related to a given insight within the context of a
+specific Attack Surface. Assets typically include IPs and hostnames, and include the "first seen" and
+"last seen" dates that describe when RiskIQ detected an indication  the asset was potentially impacted.
+
+Observations are available in the `observations` property of an AttackSurfaceInsight.
+
+.. code-block:: python
+
+    >>> insights = my_asi.medium_priority_insights.only_active_insights
+    >>> first_insight = insights[0]
+    >>> for observation in first_insight:
+            print(observation.type)
+            print(observation.name)
+    HOST
+    subdomain.passivetotal.org
+
+Notice we filtered the list to only include active insights. If you skip this step, be prepared to
+catch `AnalyzerAPIError` exceptions thrown by the API when there are no observations available
+for a given insight.
+
+The list of observations is returned as a
+:class:`passivetotal.analyzer.illuminate.AttackSurfaceObservations` object that includes a list of
+:class:`passivetotal.analyzer.illuminate.AttackSurfaceObservation` objects. Like nearly all
+`analyzer` objects, these objects can be easily rendered as a Python dictionary for integration
+with other systems using the `as_dict` property.
+
+.. code-block:: python
+
+    >>> insights = my_asi.medium_priority_insights.only_active_insights
+    >>> first_insight = insights[0]
+    >>> observations = first_insight.observations.as_dict
+    >>> observations
+    {'records': [{'type': 'HOST', 'name': 'subdomain.passivetotal.org', 'firstseen': '2021-02-03 04:05:06', 'lastseen': '2021-06-07 08:09:10'}]}
+
+
+
+Third-Party Attack Surfaces
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Third-Party ASI module of Illuminate provides access to the Attack Surfaces of other organizations
+(aka "vendors"). Your API credentials must be specifically licensed to access third-party Attack Surfaces.
+
+To obtain a list of Attack Surfaces, use the `load()` method of the
+:class:`passivetotal.analyzer.illuminate.AttackSurfaces` class.
+
+.. code-block:: python
+
+    >>> vendor_attack_surfaces = analyzer.illuminate.AttackSurfaces.load()
+    >>> for vendor_asi in vendor_attack_surfaces:
+            print(vendor_asi.name, vendor_asi.high_priority_observation_count)
+    Example Vendor, Inc 13
+    SaaS Provider 0
+    Solutions Systems 9
+
+Use the `filter_substring` method and standard Python index notation to get a single
+vendor's attack surface (assuming only one vendor matches your substring search).
+
+.. code-block:: python
+
+    >>> vendor_attack_surfaces = analyzer.illuminate.AttackSurfaces.load()
+    >>> vendor_asi = vendor_attack_surfaces.filter_substring(name='example vendor')[0]
+    >>> print(vendor_asi.name)
+    Example Vendor, Inc.
+
+The :class:`passivetotal.analyzer.illuminate.AttackSurface` objects returned in this list 
+provide the same functionality as the objects described above that represent your own attack surface.
+Use the same techniques to enumerate the insights and observations (assets) for a vendor ASI.
+
+.. code-block:: python
+
+    >>> vendor_attack_surfaces = analyzer.illuminate.AttackSurfaces.load()
+    >>> for vendor_asi in vendor_attack_surfaces:
+            if vendor_asi.high_priority_observation_count > 0:
+                print(vendor_asi.name)
+                for insight in vendor_asi.high_priority_insights.only_active_insights:
+                    print('--- {0.name}'.format(insight))
+    Example Vendor, Inc
+    --- ASI: CVE 123
+    --- ASI: CVE 445
+    SaaS Provider
+    --- [Potential] Expired items
+    Solutions Systems
+    --- Deprecated Technologies
+
+
+
+ASI Reference
+^^^^^^^^^^^^^
+
+    .. autoclass:: passivetotal.analyzer.illuminate.AttackSurfaces
+        :members:
+        :inherited-members:
+
+    .. autoclass:: passivetotal.analyzer.illuminate.AttackSurface
+        :members:
+        :inherited-members:
+
+    .. autoclass:: passivetotal.analyzer.illuminate.AttackSurfaceInsights
+        :members:
+        :inherited-members:
+    
+        .. automethod:: __init__
+    
+    .. autoclass:: passivetotal.analyzer.illuminate.AttackSurfaceInsight
+        :members:
+        :inherited-members:
+
+    .. autoclass:: passivetotal.analyzer.illuminate.AttackSurfaceObservations
+        :members:
+        :inherited-members:
+
+    .. autoclass:: passivetotal.analyzer.illuminate.AttackSurfaceObservation
+        :members:
+        :inherited-members:
+
+
+
+
 Intelligence Profiles (CTI)
 ---------------------------
 
@@ -124,7 +311,8 @@ Intel Profiles
 ^^^^^^^^^^^^^^
 
 For most use cases, start with the list of RiskIQ Illuminate intel profiles. These
-are returned as a `RecordList` type that can be iterated and filtered like a regular list.
+are returned as a :class:`passivetotal.analyzer.illuminate.IntelProfiles` type that 
+can be iterated and filtered like a regular list.
 
 .. code-block:: python
 
@@ -134,6 +322,8 @@ are returned as a `RecordList` type that can be iterated and filtered like a reg
     >>> for profile in intel_profiles:
     ...     print(profile.id, profile.title, profile.indicatorcount_riskiq)
     
+
+Each record in the list is of type :class:`passivetotal.analyzer.illuminate.IntelProfile`
 
 Intel Profiles are identified with a unique string in the `id` parameter. Once you know
 the profile you want to focus on, you can instantiate it directly using that id.
@@ -149,15 +339,6 @@ the profile you want to focus on, you can instantiate it directly using that id.
                     {'countryCode': 'us', 'label': 'Target: USA'}],
       'title': 'APT33'}
 
-**Module Reference**
-
-.. autoclass:: passivetotal.analyzer.illuminate.IntelProfiles
-    :members:
-    :inherited-members:
-
-.. autoclass:: passivetotal.analyzer.illuminate.IntelProfile
-    :members:
-    :inherited-members: tuple
 
 
 Indicator Lists
@@ -168,15 +349,22 @@ profile, some sourced from open-source intelligence, and others surfaced directl
 from RiskIQ proprietary datasets. 
 
 There are several ways to obtain the list of indicators associated with a specific
-intel profile.
+intel profile. Each method will return an object of type
+:class:`passivetotal.analyzer.illuminate.IntelProfileIndicator`
+that can be iterated like a standard list and also offers several built-in methods
+and properties to filter, sort, and render the list. 
 
-Obtain the list of indicators directly as a property of an `IntelProfile`:
+Obtain the list of indicators directly as a property of an
+:class:`passivetotal.analyzer.illuminate.IntelProfile`:
 
 .. code-block:: python
 
     >>> profile = analyzer.illuminate.IntelProfile('apt33')
     >>> for indicator in profile.indicators:
     ...    print(indicator.pretty)
+
+Each indicator is of type
+:class:`passivetotal.analyzer.illuminate.IntelProfileIndicator`
 
 For more granular control, call the `get_indicators()` method and set additional
 parameters supported by the API to narrow the list:
@@ -202,10 +390,8 @@ that automatically when you access either the `indicators` property or call
 `get_indicators()` directly on the profile objects. Here, we are using the 
 `load_all_pages()` method to populate the list directly. 
 
-Like other analyzer objects, indicators are returned in an `analyzer.RecordList` object, 
-which provides a number of mechanisms for filtering and viewing the records. If you
-only need the values of the indicators, you can quickly access them as a plain Python
-list:
+If you only need the values of the indicators, you can quickly access them as a 
+plain Python list with the `values` property:
 
 .. code-block:: python
 
@@ -219,19 +405,6 @@ list:
     ['.....']
 
 
-**Module Reference**
-
-.. autoclass:: passivetotal.analyzer.illuminate.IntelProfileIndicatorList
-    :members:
-    :inherited-members:
-
-    .. automethod:: __init__
-
-
-.. autoclass:: passivetotal.analyzer.illuminate.IntelProfileIndicator
-    :members:
-    :inherited-members:
-
 
 
 Search By Indicator
@@ -243,7 +416,7 @@ stored in the RiskIQ dataset, or you can access the list as a property of
 `analyzer.Hostname` or `analyzer.IPAddress` objects.
 
 To search the API directly, use the 
-`passivetotal.analyzer.illuminate.IntelProfiles.find_by_indicator()` static method:
+:class:`passivetotal.analyzer.illuminate.IntelProfiles.find_by_indicator()` static method:
 
 .. code-block:: python
 
@@ -268,3 +441,23 @@ properties to avoid runtime exceptions.
 
 
 
+CTI Reference
+^^^^^^^^^^^^^
+
+    .. autoclass:: passivetotal.analyzer.illuminate.IntelProfiles
+        :members:
+        :inherited-members:
+
+    .. autoclass:: passivetotal.analyzer.illuminate.IntelProfile
+        :members:
+        :inherited-members: tuple
+
+    .. autoclass:: passivetotal.analyzer.illuminate.IntelProfileIndicatorList
+        :members:
+        :inherited-members:
+    
+        .. automethod:: __init__
+    
+    .. autoclass:: passivetotal.analyzer.illuminate.IntelProfileIndicator
+        :members:
+        :inherited-members:
