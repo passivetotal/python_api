@@ -68,13 +68,17 @@ class ArtifactsRequest(Client):
         :param type: Type of the artifact, optional (will be inferred if none provided)
         :param monitor: Whether to monitor the artifact (true or false), optional
         """
-        results = self.get_artifacts(project=project_guid, query=artifact, type=artifact_type)
-        if 'artifacts' in results: # API returned a list of more than one result
-            raise Exception('More than one artifact matched your search.')
-        if 'guid' in results: # API found one result
-            artifact = results
-        else: # API found no results
-            artifact = self.create_artifact(project_guid, artifact, type=artifact_type)
+        try:
+            results = self.get_artifacts(project=project_guid, query=artifact, type=artifact_type)
+            if 'artifacts' in results: # API returned a list of more than one result
+                raise Exception('More than one artifact matched your search.')
+            if 'guid' in results: # API found one result
+                artifact = results
+        except self.exception_class as e:
+            if getattr(e, 'status_code', 404) == 404:
+                artifact = self.create_artifact(project_guid, artifact, type=artifact_type)
+            else:
+                raise e
         if tags is not None or monitor is not None:
             artifact = self.update_artifact(artifact['guid'], monitor=monitor, tags=tags)
         return artifact

@@ -18,12 +18,119 @@ class IlluminateRequest(Client):
     def get_reputation(self, **kwargs):
         """Get RiskIQ Illuminate score for a domain or IP address.
 
-        Reference: 
+        Reference: https://api.riskiq.net/api/reputation/
 
         :param query: Domain or IP address to search
         :return: Dict of results
         """
         return self._get('reputation', '', **kwargs)
+    
+    def get_intel_profiles(self, **kwargs):
+        """Get RiskIQ Intel Profiles.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :return: Dict of results
+        """
+        return self._get('intel-profiles', '', **kwargs)
+    
+    def get_intel_profile_details(self, profile_id):
+        """Get intel profile details on a specific actor group.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :param profile_id: Text identifier of the actor group.
+        :return: Dict of results
+        """
+        return self._get('intel-profiles', profile_id)
+    
+    def get_intel_profile_indicators(self, profile_id, **kwargs):
+        """Get IOCs associated with an intel profile.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :param profile_id: Text identifier of the actor group.
+        :return: Dict of results
+        """
+        return self._get('intel-profiles', profile_id, 'indicators', **kwargs)
+    
+    def get_intel_profiles_for_indicator(self, indicator, **kwargs):
+        """Check whether an indicator is associated with any intel profiles.
+
+        Reference: https://api.riskiq.net/api/intel-profiles/
+
+        :param indicator: String representation of the IOC.
+        :return: Dict of results
+        """
+        return self._get('intel-profiles','indicator', query=indicator, **kwargs)
+    
+    def get_asi_summary(self):
+        """Get attack surface intelligence summary for the main organization 
+        associated with an API account.
+
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :return: Dict of results
+        """
+        return self._get('attack-surface', '')
+    
+    def get_asi_priority(self, level, **kwargs):
+        """Get attack surface intelligence priority detail.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :param level: Priority level to retrieve details for [high, medium, low]
+        :return: Dict of results
+        """
+        return self._get('attack-surface', 'priority', level, **kwargs)
+    
+    def get_asi_insights(self, insight_id, **kwargs):
+        """Get attack surface intelligence assets by insight ID.
+
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :return: Dict of results
+        """
+        return self._get('attack-surface', 'insight', insight_id, **kwargs)
+    
+    def get_asi_3p_vendors(self, **kwargs):
+        """Get list of attack surface intelligence third party vendors.
+
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :return: Dict of results
+        """
+        return self._get('attack-surface', 'third-party', **kwargs)
+    
+    def get_asi_3p_vendor_summary(self, vendor_id):
+        """Get attack surface intelligence summary for a third-party vendor.
+
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :return: Dict of results
+        """
+        return self._get('attack-surface', 'third-party', str(vendor_id))
+    
+    def get_asi_3p_vendor_priority(self, vendor_id, level, **kwargs):
+        """Get attack surface intelligence priorities for a third-party vendor.
+
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :return: Dict of results
+        """
+        path = 'third-party/{0}/priority/{1}'.format(vendor_id, level)
+        return self._get('attack-surface', path, **kwargs)
+    
+    def get_asi_3p_vendor_insights(self, vendor_id, insight_id, **kwargs):
+        """Get attack surface intelligence insights for a third-party vendor.
+
+        Reference: https://api.riskiq.net/api/asi_thirdparty/
+
+        :return: Dict of results
+        """
+        path = 'third-party/{0}/insight/{1}'.format(vendor_id, insight_id)
+        return self._get('attack-surface', path, **kwargs)
+
 
 
 

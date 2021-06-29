@@ -1,5 +1,37 @@
 # Changelog
 
+## v2.5.1
+
+#### Enhancements
+
+- Adds support for the Illuminate CTI module with Intel Profile API library
+  calls and `analzyer` objects. Includes support for all API parameters and
+  handles pagination automatically.
+- Adds support for Illuminate Attack Surface Intelligence including third-party
+  attack surfaces. 
+- Ability to filter all RecordList analyzer objects by a list of values using
+  new `filter_in` method.
+- Ability to filter all RecordList analyzer objects by a case-insensitive
+  substring search using new `filter_substring` method. Especially useful for
+  filtering a list of Attack Surface Insights or Attack Surface Third-Party vendors.
+
+
+
+#### Bug Fixes
+
+- Filter methods on RecordList objects now consistently return lists instead of
+  filters.
+- Property return NotImplemented type for base methods.
+- Ensure strings are returned for firstseen / lastseen dates in certificates
+  property. Was causing json encoding errors when trying to encode
+  `certificates.as_dict`.
+- Add missing `duration` property to pDNS `resolutions.as_dict`
+- Fixed save_to_project() API call; was broken after introduction of new API 
+  exception types.
+
+
+
+
 ## v2.5.0
 
 #### Enhancements:
