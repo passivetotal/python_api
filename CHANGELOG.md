@@ -26,6 +26,8 @@
   property. Was causing json encoding errors when trying to encode
   `certificates.as_dict`.
 - Add missing `duration` property to pDNS `resolutions.as_dict`
+- Fixed save_to_project() API call; was broken after introduction of new API 
+  exception types.
 
 
 

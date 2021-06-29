@@ -20,7 +20,7 @@ class Client(object):
 
     def __init__(self, username, api_key, server=DEFAULT_SERVER,
                  version=DEFAULT_VERSION, http_proxy=None, https_proxy=None,
-                 verify=True, headers=None, debug=False, exception_class=None):
+                 verify=True, headers=None, debug=False, exception_class=Exception):
         """Initial loading of the client.
 
         :param str username: API username in email address format
