@@ -103,6 +103,12 @@ API.
     :members: get_reputation
 
 
+Reputation Score Reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: passivetotal.analyzer.illuminate.ReputationScore
+    :members:
+
 
 
 Attack Surface Intelligence

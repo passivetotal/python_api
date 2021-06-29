@@ -193,6 +193,54 @@ IP or hostname.
     :members:
     :inherited-members:
 
+
+Pandas Integration
+------------------
+
+The `analyzer` module contains an optional integration with the Pandas_ Python 
+library. `pandas` is a robust data analytics toolset that integrates especially
+well with Jupyter Notebooks. Even if you don't plan to use the more sophisticated
+features `pandas` offers, the vastly improved display of `analyzer` results in
+notebooks is well worth enabling the integration. 
+
+To get started, install the `pandas` Python package, ideally in a
+`virtual environment <https://docs.python.org/3/library/venv.html>`_:
+
+``pip install pandas``
+
+Nearly all `analyzer` objects offer results formatted as a Pandas `DataFrame`,
+which is the standard two-dimensional (tabluar) data format in Pandas. You can access
+the data with the `as_df` property or by calling the `to_dataframe()` method on an 
+analyzer object. For example:
+
+``analyzer.Hostname('riskiq.net').summary.as_df``
+
+If this is the last line of a cell in a Jupyter notebook, and you run that
+cell, you'll get a one-line tabular output with the summary data in columns. 
+
+To view a list of pDNS records:
+
+``analyzer.Hostname('riskiq.net').resolutions.as_df``
+
+Internally, the `as_df` property calls `to_dataframe()` on each object with
+no parameters, which results in a default rendering of the dataframe. Some objects,
+like :class:`passivetotal.analyzer.illuminate.ReputationScore`, offer additional options
+in their implementation of `to_dataframe()`. For example:
+``analyzer.Hostname('jquery.su').reputation.to_dataframe(explode_rules=True)``
+
+This will show the reputation score with one row for each rule returned by the
+Reputation API. It uses the pandas `DataFrame.explode` method to unstack a list into
+a set of rows and columns, hence the parameter name `explode_rules`.
+
+Pandas dataframes are easily exported as CSV and offer capabilities to perform
+SQL-style joins and Excel-style VLOOKUPs. Consult the docs to learn what's possible.
+
+
+.. _Pandas: https://pandas.pydata.org/docs/index.html
+
+
+
+
 Using Record Lists
 ------------------
 Several attributes of Hostnames and IPs return lists of records from the API. The
