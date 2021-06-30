@@ -3,6 +3,8 @@
 from collections import namedtuple
 from datetime import datetime, timezone, timedelta
 from passivetotal import *
+from passivetotal._version import VERSION
+from passivetotal.api import Context
 from passivetotal.analyzer._common import AnalyzerError, AnalyzerAPIError, is_ip
 
 DEFAULT_DAYS_BACK = 90
@@ -56,6 +58,7 @@ def init(**kwargs):
         else:
             api_clients[name] = c.from_config()
         api_clients[name].exception_class = AnalyzerAPIError
+        api_clients[name].set_context('python','passivetotal',VERSION,'analyzer')
     config['is_ready'] = True
 
 def get_api(name):
@@ -90,6 +93,23 @@ def get_object(input, type=None):
     elif type not in objs.keys():
         raise AnalyzerError('type must be IPAddress or Hostname')
     return objs[type](input) 
+
+def get_version():
+    """Get the current version of this package."""
+    return VERSION
+
+def set_context(provider, variant, version, feature=''):
+    """Define the application context for an implementation using the analyzer module.
+
+    Sets a header to be sent in API requests that is used for metrics and troubleshooting.
+    
+    :param provider: The company, partner, provider or other top-level application context.
+    :param variant: The specific app, libary subcomponent, or feature category.
+    :param version: Version of the app, feature or code setting the context.
+    :param feature: Optional sub-feature, dashboard or script name.
+    """
+    for client in api_clients.values():
+        client.set_context(provider, variant, version, feature)
 
 def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, start_date=None, end=None, end_date=None):
     """Set a range of dates for all date-bounded API queries.

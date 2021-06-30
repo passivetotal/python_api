@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 import os
+import re
 from setuptools import setup, find_packages
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+# pylint: disable=locally-disabled, invalid-name
+with open('passivetotal/_version.py', 'r') as fd:
+    v_match = re.search(r'^VERSION\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE)
+    __version__ = v_match.group(1) if v_match else 'no version'
+# pylint: enable=locally-disabled, invalid-name
+
 setup(
     name='passivetotal',
-    version='2.5.1',
+    version=__version__,
     description='Library for the RiskIQ PassiveTotal and Illuminate API',
     url="https://github.com/passivetotal/python_api",
     author="RiskIQ",

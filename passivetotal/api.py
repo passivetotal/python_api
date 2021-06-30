@@ -1,13 +1,17 @@
 """PassiveTotal API Interface."""
 
-__author__ = 'Brandon Dixon (PassiveTotal)'
-__version__ = '1.0.0'
 
 import json
 import logging
 import requests
 import sys
+from urllib.parse import quote as urlquote
 from passivetotal.config import Config
+from passivetotal._version import VERSION
+
+__author__ = 'Brandon Dixon (PassiveTotal)'
+__version__ = VERSION
+
 
 
 class Client(object):
@@ -58,6 +62,7 @@ class Client(object):
         if '127.0.0.1' in server:
             self.verify = False
         self.exception_class = exception_class
+        self.set_context('python','passivetotal',VERSION)
 
     @classmethod
     def from_config(cls):
@@ -78,6 +83,18 @@ class Client(object):
             self.logger.setLevel('DEBUG')
         else:
             self.logger.setLevel('INFO')
+        
+    def set_context(self, provider, variant, version, feature=''):
+        """Set the context for this request.
+        
+        :param provider: The company, partner, provider or other top-level application context.
+        :param variant: The specific app, libary subcomponent, or feature category.
+        :param version: Version of the app, feature or code setting the context.
+        :param feature: Optional sub-feature, dashboard or script name.
+        """
+        context = Context(provider, variant, version, feature)
+        self.context = context
+        self.headers.update(context.get_header())
 
     def _endpoint(self, endpoint, action, *url_args):
         """Return the URL for the action.
@@ -181,3 +198,30 @@ class Client(object):
             kwargs['proxies'] = self.proxies
         response = requests.request(method, api_url, **kwargs)
         return self._json(response)
+
+
+
+class Context:
+
+    """Integration context for a set of API requests."""
+
+    HEADER_NAME = 'X-RISKIQ-CONTEXT'
+
+    def __init__(self, provider, variant, version, feature = ''):
+        """Build a new context header.
+        
+        :param provider: The company, partner, provider or other top-level application context.
+        :param variant: The specific app, libary subcomponent, or feature category.
+        :param version: Version of the app, feature or code setting the context.
+        :param feature: Optional sub-feature, dashboard or script name.
+        """
+        self._fields = (provider, variant, version, feature)
+    
+    def get_header_name(self):
+        return self.HEADER_NAME
+    
+    def get_header_value(self):
+        return '/'.join(map(lambda f: urlquote(f, safe=''), self._fields))
+    
+    def get_header(self):
+        return { self.get_header_name() : self.get_header_value() }

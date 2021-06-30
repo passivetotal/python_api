@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.5.2
+
+#### Enhancements
+
+- Send new request headers for metrics and troubleshooting with the `set_context`
+  method on the `analyzer` module and within the core API request libs.
+- Abstract package version into a distinct file to consolidate updates and ensure
+  consistency across docs and pypi. Add `get_version` method to `analyzer` module
+  for easy access to the current version number.
+
+
+#### Bug Fixes
+
+
+
+
 ## v2.5.1
 
 #### Enhancements
