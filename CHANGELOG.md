@@ -1,5 +1,35 @@
 # Changelog
 
+## v2.5.3
+
+#### Enhancements
+
+- Better support for unit tests in client libraries with ability to set a 
+  session to override default request methods.
+- Add flexibility to library class instantiation to prefer keyword parameters
+  over config file keys. 
+- Support for new `create_date` Articles API data field and query parameter. Enables
+  searching for most recent articles instead of returning all of them at once, and
+  provides visiblity to situations where an article published in the past was recently
+  added to the Articles collection. 
+
+
+#### Breaking Changes
+
+- Previously, calls to `analyzer.AllArticles()` would return all articles without a date
+  limit. Now, it will return only articles created after the starting date set with
+  `analyzer.set_date_range()`. The current module-level default for all date-bounded queries
+  is 90 days back, so now this function will return all articles created in the last 90 days.
+- `age` property of an Article analyzer object is now based on `create_date` instead of publish
+  date.
+
+
+#### Bug Fixes
+
+[ none ]
+
+
+
 ## v2.5.2
 
 #### Enhancements

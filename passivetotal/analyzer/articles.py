@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from passivetotal.analyzer._common import (
     RecordList, Record, ForPandas
 )
-from passivetotal.analyzer import get_api
+from passivetotal.analyzer import get_api, get_config
 
 
 
@@ -71,20 +71,28 @@ class AllArticles(ArticlesList):
     By default, instantiating the class will automatically load the entire list
     of threat intelligence articles. Pass autoload=False to the constructor to disable
     this functionality.
+
+    Only articles created after the start date specified in the analyzer.set_date_range()
+    method will be returned unless a different created_after parameter is supplied to the object
+    constructor.
     """
 
-    def __init__(self, autoload = True):
+    def __init__(self, created_after=None, autoload=True):
         """Initialize a list of articles; will autoload by default.
-
         :param autoload: whether to automatically load articles upon instantiation (defaults to true)
         """
         super().__init__()
         if autoload:
-            self.load()
+            self.load(created_after)
 
-    def load(self):
-        """Query the API for articles and load them into an articles list."""
-        response = get_api('Articles').get_articles()
+    def load(self, created_after=None):
+        """Query the API for articles and load them into an articles list.
+        
+        :param created_after: only return articles created after this date (optional, defaults to date set by `analyzer.set_date_range()`
+        """
+        if created_after is None:
+            created_after = get_config('start_date')
+        response = get_api('Articles').get_articles(createdAfter=created_after)
         self.parse(response)
     
 
@@ -98,6 +106,7 @@ class Article(Record, ForPandas):
         self._summary = api_response.get('summary')
         self._type = api_response.get('type')
         self._publishdate = api_response.get('publishedDate')
+        self._createdate = api_response.get('createdDate')
         self._link = api_response.get('link')
         self._categories = api_response.get('categories')
         self._tags = api_response.get('tags')
@@ -115,13 +124,14 @@ class Article(Record, ForPandas):
         response = get_api('Articles').get_details(self._guid)
         self._summary = response.get('summary')
         self._publishdate = response.get('publishedDate')
+        self._createdate = response.get('createdDate')
         self._tags = response.get('tags')
         self._categories = response.get('categories')
         self._indicators = response.get('indicators')
 
     def _get_dict_fields(self):
-        return ['guid','title','type','summary','str:date_published','age',
-                 'link','categories','tags','indicators','indicator_count',
+        return ['guid','title','type','summary','str:date_published','str:date_created',
+                 'age', 'link','categories','tags','indicators','indicator_count',
                  'indicator_types','str:ips','str:hostnames']
 
     def _ensure_details(self):
@@ -161,6 +171,7 @@ class Article(Record, ForPandas):
             title           = self._title,
             type            = self._type,
             date_published  = self._publishdate,
+            date_created    = self._createdate,
             summary         = self._summary,
             link            = self._link,
             categories      = self._categories,
@@ -229,10 +240,17 @@ class Article(Record, ForPandas):
         return date
     
     @property
+    def date_created(self):
+        """Date the article was created in the RiskIQ database."""
+        self._ensure_details()
+        date = datetime.fromisoformat(self._createdate)
+        return date
+    
+    @property
     def age(self):
-        """Age of the article in days."""
+        """Age of the article in days, measured from create date."""
         now = datetime.now(timezone.utc)
-        interval = now - self.date_published
+        interval = now - self.date_created
         return interval.days
     
     @property
