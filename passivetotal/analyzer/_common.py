@@ -429,7 +429,13 @@ class AnalyzerAPIError(AnalyzerError):
             self.json = self.response.json()
         except Exception:
             self.json = {}
-        self.message = self.json.get('error', self.json.get('message', str(response)))
+        if self.json is None:
+            self.message = 'No JSON data in API response'
+        else:
+            try:
+                self.message = self.json.get('error', self.json.get('message', str(response)))
+            except Exception:
+                self.message = ''
     
     def __str__(self):
         return 'Error #{0.status_code} "{0.message}" ({0.url})'.format(self)

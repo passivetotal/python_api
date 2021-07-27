@@ -24,7 +24,8 @@ class Client(object):
 
     def __init__(self, username, api_key, server=DEFAULT_SERVER,
                  version=DEFAULT_VERSION, http_proxy=None, https_proxy=None,
-                 verify=True, headers=None, debug=False, exception_class=Exception):
+                 verify=True, headers=None, debug=False, exception_class=Exception,
+                 session=None):
         """Initial loading of the client.
 
         :param str username: API username in email address format
@@ -63,18 +64,25 @@ class Client(object):
             self.verify = False
         self.exception_class = exception_class
         self.set_context('python','passivetotal',VERSION)
+        self.session = session or requests.Session()
 
     @classmethod
-    def from_config(cls):
-        """Method to return back a loaded instance."""
+    def from_config(cls, **kwargs):
+        """Method to return back a loaded instance.
+        
+        kwargs override configuration file variables if provided and are passed to the object constructor.
+        """
+        arg_keys = ['username','api_key','server','version','http_proxy','https_proxy']
+        args = { k: kwargs.pop(k) if k in kwargs else None for k in arg_keys }
         config = Config()
         client = cls(
-            username=config.get('username'),
-            api_key=config.get('api_key'),
-            server=config.get('api_server'),
-            version=config.get('api_version'),
-            http_proxy=config.get('http_proxy'),
-            https_proxy=config.get('https_proxy'),
+            username    = args.get('username') or config.get('username'),
+            api_key     = args.get('api_key') or config.get('api_key'),
+            server      = args.get('server') or config.get('api_server'),
+            version     = args.get('version') or config.get('api_version'),
+            http_proxy  = args.get('http_proxy') or config.get('http_proxy'),
+            https_proxy = args.get('https_proxy') or config.get('https_proxy'),
+            **kwargs
         )
         return client
 
@@ -155,7 +163,7 @@ class Client(object):
         if self.proxies:
             kwargs['proxies'] = self.proxies
         self.logger.debug("Requesting: %s, %s" % (api_url, str(kwargs)))
-        response = requests.get(api_url, **kwargs)
+        response = self.session.get(api_url, **kwargs)
         return self._json(response)
 
     def _get_special(self, endpoint, action, trail, data, *url_args, **url_params):
@@ -175,7 +183,7 @@ class Client(object):
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies
-        response = requests.get(api_url, **kwargs)
+        response = self.session.get(api_url, **kwargs)
         return self._json(response)
 
     def _send_data(self, method, endpoint, action,
@@ -196,7 +204,7 @@ class Client(object):
                   'auth': (self.username, self.api_key)}
         if self.proxies:
             kwargs['proxies'] = self.proxies
-        response = requests.request(method, api_url, **kwargs)
+        response = self.session.request(method, api_url, **kwargs)
         return self._json(response)
 
 
