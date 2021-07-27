@@ -56,7 +56,7 @@ def init(**kwargs):
         if 'username' in kwargs and 'api_key' in kwargs:
             api_clients[name] = c(**kwargs)
         else:
-            api_clients[name] = c.from_config()
+            api_clients[name] = c.from_config(**kwargs)
         api_clients[name].exception_class = AnalyzerAPIError
         api_clients[name].set_context('python','passivetotal',VERSION,'analyzer')
     config['is_ready'] = True
