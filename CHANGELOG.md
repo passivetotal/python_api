@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.5.4
+
+#### Enhancements
+
+- Removed strict checking on tracker type to permit querying by arbitrary tracker types. Updated list
+  of common trackers. Added searchType param to docs to reflect API's capability of returning either
+  hostnames or addresses.
+
+
+#### Bug Fixes
+
+- Fixed incorrect constant reference in trackers API (by removing strict checking on
+  tracker type).
+
+
+
 ## v2.5.3
 
 #### Enhancements
