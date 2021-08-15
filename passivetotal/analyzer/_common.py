@@ -162,18 +162,18 @@ class RecordList(AsDictionary):
     
     @property
     def length(self):
-        return len(self._records)
+        return len(self.all)
 
     def filter_and(self, **kwargs):
         """Return only records that match all key/value arguments."""
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: r.match_all(**kwargs), self._records))
+        filtered_results._records = list(filter(lambda r: r.match_all(**kwargs), self.all))
         return filtered_results
     
     def filter_or(self, **kwargs):
         """Return only records that match any key/value arguments."""
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: r.match_any(**kwargs), self._records))
+        filtered_results._records = list(filter(lambda r: r.match_any(**kwargs), self.all))
         return filtered_results
     
     def filter_in(self, **kwargs):
@@ -187,14 +187,14 @@ class RecordList(AsDictionary):
         if isinstance(values, str):
             values = values.split(',')
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: getattr(r, field) in values, self._records))
+        filtered_results._records = list(filter(lambda r: getattr(r, field) in values, self.all))
         return filtered_results
     
     def filter_substring(self, **kwargs):
         """Return only records where a case-insensitive match on the field returns true."""
         field, value = kwargs.popitem()
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: value.casefold() in getattr(r, field).casefold(), self._records))
+        filtered_results._records = list(filter(lambda r: value.casefold() in getattr(r, field).casefold(), self.all))
         return filtered_results
     
     def sorted_by(self, field, reverse=False):
@@ -211,21 +211,21 @@ class RecordList(AsDictionary):
 
     def _ensure_firstlastseen(self):
         """Ensure this record list has records of type FirstLastSeen."""
-        if not isinstance(self._records[0], FirstLastSeen):
+        if not isinstance(self.all[0], FirstLastSeen):
             raise TypeError('Cannot filter on a record type without firstseen / lastseen fields')
     
     def filter_dateseen_after(self, date_string):
         self._ensure_firstlastseen()
         dateobj = datetime.fromisoformat(date_string)
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.firstseen > dateobj, self._records)
+        filtered_results._records = filter(lambda r: r.firstseen > dateobj, self.all)
         return filtered_results
 
     def filter_dateseen_before(self, date_string):
         self._ensure_firstlastseen()
         dateobj = datetime.fromisoformat(date_string)
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.lastseen < dateobj, self._records)
+        filtered_results._records = filter(lambda r: r.lastseen < dateobj, self.all)
         return filtered_results
     
     def filter_dateseen_between(self, start_date_string, end_date_string):
@@ -233,8 +233,9 @@ class RecordList(AsDictionary):
         dateobj_start = datetime.fromisoformat(start_date_string)
         dateobj_end = datetime.fromisoformat(end_date_string)
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.firstseen >= dateobj_start and r.lastseen <= dateobj_end, self._records)
+        filtered_results._records = filter(lambda r: r.firstseen >= dateobj_start and r.lastseen <= dateobj_end, self.all)
         return filtered_results
+
 
 
 class Record(AsDictionary):

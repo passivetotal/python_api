@@ -32,11 +32,6 @@ No other configuration is required to begin using the analyzer module, but you
 should review the module reference to become aware of configuration options that
 would normally be set in specific API calls.
 
-Module Reference
-----------------
-.. automodule:: passivetotal.analyzer
-   :members:
-
 
 Hostname Analysis
 -----------------
@@ -77,6 +72,11 @@ IP Analysis
    :inherited-members:
 
 
+Module Reference
+----------------
+.. automodule:: passivetotal.analyzer
+    :members:
+   
 
 Summary Data
 ------------
@@ -342,6 +342,19 @@ Trackers Record Lists
 .. autoclass:: passivetotal.analyzer.trackers.TrackerRecord
     :members:
     :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.trackers.TrackerSearchResults
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.trackers.TrackerSearchRecords
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.trackers.Tracker
+    :members:
+    :inherited-members:
+
 
 Whois Record Lists
 ^^^^^^^^^^^^^^^^^^

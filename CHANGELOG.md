@@ -7,6 +7,11 @@
 - Removed strict checking on tracker type to permit querying by arbitrary tracker types. Updated list
   of common trackers. Added searchType param to docs to reflect API's capability of returning either
   hostnames or addresses.
+- New methods to search trackers in the `analyzer` module, including `tracker_references` property on
+  `Hostname` and `IPAddress` objects to find other sites referencing the focus host in their tracker
+  values.
+- New `analyzer.Tracker` top-level entity with `observations_by_ip` and `observations_by_hostname`
+  properties to find other hosts with the same tracker type and value. 
 
 
 #### Bug Fixes

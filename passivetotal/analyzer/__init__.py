@@ -232,3 +232,4 @@ from passivetotal.analyzer.ip import IPAddress
 from passivetotal.analyzer.ssl import CertificateField
 from passivetotal.analyzer.articles import AllArticles
 from passivetotal.analyzer.projects import Project, ProjectList
+from passivetotal.analyzer.trackers import Tracker
