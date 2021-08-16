@@ -163,18 +163,20 @@ class RecordList(AsDictionary):
     @property
     def length(self):
         return len(self.all)
+    
+    def filter_fn(self, fn):
+        """Return only records where a function returns true."""
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = list(filter(fn, self.all))
+        return filtered_results
 
     def filter_and(self, **kwargs):
         """Return only records that match all key/value arguments."""
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: r.match_all(**kwargs), self.all))
-        return filtered_results
+        return self.filter_fn(lambda r: r.match_all(**kwargs))
     
     def filter_or(self, **kwargs):
         """Return only records that match any key/value arguments."""
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: r.match_any(**kwargs), self.all))
-        return filtered_results
+        return self.filter_fn(lambda r: r.match_any(**kwargs))
     
     def filter_in(self, **kwargs):
         """Return only records where a field contains one or more values.
@@ -186,16 +188,12 @@ class RecordList(AsDictionary):
         field, values = kwargs.popitem()
         if isinstance(values, str):
             values = values.split(',')
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: getattr(r, field) in values, self.all))
-        return filtered_results
+        return self.filter_fn(lambda r: getattr(r, field) in values)
     
     def filter_substring(self, **kwargs):
         """Return only records where a case-insensitive match on the field returns true."""
         field, value = kwargs.popitem()
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: value.casefold() in getattr(r, field).casefold(), self.all))
-        return filtered_results
+        return self.filter_fn(lambda r: value.casefold() in getattr(r, field).casefold())
     
     def sorted_by(self, field, reverse=False):
         """Return a sorted list.

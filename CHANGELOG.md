@@ -12,7 +12,8 @@
   values.
 - New `analyzer.Tracker` top-level entity with `observations_by_ip` and `observations_by_hostname`
   properties to find other hosts with the same tracker type and value. 
-
+- New `filter_fn` method on all RecordList objects enables filtering a list by an arbitrary function.
+  Helps reduce code duplication and enables more advanced filtering. 
 
 #### Bug Fixes
 
