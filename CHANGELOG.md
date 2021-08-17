@@ -14,6 +14,12 @@
   properties to find other hosts with the same tracker type and value. 
 - New `filter_fn` method on all RecordList objects enables filtering a list by an arbitrary function.
   Helps reduce code duplication and enables more advanced filtering. 
+- Monitoring API endpoint support in the core library, and new `alerts` property on 
+ project artifacts to easily retrieve the list of new alerts for an artifact in a project.
+ Handles pagination automatically and returns results in new analyzer objects to enable
+ standard filtering and data representation (i.e. `as_dict` and `as_df`).
+
+
 
 #### Bug Fixes
 

@@ -1,6 +1,13 @@
+from collections import OrderedDict
 from datetime import datetime
+from functools import lru_cache, partial
 from passivetotal.analyzer import get_api, get_config, get_object
-from passivetotal.analyzer._common import RecordList, Record, AnalyzerError, ForPandas
+from passivetotal.analyzer._common import (
+    RecordList, PagedRecordList, Record, AnalyzerError, ForPandas
+)
+
+ALERT_PAGE_SIZE = 500
+
 
 
 class ProjectList(RecordList, ForPandas):
@@ -245,6 +252,7 @@ class ArtifactList(RecordList, ForPandas):
     
     @property
     def totalrecords(self):
+        """Total number of artifacts."""
         return len(self._records)
     
     def parse(self, api_response):
@@ -285,7 +293,7 @@ class Artifact(Record, ForPandas):
             self._tags_global = api_response.get('global_tags')
             self._tags_system = api_response.get('system_tags')
             self._tags_user = api_response.get('user_tags')
-            self._query = query
+            #self._query = query
         return self
 
     def __str__(self):
@@ -370,6 +378,26 @@ class Artifact(Record, ForPandas):
         self._tags_user = result['user_tags']
         return True
     
+    @lru_cache(maxsize=None)
+    def get_alerts(self, date_start, date_end, abbreviated=False):
+        """Get alerts for this indicator.
+
+        Loads all pages of alerts by default. Calls with identical params are cached.
+        
+        :param start_date: Only return alerts created on or after this date/time
+        :param end_date: Only return alerts created before this date/time
+        :param abbreviated: Whether to return only the first page with size=0
+
+        :rtype: :class:`passivetotal.analyzer.projects.ArtifactAlerts`
+        """
+        if abbreviated:
+            alerts = ArtifactAlerts(self, date_start, date_end, pagesize=1)
+            alerts.load_next_page()
+        else:
+            alerts = ArtifactAlerts(self, date_start, date_end)
+            alerts.load_all_pages()
+        return alerts
+    
     @property
     def project(self):
         pass
@@ -425,6 +453,11 @@ class Artifact(Record, ForPandas):
         return self._query
     
     @property
+    def query(self):
+        """Name of the artifact (alias for `name` property)."""
+        return self.name
+    
+    @property
     def creator(self):
         """User ID that created the artifact."""
         return self._creator
@@ -469,6 +502,206 @@ class Artifact(Record, ForPandas):
             return get_object(self.name)
         else:
             return None
+    
+    @property
+    def alerts(self):
+        """Alerts for this indicator, scoped by the date range set in 
+        `analzyer.set_date_range()`. For more arbitrary control, call
+        `passivetotal.analyzer.projects.Artifact.get_alerts()` directly.
+        
+        :rtype: :class:`passivetotal.analyzer.projects.ArtifactAlerts`
+        """
+        return self.get_alerts(get_config('start_date'), get_config('end_date'))
+    
+    @property
+    def alerts_available(self):
+        """Number of alerts available within the scope of the current date range
+        set in `analyzer.set_date_range()`. 
+        
+        Makes a single query to the API to retrieve one page of results and gets 
+        the `totalrecords` property from that (abbreviated) recordlist.
+        """
+        alerts = self.get_alerts(
+            get_config('start_date'),
+            get_config('end_date'),
+            True
+        )
+        return alerts.totalrecords
+
+
+
+class ArtifactAlerts(RecordList, PagedRecordList, ForPandas):
+
+    """List of alerts from the monitoring API for a specific artifact."""
+
+    def __init__(self, artifact=None, date_start=None, date_end=None, pagesize=ALERT_PAGE_SIZE):
+        self._artifact = artifact
+        self._totalrecords = None
+        self._records = []
+        self._date_start = date_start
+        self._date_end = date_end
+        self._pagination_current_page = 0
+        self._pagination_page_size = pagesize
+        self._pagination_has_more = True
+        self._pagination_callable = partial(
+            get_api('Monitor').get_alerts,
+            artifact=self._artifact.guid,
+            start=self._date_start,
+            end=self._date_end,
+            size=pagesize
+        )
+
+    def _get_shallow_copy_fields(self):
+        return ['_artifact','_pagination_current_page','_pagination_page_size',
+                '_pagination_callable', '_pagination_has_more', '_date_start','_date_end']
+
+    def _get_sortable_fields(self):
+        return ['change','query','type','result','project_name']
+
+    def _get_dict_fields(self):
+        return ['totalrecords','str:artifact','str:date_start','str:date_end']
+    
+    def _pagination_parse_page(self, api_response):
+        """Parse a page of API response data."""
+        self._totalrecords = api_response.get('totalRecords')
+        results = api_response['results'].get(self._artifact.guid)
+        if results is not None:
+            self._records.extend([
+                ArtifactAlert(self._artifact, r) for r in results
+            ])
+    
+    @property
+    def artifact(self):
+        """The artifact these alerts correspond to.
+
+        :rtype: :class:`passivetotal.analyzer.projects.Artifact`
+        """
+        return self._artifact
+
+    @property
+    def date_start(self):
+        """Starting date for the API query that populated this list."""
+        return self._date_start
+    
+    @property
+    def date_end(self):
+        """Ending date for the API querye that populated this list."""
+        return self._date_end
+
+    @property
+    def totalrecords(self):
+        """Number of available alerts."""
+        return self._totalrecords
+    
+    def parse(self, api_response):
+        """Parse an API response."""
+        self._records = []
+        for result in api_response.get(self._artifact.guid, []):
+            self._records.append(ArtifactAlert(self._artifact, result))
+
+
+
+class ArtifactAlert(Record, ForPandas):
+
+    """A single alert for an Artifact."""
+
+    def __init__(self, artifact, api_response):
+        self._artifact = artifact
+        self._query = api_response.get('query')
+        self._change = api_response.get('change')
+        self._type = api_response.get('type')
+        self._project_name = api_response.get('project')
+        self._project_guid = api_response.get('projectGuid')
+        self._result = api_response.get('result')
+        self._tags = api_response.get('tags')
+        self._datetime = api_response.get('datetime')
+    
+    def __repr__(self):
+        return '<ArtifactAlert {0.type} {0.change}:{0.query} "{0.result}">'.format(self)
+    
+    def __str__(self):
+        return '{}'.format(self._result)
+    
+    def _get_dict_fields(self):
+        return ['type','change','query','result','project_name','project_guid','str:firstseen']
+    
+    def to_dataframe(self):
+        """Render this object as a Pandas DataFrame.
+        
+        :rtype: :class:`pandas.DataFrame`
+        """
+        pd = self._get_pandas()
+        cols = ['type','change','query','result','firstseen','project_name', 'project_guid']
+        as_d = OrderedDict()
+        for col in cols:
+            as_d[col] = getattr(self, col)
+        return pd.DataFrame.from_records([as_d])
+    
+    @property
+    def artifact(self):
+        """Artifact that raised this alert.
+        
+        :rtype: :class:`passivetotal.analyzer.projects.Artifact`
+        """
+        return self._artifact
+    
+    @property
+    def query(self):
+        """Search term or monitored query this alert was monitoring."""
+        return self._query
+    
+    @property
+    def change(self):
+        """The change that triggered this alert."""
+        return self._change
+    
+    @property
+    def type(self):
+        """The type of change this alert was configured to watch for."""
+        return self._type
+    
+    @property
+    def project(self):
+        """The project this artifact is associated with.
+        
+        :rtype: :class:`passivetotal.analyzer.projects.Project`
+        """
+        return Project.find(self._project_guid)
+    
+    @property
+    def project_name(self):
+        """The name of the project this artifact is associated with.
+        
+        This is the value returned directly by the API. If the project name
+        changed after the alert was raised, this value may not match the current name
+        of the project."""
+        return self._project_name
+    
+    @property
+    def project_guid(self):
+        """The guid for the project this artifact is associated with."""
+        return self._project_guid
+    
+    @property
+    def result(self):
+        """The result of the alert query (the value of the alert itself)."""
+        return self._result
+    
+    @property
+    def tags(self):
+        """List of tags associated with this alert."""
+        return self._tags
+    
+    @property
+    def firstseen(self):
+        """Date and time of the alert."""
+        return datetime.fromisoformat(self._datetime)
+    
+    @property
+    def firstseen_raw(self):
+        """The raw value of the alert date/time as returned by the API."""
+        return self._datetime
+
 
 
 
