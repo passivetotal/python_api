@@ -405,6 +405,69 @@ class PagedRecordList:
         :rtype: bool
         """
         return self._pagination_has_more
+
+
+
+class FilterDomains:
+
+    """Object that supports filtering records against a list of hostnames, registered domains, or tlds.
+    
+    Expects a `filter_fn` method on `self` and for each record to expose a `host` property.
+    """
+
+    def _get_object(self, input):
+        """Wrapper for `analyzer.get_object` to avoid circular imports."""
+        from . import get_object
+        return get_object(input)
+
+    def exclude_hosts_in(self, hosts):
+        """Filter the list to exclude records where the parent or child is contained in not in 
+        a list of hosts. Accepts either a list of strings or a list of `analyzer.Hostname` objects.
+        
+        Will apply to parents if `direction` is parents (from `hostpair_parents` property) or to
+        children if `direction` is children(from `hostpair_children` property).
+
+        Use `exclude_domains_in()` to match against only the registered domain.
+        
+        :param hosts: List of hostnames to directly match against, as a comma-separated string or a list.
+        """
+        if isinstance(hosts, str):
+            hosts = hosts.split(',')
+        return self.filter_fn(lambda h:  h.host not in [self._get_object(h) for h in hosts])
+    
+    def exclude_domains_in(self, hosts):
+        """Filter the list to exclude records where the registered domain of the parent or child 
+        is not in a list of hosts. Accepts either a list of strings or a list of 
+        `analyzer.Hostname` objects.
+        
+        Will apply to parents if `direction` is parents (from `hostpair_parents` property) or to
+        children if `direction` is children(from `hostpair_children` property).
+        
+        :param hosts: List of hostnames to directly match against, as a comma-separated string or a list.
+        """
+        if isinstance(hosts, str):
+            hosts = hosts.split(',')
+        return self.filter_fn(
+            lambda h: h.host.registered_domain not in [
+                h.registered_domain for h in [self._get_object(host) for host in hosts] if h.is_hostname
+            ] if h.host.is_hostname else False
+        )
+    
+    def exclude_tlds_in(self, tlds):
+        """Filter the list to exclude records where the tld of the registered domain of the 
+        parent or child is not in a list of tlds. Accepts either a list of strings or a list of 
+        `analyzer.Hostname` objects.
+        
+        Will apply to parents if `direction` is parents (from `hostpair_parents` property) or to
+        children if `direction` is children(from `hostpair_children` property).
+        
+        :param hosts: List of hostnames to directly match against, as a comma-separated string or a list.
+        """
+        if isinstance(tlds, str):
+            tlds = tlds.split(',')
+        return self.filter_fn(
+            lambda h: h.host.tld not in tlds if h.host.is_hostname else False
+        )
                    
 
 

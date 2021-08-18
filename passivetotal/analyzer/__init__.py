@@ -83,8 +83,12 @@ def get_object(input, type=None):
     """Get an Analyzer object for a given input and type. If no type is specified,
     type will be autodetected based on the input.
 
+    If the input is already an Analyzer object it will be returned as-is.
+
     Returns :class:`analyzer.Hostname` or :class:`analyzer.IPAddress`.
     """
+    if isinstance(input, IPAddress) or isinstance(input, Hostname):
+        return input
     objs = {
         'IPAddress': IPAddress,
         'Hostname': Hostname

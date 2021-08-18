@@ -143,3 +143,19 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
         if getattr(self, '_whois', None) is not None:
             return self._whois
         return self._api_get_whois()
+    
+    @property
+    def is_ip(self):
+        """Whether this object is an IP. Always returns true. 
+        
+        Useful when obtaining a host from a list that may provide either an analyzer.Hostname or
+        analyzer.IPAddress object."""
+        return True
+    
+    @property
+    def is_hostname(self):
+        """Whether this object is a hostname. Always returns false.
+        
+        Useful when obtaining a host froma list that may provide either an analyzer.Hostname or
+        analyzer.IPAddress object."""
+        return False

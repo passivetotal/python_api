@@ -1,5 +1,6 @@
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas, AnalyzerError, AnalyzerAPIError
+    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas, AnalyzerError, AnalyzerAPIError,
+    FilterDomains
 )
 from passivetotal.analyzer import get_api, get_config, get_object
 
@@ -101,7 +102,7 @@ class TrackerRecord(Record, FirstLastSeen, ForPandas):
     def hostname(self):
         """Hostname the tracker was observed on."""
         return self._hostname
-    
+
     @property
     def trackertype(self):
         """Type or category of web tracker."""
@@ -122,7 +123,7 @@ class TrackerRecord(Record, FirstLastSeen, ForPandas):
 
 
 
-class TrackerSearchResults(RecordList, ForPandas):
+class TrackerSearchResults(RecordList, ForPandas, FilterDomains):
 
     """Search results from a tracker query."""
 

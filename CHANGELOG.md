@@ -15,9 +15,16 @@
 - New `filter_fn` method on all RecordList objects enables filtering a list by an arbitrary function.
   Helps reduce code duplication and enables more advanced filtering. 
 - Monitoring API endpoint support in the core library, and new `alerts` property on 
- project artifacts to easily retrieve the list of new alerts for an artifact in a project.
- Handles pagination automatically and returns results in new analyzer objects to enable
- standard filtering and data representation (i.e. `as_dict` and `as_df`).
+  project artifacts to easily retrieve the list of new alerts for an artifact in a project.
+  Handles pagination automatically and returns results in new analyzer objects to enable
+  standard filtering and data representation (i.e. `as_dict` and `as_df`).
+- Small change to the `get_object` method to tolerate passing it objects that are already
+  `analyzer.Hostname` or `analyzer.IPAddress` objects.
+- New `is_ip` and `is_hostname` methods on both `Hostname` and `IPAddress` objects to simplify
+  code that operates against a list of hosts that may include objects of both types.
+- New methods on Tracker search results and Hostpair results to exclude records with hostnames, 
+  domains or tlds in a given list. This helps refine results to focus on "foreign" sites and enables direct
+  application of proven phishing site detection use cases.
 
 
 

@@ -193,5 +193,21 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs,
         return self._api_get_whois(
             compact=False
         )
+    
+    @property
+    def is_ip(self):
+        """Whether this object is an IP. Always returns false. 
+        
+        Useful when obtaining a host from a list that may provide either an analyzer.Hostname or
+        analyzer.IPAddress object."""
+        return False
+    
+    @property
+    def is_hostname(self):
+        """Whether this object is a hostname. Always returns true.
+        
+        Useful when obtaining a host froma list that may provide either an analyzer.Hostname or
+        analyzer.IPAddress object."""
+        return True
 
 
