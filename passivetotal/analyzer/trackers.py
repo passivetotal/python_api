@@ -330,7 +330,10 @@ class HasTrackers:
 
     """An object with web tracker history."""
 
-    _REFERENCE_TRACKER_TYPES = ['DocumentBaseHost','HTTrackSourceHost','MarkOfTheWebSourceHost']
+    _REFERENCE_TRACKER_TYPES = {
+        'Hostname': ['DocumentBaseHost','HTTrackSourceHost','MarkOfTheWebSourceHost','SingleFileSourceHost'],
+        'IPAddress': ['DocumentBaseAddress','HTTrackSourceAddress','MarkOfTheWebSourceAddress','SingleFileSourceAddress']
+    }
 
     def _api_get_trackers(self, start_date=None, end_date=None):
         """Query the host attributes API for web tracker history.
@@ -351,7 +354,8 @@ class HasTrackers:
     def _api_get_tracker_references(self):
         """Query the host attributes API and search trackers for multiple trackertypes and searchtypes."""
         self._tracker_references = TrackerSearchResults(query=self.get_host_identifier())
-        for trackertype in self._REFERENCE_TRACKER_TYPES:
+        tracker_types = self._REFERENCE_TRACKER_TYPES.get('Hostname' if self.is_hostname else 'IPAddress')
+        for trackertype in tracker_types:
             for searchtype in ['addresses','hosts']:
                 try:
                     result = get_api('HostAttributes').search_trackers_by_type(
