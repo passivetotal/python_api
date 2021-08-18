@@ -237,6 +237,8 @@ class Article(Record, ForPandas):
         """Date the article was published, as a datetime object."""
         self._ensure_details()
         date = datetime.fromisoformat(self._publishdate)
+        if date.tzinfo is None:
+            date = date.replace(tzinfo=timezone.utc)
         return date
     
     @property
@@ -244,6 +246,8 @@ class Article(Record, ForPandas):
         """Date the article was created in the RiskIQ database."""
         self._ensure_details()
         date = datetime.fromisoformat(self._createdate)
+        if date.tzinfo is None:
+            date = date.replace(tzinfo=timezone.utc)
         return date
     
     @property

@@ -32,6 +32,8 @@
 
 - Fixed incorrect constant reference in trackers API (by removing strict checking on
   tracker type).
+- Fixed broken `age` property on Artilces that was also causing `as_df` and `as_dict` to fail.
+  Likely caused by missing time zone info in dates returned from the API. 
 
 
 
