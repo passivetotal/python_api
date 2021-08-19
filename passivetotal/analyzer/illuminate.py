@@ -244,6 +244,8 @@ class IntelProfile(Record, ForPandas):
         :param categories: Categories of indicators to filter on (optional).
         :param sources: Sources of indicators [osint, riskiq] (optional).
         :param pagesize: Size of pages to return from the API (defaults to `INDICATOR_PAGE_SIZE`).
+        
+        :rypte: :class:`passivetotal.analyzer.illuminate.IntelProfileIndicatorList`
         """
         iocs = IntelProfileIndicatorList(
             profile_id=self._id,

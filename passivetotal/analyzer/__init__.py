@@ -51,6 +51,7 @@ def init(**kwargs):
         (ArticlesRequest, 'Articles'),
         (ProjectsRequest, 'Projects'),
         (ArtifactsRequest, 'Artifacts'),
+        (MonitorRequest, 'Monitor'),
     ]
     for c, name in api_classes:
         if 'username' in kwargs and 'api_key' in kwargs:
@@ -82,8 +83,12 @@ def get_object(input, type=None):
     """Get an Analyzer object for a given input and type. If no type is specified,
     type will be autodetected based on the input.
 
+    If the input is already an Analyzer object it will be returned as-is.
+
     Returns :class:`analyzer.Hostname` or :class:`analyzer.IPAddress`.
     """
+    if isinstance(input, IPAddress) or isinstance(input, Hostname):
+        return input
     objs = {
         'IPAddress': IPAddress,
         'Hostname': Hostname
@@ -232,3 +237,4 @@ from passivetotal.analyzer.ip import IPAddress
 from passivetotal.analyzer.ssl import CertificateField
 from passivetotal.analyzer.articles import AllArticles
 from passivetotal.analyzer.projects import Project, ProjectList
+from passivetotal.analyzer.trackers import Tracker

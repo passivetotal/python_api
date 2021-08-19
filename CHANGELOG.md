@@ -1,5 +1,42 @@
 # Changelog
 
+## v2.5.4
+
+#### Enhancements
+
+- Removed strict checking on tracker type to permit querying by arbitrary tracker types. Updated list
+  of common trackers. Added searchType param to docs to reflect API's capability of returning either
+  hostnames or addresses.
+- New methods to search trackers in the `analyzer` module, including `tracker_references` property on
+  `Hostname` and `IPAddress` objects to find other sites referencing the focus host in their tracker
+  values.
+- New `analyzer.Tracker` top-level entity with `observations_by_ip` and `observations_by_hostname`
+  properties to find other hosts with the same tracker type and value. 
+- New `filter_fn` method on all RecordList objects enables filtering a list by an arbitrary function.
+  Helps reduce code duplication and enables more advanced filtering. 
+- Monitoring API endpoint support in the core library, and new `alerts` property on 
+  project artifacts to easily retrieve the list of new alerts for an artifact in a project.
+  Handles pagination automatically and returns results in new analyzer objects to enable
+  standard filtering and data representation (i.e. `as_dict` and `as_df`).
+- Small change to the `get_object` method to tolerate passing it objects that are already
+  `analyzer.Hostname` or `analyzer.IPAddress` objects.
+- New `is_ip` and `is_hostname` methods on both `Hostname` and `IPAddress` objects to simplify
+  code that operates against a list of hosts that may include objects of both types.
+- New methods on Tracker search results and Hostpair results to exclude records with hostnames, 
+  domains or tlds in a given list. This helps refine results to focus on "foreign" sites and enables direct
+  application of proven phishing site detection use cases.
+
+
+
+#### Bug Fixes
+
+- Fixed incorrect constant reference in trackers API (by removing strict checking on
+  tracker type).
+- Fixed broken `age` property on Articles that was also causing `as_df` and `as_dict` to fail.
+  Likely caused by missing time zone info in dates returned from the API. 
+
+
+
 ## v2.5.3
 
 #### Enhancements

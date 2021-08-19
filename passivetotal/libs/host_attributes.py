@@ -6,9 +6,7 @@ __version__ = '1.0.0'
 from passivetotal.api import Client
 # exceptions
 from passivetotal.common.exceptions import MISSING_FIELD
-from passivetotal.common.exceptions import INVALID_FIELD_TYPE
-# const
-from passivetotal.common.const import TRACKER_VALID_FIELDS
+
 
 
 class HostAttributeRequest(Client):
@@ -66,11 +64,9 @@ class HostAttributeRequest(Client):
 
         :param str query: Query value to use when making the request for data
         :param str type: Field to run the query against
+        :param str searchType: Type of results to search (hosts or addresses)
         :return: Tracker matches
         """
         if 'type' not in kwargs:
             raise MISSING_FIELD("Type value is required.")
-        if kwargs['type'] not in WHOIS_VALID_FIELDS:
-            raise INVALID_FIELD_TYPE("Field must be one of the following: %s"
-                                     % ', '.join(TRACKER_VALID_FIELDS))
         return self._get('trackers', 'search', **kwargs)

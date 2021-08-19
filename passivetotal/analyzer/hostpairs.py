@@ -1,13 +1,13 @@
 from datetime import datetime
 import pprint
 from passivetotal.analyzer._common import (
-    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas
+    RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas, FilterDomains
 )
 from passivetotal.analyzer import get_api, get_config, get_object
 
 
 
-class HostpairHistory(RecordList, PagedRecordList, ForPandas):
+class HostpairHistory(RecordList, PagedRecordList, ForPandas, FilterDomains):
 
     """Historical connections between hosts."""
 
@@ -55,13 +55,11 @@ class HostpairHistory(RecordList, PagedRecordList, ForPandas):
     @property
     def children(self):
         """Set of unique child hostnames in the hostpairs record list."""
-        from passivetotal.analyzer import Hostname
         return set([record.child for record in self if record.child is not None])
     
     @property
     def parents(self):
         """Set of unique parent hostnames in the hostpairs record list."""
-        from passivetotal.analyzer import Hostname
         return set([record.parent for record in self if record.parent is not None])
     
     @property
@@ -72,6 +70,17 @@ class HostpairHistory(RecordList, PagedRecordList, ForPandas):
         the value of `Hostpairs.direction`
         """
         return getattr(self, self._direction)
+    
+    @property
+    def domains(self):
+        """List of unique registered domains."""
+        def get_domain(host):
+            try:
+                return host.registered_domain
+            except AttributeError:
+                pass
+        return set([])
+    
 
 
 
@@ -122,13 +131,33 @@ class HostpairRecord(Record, FirstLastSeen, ForPandas):
 
     @property
     def child(self):
-        """Descendant hostname for this pairing."""
+        """Descendant hostname for this pairing.
+        
+        :retval: :class:`passivetotal.analyzer.hostname.Hostname`
+        """
         return get_object(self._child)
     
     @property
+    def direction(self):
+        """Direction of the relationship - parent or child."""
+        return 'parent' if self._direction=='parents' else 'child'
+
+    @property
     def parent(self):
-        """Parent hostname for this pairing."""
+        """Parent hostname for this pairing.
+        
+        :retval: :class:`passivetotal.analyzer.hostname.Hostname`
+        """
         return get_object(self._parent)
+        
+    @property
+    def host(self):
+        """Returns the parent or the child host depending on whether the direction is
+        "parent" or "child". 
+
+        :retval: :class:`passivetotal.analyzer.hostname.Hostname`
+        """
+        return getattr(self, self.direction)
 
 
 

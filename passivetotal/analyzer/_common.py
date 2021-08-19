@@ -162,19 +162,21 @@ class RecordList(AsDictionary):
     
     @property
     def length(self):
-        return len(self._records)
+        return len(self.all)
+    
+    def filter_fn(self, fn):
+        """Return only records where a function returns true."""
+        filtered_results = self._make_shallow_copy()
+        filtered_results._records = list(filter(fn, self.all))
+        return filtered_results
 
     def filter_and(self, **kwargs):
         """Return only records that match all key/value arguments."""
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: r.match_all(**kwargs), self._records))
-        return filtered_results
+        return self.filter_fn(lambda r: r.match_all(**kwargs))
     
     def filter_or(self, **kwargs):
         """Return only records that match any key/value arguments."""
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: r.match_any(**kwargs), self._records))
-        return filtered_results
+        return self.filter_fn(lambda r: r.match_any(**kwargs))
     
     def filter_in(self, **kwargs):
         """Return only records where a field contains one or more values.
@@ -186,16 +188,12 @@ class RecordList(AsDictionary):
         field, values = kwargs.popitem()
         if isinstance(values, str):
             values = values.split(',')
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: getattr(r, field) in values, self._records))
-        return filtered_results
+        return self.filter_fn(lambda r: getattr(r, field) in values)
     
     def filter_substring(self, **kwargs):
         """Return only records where a case-insensitive match on the field returns true."""
         field, value = kwargs.popitem()
-        filtered_results = self._make_shallow_copy()
-        filtered_results._records = list(filter(lambda r: value.casefold() in getattr(r, field).casefold(), self._records))
-        return filtered_results
+        return self.filter_fn(lambda r: value.casefold() in getattr(r, field).casefold())
     
     def sorted_by(self, field, reverse=False):
         """Return a sorted list.
@@ -211,21 +209,21 @@ class RecordList(AsDictionary):
 
     def _ensure_firstlastseen(self):
         """Ensure this record list has records of type FirstLastSeen."""
-        if not isinstance(self._records[0], FirstLastSeen):
+        if not isinstance(self.all[0], FirstLastSeen):
             raise TypeError('Cannot filter on a record type without firstseen / lastseen fields')
     
     def filter_dateseen_after(self, date_string):
         self._ensure_firstlastseen()
         dateobj = datetime.fromisoformat(date_string)
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.firstseen > dateobj, self._records)
+        filtered_results._records = filter(lambda r: r.firstseen > dateobj, self.all)
         return filtered_results
 
     def filter_dateseen_before(self, date_string):
         self._ensure_firstlastseen()
         dateobj = datetime.fromisoformat(date_string)
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.lastseen < dateobj, self._records)
+        filtered_results._records = filter(lambda r: r.lastseen < dateobj, self.all)
         return filtered_results
     
     def filter_dateseen_between(self, start_date_string, end_date_string):
@@ -233,8 +231,9 @@ class RecordList(AsDictionary):
         dateobj_start = datetime.fromisoformat(start_date_string)
         dateobj_end = datetime.fromisoformat(end_date_string)
         filtered_results = self._make_shallow_copy()
-        filtered_results._records = filter(lambda r: r.firstseen >= dateobj_start and r.lastseen <= dateobj_end, self._records)
+        filtered_results._records = filter(lambda r: r.firstseen >= dateobj_start and r.lastseen <= dateobj_end, self.all)
         return filtered_results
+
 
 
 class Record(AsDictionary):
@@ -406,6 +405,69 @@ class PagedRecordList:
         :rtype: bool
         """
         return self._pagination_has_more
+
+
+
+class FilterDomains:
+
+    """Object that supports filtering records against a list of hostnames, registered domains, or tlds.
+    
+    Expects a `filter_fn` method on `self` and for each record to expose a `host` property.
+    """
+
+    def _get_object(self, input):
+        """Wrapper for `analyzer.get_object` to avoid circular imports."""
+        from . import get_object
+        return get_object(input)
+
+    def exclude_hosts_in(self, hosts):
+        """Filter the list to exclude records where the parent or child is contained in not in 
+        a list of hosts. Accepts either a list of strings or a list of `analyzer.Hostname` objects.
+        
+        Will apply to parents if `direction` is parents (from `hostpair_parents` property) or to
+        children if `direction` is children(from `hostpair_children` property).
+
+        Use `exclude_domains_in()` to match against only the registered domain.
+        
+        :param hosts: List of hostnames to directly match against, as a comma-separated string or a list.
+        """
+        if isinstance(hosts, str):
+            hosts = hosts.split(',')
+        return self.filter_fn(lambda h:  h.host not in [self._get_object(h) for h in hosts])
+    
+    def exclude_domains_in(self, hosts):
+        """Filter the list to exclude records where the registered domain of the parent or child 
+        is not in a list of hosts. Accepts either a list of strings or a list of 
+        `analyzer.Hostname` objects.
+        
+        Will apply to parents if `direction` is parents (from `hostpair_parents` property) or to
+        children if `direction` is children(from `hostpair_children` property).
+        
+        :param hosts: List of hostnames to directly match against, as a comma-separated string or a list.
+        """
+        if isinstance(hosts, str):
+            hosts = hosts.split(',')
+        return self.filter_fn(
+            lambda h: h.host.registered_domain not in [
+                h.registered_domain for h in [self._get_object(host) for host in hosts] if h.is_hostname
+            ] if h.host.is_hostname else False
+        )
+    
+    def exclude_tlds_in(self, tlds):
+        """Filter the list to exclude records where the tld of the registered domain of the 
+        parent or child is not in a list of tlds. Accepts either a list of strings or a list of 
+        `analyzer.Hostname` objects.
+        
+        Will apply to parents if `direction` is parents (from `hostpair_parents` property) or to
+        children if `direction` is children(from `hostpair_children` property).
+        
+        :param hosts: List of hostnames to directly match against, as a comma-separated string or a list.
+        """
+        if isinstance(tlds, str):
+            tlds = tlds.split(',')
+        return self.filter_fn(
+            lambda h: h.host.tld not in tlds if h.host.is_hostname else False
+        )
                    
 
 
