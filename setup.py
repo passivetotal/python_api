@@ -22,7 +22,7 @@ setup(
     author_email="admin@passivetotal.org",
     license="GPLv2",
     packages=find_packages(),
-    install_requires=['requests', 'ez_setup', 'python-dateutil', 'future', 'tldextract'],
+    install_requires=['requests', 'python-dateutil', 'future', 'tldextract'],
     long_description=read('README.md'),
     long_description_content_type="text/markdown",
     classifiers=[],
