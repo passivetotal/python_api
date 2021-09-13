@@ -231,6 +231,22 @@ def set_project(name_or_guid, visibility='analyst', description='', tags=None, c
     else:
         raise AnalyzerError('More than one project found; narrow the search criteria or use a unique name')
 
+def AttackSurface(id_or_name=None):
+    """Find one attack surface.
+        
+    Call with no parameters to find your Attack Surface.
+    Pass a number to load a specific Attack Surface by ID, or pass a string to load the entire
+    list of Attack Surfaces and search them by case-insensitive substring.
+    
+    Raises `AnalyzerError` if no attack surfaces are found or if more than one Attack Surface name
+    matches the parameter.
+    
+    :returns: :class:`passivetotal.illuminate.AttackSurface`
+    """
+    from passivetotal.analyzer.illuminate import AttackSurface as ASI
+    return ASI.find(id_or_name)
+
+
 
 from passivetotal.analyzer.hostname import Hostname
 from passivetotal.analyzer.ip import IPAddress

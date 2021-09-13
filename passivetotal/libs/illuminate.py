@@ -130,6 +130,75 @@ class IlluminateRequest(Client):
         """
         path = 'third-party/{0}/insight/{1}'.format(vendor_id, insight_id)
         return self._get('attack-surface', path, **kwargs)
+    
+    def get_asi_vuln_components(self, **kwargs):
+        """Get attack surface vulnerable components.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/#!/default/get_pt_v2_attack_surface_vuln_intel_components
+        
+        :return: Dict of results
+        """
+        return self._get('attack-surface', 'vuln-intel/components', **kwargs)
+    
+    def get_asi_vuln_cves(self, **kwargs):
+        """Get attack surface vulnerabilities.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/#!/default/get_pt_v2_attack_surface_vuln_intel_cves
+        
+        :return: Dict of results
+        """
+        return self._get('attack-surface', 'vuln-intel/cves', **kwargs)
+    
+    def get_asi_vuln_cve_observations(self, cve_id, **kwargs):
+        """Get attack surface observations for a given CVE.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/#!/default/get_pt_v2_attack_surface_vuln_intel_cves_cveId_observations
+        
+        :return: Dict of results
+        """
+        path = 'vuln-intel/cves/{0}/observations'.format(cve_id)
+        return self._get('attack-surface', path, **kwargs)
+
+    def get_asi_3p_vuln_components(self, vendor_id, **kwargs):
+        """Get attack surface vulnerable components for a third-party vendor.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/#!/default/get_pt_v2_attack_surface_vuln_intel_third_party_id_components
+        
+        :return: Dict of results
+        """
+        path = 'vuln-intel/third-party/{0}/components'.format(vendor_id)
+        return self._get('attack-surface', path, **kwargs)
+    
+    def get_asi_3p_vuln_cves(self, vendor_id, **kwargs):
+        """Get attack surface vulnerabilities for a third-party vendor.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/#!/default/get_pt_v2_attack_surface_vuln_intel_third_party_id_cves
+        
+        :return: Dict of results
+        """
+        path = 'vuln-intel/third-party/{0}/cves'.format(vendor_id)
+        return self._get('attack-surface', path, **kwargs)
+    
+    def get_asi_3p_vuln_cve_observations(self, vendor_id, cve_id, **kwargs):
+        """Get attack surface observations for a given CVE and third-party vendor ID.
+        
+        Reference: https://api.riskiq.net/api/asi_thirdparty/#!/default/get_pt_v2_attack_surface_vuln_intel_third_party_id_cves_cveId_observations
+        
+        :return: Dict of results
+        """
+        path = 'vuln-intel/third-party/{0}/cves/{1}/observations'.format(vendor_id, cve_id)
+        return self._get('attack-surface', path, **kwargs)
+    
+    def get_vuln_article(self, cve_id, **kwargs):
+        """Get details on a CVE vulnerability article.
+        
+        Reference: https://api.riskiq.net/api/vulnerability/#!/default/get_pt_v2_vuln_intel_article_cveId
+        
+        :return: Dict of results
+        """
+        path = 'article/{0}'.format(cve_id)
+        return self._get('vuln-intel', path, **kwargs)
+
 
 
 
