@@ -532,6 +532,15 @@ class VulnArticle(Record, ForPandas):
         return self._id
     
     @property
+    def osint_articles(self):
+        """Get a list of RiskIQ open-source intelligence articles that reference this vulnerability.
+        
+        :rtype: :class:`passivetotal.analyzer.articles.ArticlesList`
+        """
+        from passivetotal.analyzer.articles import ArticlesList
+        return ArticlesList.find(self.id)
+    
+    @property
     def description(self):
         """Narrative description of the CVE."""
         return self._description
