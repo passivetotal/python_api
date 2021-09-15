@@ -1,9 +1,10 @@
-from functools import partial
+from datetime import datetime
+from functools import partial, lru_cache
 
 
 from passivetotal.analyzer import get_api
 from passivetotal.analyzer._common import (
-    Record, RecordList, PagedRecordList, FirstLastSeen, ForPandas
+    Record, RecordList, PagedRecordList, FirstLastSeen, ForPandas, AnalyzerError
 )
 
 
@@ -269,6 +270,11 @@ class AttackSurfaceCVEObservation(Record, FirstLastSeen, ForPandas):
         return self._cve
     
     @property
+    def cve_id(self):
+        """RiskIQ identifier for the CVE this observation is vulnerable to."""
+        return self.cve.id
+    
+    @property
     def type(self):
         """Type of this observation (asset)."""
         return self._type
@@ -395,3 +401,349 @@ class AttackSurfaceComponent(Record, FirstLastSeen, ForPandas):
     def count(self):
         """Count."""
         return self._count
+
+
+
+class VulnArticle(Record, ForPandas):
+
+    """Vulnerabilty report providing details on impacted assets and third-party vendors."""
+
+    _instances = {}
+
+    def __new__(cls, id=None, api_response=None):
+        if id is None and api_response is not None and 'cveInfo' in api_response and 'cveId' in api_response['cveInfo']:
+            id = api_response['cveInfo'].get('cveId')
+        if id is not None:
+            self = cls._instances.get(id)
+            if self is not None:
+                return self
+        self = cls._instances[id] = object.__new__(cls)
+        self._is_loaded = False
+        if api_response is not None:
+            self._parse(api_response)
+        return self
+    
+    def __repr__(self):
+        return '<VulnArticle {}>'.format(self._id)
+    
+    def __str__(self):
+        try:
+            cwe_list = '({})'.format(','.join(self.cwes))
+        except Exception:
+            cwe_list = ''
+        return '[{0.id}] {0.description}{1}'.format(self, cwe_list)
+    
+    def _parse(self, api_response):
+        self._id = api_response['cveInfo']['cveId']
+        self._description = api_response['cveInfo']['description']
+        self._cwes = api_response['cveInfo']['cwes']
+        self._priority_score = api_response['cveInfo']['priorityScore']
+        self._cvss2_score = api_response['cveInfo']['cvss2Score']
+        self._cvss3_score = api_response['cveInfo']['cvss3Score']
+        self._date_published = api_response['cveInfo']['datePublished']
+        self._date_created = api_response['cveInfo']['dateCreated']
+        self._date_publisher_updated = api_response['cveInfo']['datePublisherUpdate']
+        self._references = api_response['cveInfo']['references']
+        self._components = api_response['components']
+        self._impacted3p = api_response['impactedThirdParties']
+        self._observation_count = api_response['observationCount']
+        self._link = api_response['articlesLink']
+        self._is_loaded = True
+    
+    def _api_get_article(self, id):
+        response = get_api('Illuminate').get_vuln_article(id)
+        self._parse(response)
+    
+    def _get_dict_fields(self):
+        return ['id','description','cwes','score','cvss2score','cvss3score','str:date_published',
+                'str:date_updated','str:date_publisher_updated','references','components',
+                'observation_count']
+    
+    def to_dataframe(self, view='info'):
+        """Render this object as a Pandas dataframe.
+
+        :param view: View to generate (info, references, components, or impacts)
+        
+        :rtype: :class:`pandas.DataFrame`
+        """
+        views = ['info','references','components','impacts']
+        if view not in views:
+            raise AnalyzerError('view must be one of {}'.format(views))
+        pd = self._get_pandas()
+        cols = {
+            'info': ['cve_id','description','score','cvss2score','cvss3score','date_published','date_created',
+                     'date_pubupdate','observations','references','components','impacts'],
+            'references': ['cve_id','reference_url','reference_name'],
+            'components': ['cve_id','component'],
+            'impacts': ['cve_id', 'vendor_name','vendor_id','observation_count']
+        }
+        records = {
+            'info': [{
+                'cve_id': self.id,
+                'description': self.description,
+                'score': self.score,
+                'cvss2score': self.cvss2score,
+                'cvss3score': self.cvss3score,
+                'date_published': self.date_published,
+                'date_created': self.date_created,
+                'date_pubupdate': self.date_publisher_updated,
+                'observations': self.observation_count,
+                'references': len(self.references),
+                'components': len(self.components),
+                'impacts': len(self._impacted3p)
+            }],
+            'references': [{
+                    'cve_id': self.id,
+                    'reference_url': r['url'],
+                    'reference_name': r['name']
+                } for r in self.references ],
+            'components': [{
+                    'cve_id': self.id,
+                    'component': c['name']
+                } for c in self.components ],
+            'impacts': [{
+                    'cve_id': self.id,
+                    'vendor_name': i.vendor_name,
+                    'vendor_id': i.vendor_id,
+                    'observation_count': i.observation_count  
+                    } for i in self.attack_surfaces ]
+        }
+        return pd.DataFrame.from_records(records[view], index='cve_id', columns=cols[view])
+    
+    @staticmethod
+    def load(id):
+        """Load a Vulnerability Article by ID.
+        
+        :rtype: :class:`VulnArticle`
+        """
+        article = VulnArticle()
+        if not article._is_loaded:
+            article._api_get_article(id)
+        return article
+    
+    @property
+    def id(self):
+        """CVE identifier string (alias for cve_id)."""
+        return self._id
+    
+    @property
+    def cve_id(self):
+        """CVE identifier string."""
+        return self._id
+    
+    @property
+    def description(self):
+        """Narrative description of the CVE."""
+        return self._description
+    
+    @property
+    def cwes(self):
+        """List of CWE IDs."""
+        return self._cwes
+    
+    @property
+    def score(self):
+        """RiskIQ-assigned priority score for this vulnerability, ranging between 0 and 100."""
+        return self._priority_score
+    
+    @property
+    def cvss2score(self):
+        """The CVSS2 score for this vulnerability."""
+        return self._cvss2_score
+    
+    @property
+    def cvss3score(self):
+        """The CVSSS3 score for this vulnerability."""
+        return self._cvss3_score
+    
+    @property
+    def date_published(self):
+        """The date the article was published."""
+        return datetime.fromisoformat(self._date_published)
+    
+    @property
+    def date_published_raw(self):
+        """The raw (string) value returned from the API with the date the article was published."""
+        return self._date_published
+    
+    @property
+    def date_created(self):
+        """The date the article was created."""
+        return datetime.fromisoformat(self._date_created)
+
+    @property
+    def date_created_raw(self):
+        """The raw (string) value returned from the API with the date the article was created."""
+        return self._date_created
+    
+    @property
+    def date_publisher_updated(self):
+        """The date the article was updated by the publisher."""
+        return datetime.fromisoformat(self._date_publisher_updated)
+
+    @property
+    def date_publisherupdate_raw(self):
+        """The raw (string) value returned from the API with the date the article was updated by the publisher."""
+        return self._date_publisher_updated
+    
+    @property
+    def references(self):
+        """List of references for this article."""
+        return self._references
+    
+    @property
+    def components(self):
+        """List of components (detections) RiskIQ will search for to determine if assets are impacted by this vulnerability."""
+        return self._components
+    
+    @property
+    @lru_cache
+    def attack_surfaces(self):
+        """List of Illuminate Attack Surfaces (aka third-party vendors) with assets impacted by this vulnerability.
+        
+        :rtype: :class:`VulnArticleImpacts`
+        """
+        return VulnArticleImpacts(self, self._impacted3p)
+    
+    @property
+    def observation_count(self):
+        """Number of observations (assets) within the primary attack surface that are impacted by this vulnerability."""
+        return self._observation_count
+    
+    @property
+    def observations(self):
+        """List of observations (assets) within the primary attack surface that are impacted by this vulnerability."""
+        from . import AttackSurface
+        attack_surface = AttackSurface.load()
+        article = {
+            'cveId': self.id,
+            'cwes': self.cwes,
+            'priorityScore': self.score,
+            'observationCount': self.observation_count,
+            'cveLink': ''
+        }
+        cve = AttackSurfaceCVE(attack_surface, article)
+        return cve.observations
+
+
+
+class VulnArticleImpacts(RecordList, ForPandas):
+
+    """List of Illuminate Attack Surfaces impacted by a vulnerability."""
+
+    def __init__(self, article=None, impacts=[]):
+        self._records = []
+        if article is not None:
+            self._article = article
+            if len(impacts):
+                self._records = [ VulnArticleImpact(self._article, i) for i in impacts ]
+    
+    def __repr__(self):
+        return '<VulnArticleImpacts {0.article.id}>'.format(self)
+    
+    def __str__(self):
+        return '{0.article.id} impacts {0.impact_count:,} attack surfaces(s)'.format(self)
+
+    def _get_dict_fields(self):
+        return ['cve_id', 'impact_count']
+
+    def _get_shallow_copy_fields(self):
+        return ['_article']
+    
+    def _get_sortable_fields(self):
+        return ['vendor_name','vendor_id','observation_count']
+    
+    @property
+    def article(self):
+        """Article that describes the vulnerability impacting these attack surfaces."""
+        return self._article
+    
+    @property
+    def attack_surfaces(self):
+        """List of impacted attack surfaces.
+        
+        :rtypte: :class:`VulnArticleImpact`
+        """
+        return self._records
+    
+    @property
+    def cve_id(self):
+        """CVE identifier for the vulnerability this article applies to."""
+        return self.article.id
+    
+    @property
+    def impact_count(self):
+        """Number of attack surfaces impacted by this vulnerability."""
+        return len(self._records)
+        
+    
+
+class VulnArticleImpact(Record, ForPandas):
+
+    """An impacted third-party attack surface with observations (assets) affected by a given vulnerabilty."""
+
+    def __init__(self, article, api_response=None):
+        self._article = article
+        if api_response is not None:
+            self._parse(api_response)
+        
+    def __repr__(self):
+        return "<VulnArticleImpact '{}'>".format(self._vendorname)
+    
+    def __str__(self):
+        return '{0.vendor_name}: {0.observation_count:,} observations'.format(self)
+    
+    def _get_dict_fields(self):
+        return ['vendor_name', 'vendor_id', 'observation_count']
+
+    def _parse(self, api_response):
+        self._vendorid = api_response['vendorID']
+        self._vendorname = api_response['name']
+        self._assetcount = api_response['assetCount']
+    
+    @property
+    def article(self):
+        """Article that describes the vulnerability this observation (asset) is impacted by.
+        
+        :rtype: :class:`VulnArticle`
+        """
+        return self._article
+
+    @property
+    def vendor_name(self):
+        """Name of the vendor with observations (assets) impacted by this vulnerability."""
+        return self._vendorname
+    
+    @property
+    def vendor_id(self):
+        """The RiskIQ-assigned identifier for this vendor."""
+        return self._vendorid
+    
+    @property
+    def attack_surface(self):
+        """Illuminate Attack Surface for the third-party vendor impacted by this vulnerability."""
+        from . import AttackSurface
+        return AttackSurface.load(self._vendorid)
+    
+    @property
+    def observation_count(self):
+        """Number of observations (assets) within a vendor's attack surface that are impacted by this vulnerability."""
+        return self._assetcount
+    
+    @property
+    def observations(self):
+        """List of observations (assets) within this vendor's attack surface that are impacted by this vulnerability."""
+        article = {
+            'cveId': self.article.id,
+            'cwes': self.article.cwes,
+            'priorityScore': self.article.score,
+            'observationCount': self.article.observation_count,
+            'cveLink': ''
+        }
+        cve = AttackSurfaceCVE(self.attack_surface, article)
+        return cve.observations
+
+
+    
+
+    
