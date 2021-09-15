@@ -113,12 +113,30 @@ class AttackSurfaceCVE(Record, ForPandas):
         return self._observations
     
     @property
+    def article(self):
+        """CVE article with complete details on this vulnerability.
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticle`
+        """
+        return VulnArticle.load(self._cve_id)
+    
+    @property
     def attack_surface(self):
         """Attack surface this CVE is associated with.
         
         :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
         """
         return self._attack_surface
+    
+    @property
+    def description(self):
+        """Description of the CVE, retrieved from the vulnerability article associated with this CVE."""
+        return self.article.description
+    
+    @property
+    def publish_date(self):
+        """Publication date of the vulnerability article associated with this CVE."""
+        return self.article.date_published
     
     @property
     def cwes(self):
@@ -516,7 +534,7 @@ class VulnArticle(Record, ForPandas):
         
         :rtype: :class:`VulnArticle`
         """
-        article = VulnArticle()
+        article = VulnArticle(id)
         if not article._is_loaded:
             article._api_get_article(id)
         return article
