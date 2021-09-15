@@ -34,6 +34,18 @@ class ArticlesList(RecordList, ForPandas):
             for article in api_response.get('articles', []):
                 self._records.append(Article(article, self._query))
     
+    @staticmethod
+    def find(query):
+        """Query the Articles API endpoint and find articles that match the search term.
+        
+        :rtype: :class:`passivetotal.analyzer.articles.ArticlesList`
+        """
+        articles = ArticlesList()
+        articles._query = query
+        response = get_api('Articles').get_articles(query=query)
+        articles.parse(response)
+        return articles
+    
     def filter_tags(self, tags):
         """Filtered article list that includes articles with an exact match to one
         or more tags.

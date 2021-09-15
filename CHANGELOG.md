@@ -1,5 +1,32 @@
 # Changelog
 
+## v2.5.5
+
+#### Enhancements
+
+- Support for new RiskIQ Illuminate Vulnerability Intelligence API endpoints in core API library.
+- New `cves` property of AttackSurface objects finds vulnerabilities impacting assets within that
+  attack surface. Works identically for the primary (your own) attack surface and third-party
+  attack surfaces.
+- New `AttackSurfaceCVEs` record list to contain a list of `AttackSurfaceCVE` objects, with properties
+  to access the vulnerability report, RiskIQ priority score, and list of impacted assets.
+- New `VulnArticle` object to provide details on a CVE and discover the list of third-party vendors
+  with assets impacted by the vuln. Custom views in the article's `to_dataframe()` method render
+  dataframes focused on article references, component detections, and third-party impacts.
+- New helper method `analyzer.AttackSurface()` to directly load an attack surface. Works without params to load
+  the main attack surface, with an ID to load a third-party vendor attack surface by ID, or with a string
+  to find an attack surface by vendor name. 
+- Re-organized Illuminate-specific code in the `analyzer` module into distinct files located under a
+  subpackage. Existing imports in client code should not be impacted. 
+
+
+#### Pull Requests
+
+- Publishes pull request #38 "Remove ez_setup dependancy."
+
+
+
+
 ## v2.5.4
 
 #### Enhancements
