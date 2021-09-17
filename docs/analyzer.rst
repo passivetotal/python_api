@@ -347,7 +347,7 @@ Trackers Record Lists
     :members:
     :inherited-members:
 
-.. autoclass:: passivetotal.analyzer.trackers.TrackerSearchRecords
+.. autoclass:: passivetotal.analyzer.trackers.TrackerSearchRecord
     :members:
     :inherited-members:
 

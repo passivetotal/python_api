@@ -67,7 +67,7 @@ class AttackSurfaces(RecordList, PagedRecordList, ForPandas):
         """Get a list of all third-party (vendor) attack surfaces authorized for this API account.
         
         :param pagesize: Size of pages to retrieve from the API (optional).
-        :rtype: :class:`passivetotal.analyzer.Illuminate.AttackSurfaces`.
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaces`.
         """
         attack_surfaces = AttackSurfaces(pagesize)
         attack_surfaces.load_all_pages()
@@ -139,7 +139,7 @@ class AttackSurface(Record, ForPandas):
         Raises `AnalyzerError` if no attack surfaces are found or if more than one Attack Surface name
         matches the parameter.
         
-        :returns: :class:`passivetotal.illuminate.AttackSurface`
+        :returns: :class:`passivetotal.illuminate.asi.AttackSurface`
         """
         if id_or_name is None:
             return AttackSurface.load()
@@ -212,7 +212,7 @@ class AttackSurface(Record, ForPandas):
     def all_insights(self):
         """All insights across all levels (high, medium, and low).
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurfaceInsights`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         insights = self.high_priority_insights._make_shallow_copy()
         insights._level = 'ALL'
@@ -225,7 +225,7 @@ class AttackSurface(Record, ForPandas):
     def all_active_insights(self):
         """All insights with active observations across all levels.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurfaceInsights`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.all_insights.only_active_insights
 
@@ -266,7 +266,7 @@ class AttackSurface(Record, ForPandas):
     def high_priority_insights(self):
         """Get high priority insights.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.AttackSurfaceInsights`
+        :rtype: List of :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.get_insights('high')
     
@@ -274,7 +274,7 @@ class AttackSurface(Record, ForPandas):
     def medium_priority_insights(self):
         """Get medium priority insights.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.AttackSurfaceInsights`
+        :rtype: List of :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.get_insights('medium')
     
@@ -282,7 +282,7 @@ class AttackSurface(Record, ForPandas):
     def low_priority_insights(self):
         """Get low priority insights.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.AttackSurfaceInsights`
+        :rtype: List of :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.get_insights('low')
     
@@ -290,7 +290,7 @@ class AttackSurface(Record, ForPandas):
     def cves(self):
         """Get a list of CVEs associated with this attack surface.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.AttackSurfaceCVE`
+        :rtype: List of :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVE`
         """
         if getattr(self, '_cves', None) is not None:
             return self._cves
@@ -347,7 +347,7 @@ class AttackSurfaceInsights(RecordList, ForPandas):
     def attack_surface(self):
         """Attach surface these insights are associated with.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self._attack_surface
     
@@ -433,7 +433,7 @@ class AttackSurfaceInsight(Record, ForPandas):
     def attack_surface(self):
         """Attack surface this insight is associated with.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self._attack_surface
     

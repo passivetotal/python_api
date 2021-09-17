@@ -46,7 +46,7 @@ class AttackSurfaceCVEs(RecordList, PagedRecordList, ForPandas):
     def attack_surface(self):
         """Get the Illuminate Attack Surface associated with this list of CVEs.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self._attack_surface
     
@@ -124,7 +124,7 @@ class AttackSurfaceCVE(Record, ForPandas):
     def attack_surface(self):
         """Attack surface this CVE is associated with.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self._attack_surface
     
@@ -172,7 +172,10 @@ class AttackSurfaceCVE(Record, ForPandas):
     
     @property
     def observations(self):
-        """List of observations (assets) in this attack surface vulnerable to this CVE."""
+        """List of observations (assets) in this attack surface vulnerable to this CVE.
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEObservations`
+        """
         if getattr(self, '_observations', None) is not None:
             return self._observations
         return self.get_observations()
@@ -213,7 +216,7 @@ class AttackSurfaceCVEObservations(RecordList, PagedRecordList, ForPandas):
     def cve(self):
         """Get the CVE associated with this list of observations.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurfaceCVE`
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVE`
         """
         return self._cve
     
@@ -275,7 +278,7 @@ class AttackSurfaceCVEObservation(Record, FirstLastSeen, ForPandas):
     def attack_surface(self):
         """Attack surface this observation is associated with.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self.cve.attack_surface
     
@@ -283,7 +286,7 @@ class AttackSurfaceCVEObservation(Record, FirstLastSeen, ForPandas):
     def cve(self):
         """CVE this observation is vulnerable to, in the context of a specific attack surface.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurfaceCVE`
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVE`
         """
         return self._cve
     
@@ -337,7 +340,7 @@ class AttackSurfaceComponents(RecordList, PagedRecordList, ForPandas):
     def attack_surface(self):
         """Get the CVE associated with this list of observations.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self._attack_surface
     
@@ -396,7 +399,7 @@ class AttackSurfaceComponent(Record, FirstLastSeen, ForPandas):
     def attack_surface(self):
         """Attack surface this component is associated with.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.AttackSurface`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
         return self._attack_surface
     
@@ -628,7 +631,7 @@ class VulnArticle(Record, ForPandas):
     def attack_surfaces(self):
         """List of Illuminate Attack Surfaces (aka third-party vendors) with assets impacted by this vulnerability.
         
-        :rtype: :class:`VulnArticleImpacts`
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticleImpacts`
         """
         return VulnArticleImpacts(self, self._impacted3p)
     
@@ -689,7 +692,7 @@ class VulnArticleImpacts(RecordList, ForPandas):
     def attack_surfaces(self):
         """List of impacted attack surfaces.
         
-        :rtypte: :class:`VulnArticleImpact`
+        :rtypte: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticleImpact`
         """
         return self._records
     
@@ -732,7 +735,7 @@ class VulnArticleImpact(Record, ForPandas):
     def article(self):
         """Article that describes the vulnerability this observation (asset) is impacted by.
         
-        :rtype: :class:`VulnArticle`
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticle`
         """
         return self._article
 
@@ -748,7 +751,10 @@ class VulnArticleImpact(Record, ForPandas):
     
     @property
     def attack_surface(self):
-        """Illuminate Attack Surface for the third-party vendor impacted by this vulnerability."""
+        """Illuminate Attack Surface for the third-party vendor impacted by this vulnerability.
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
+        """
         from . import AttackSurface
         return AttackSurface.load(self._vendorid)
     
@@ -759,7 +765,10 @@ class VulnArticleImpact(Record, ForPandas):
     
     @property
     def observations(self):
-        """List of observations (assets) within this vendor's attack surface that are impacted by this vulnerability."""
+        """List of observations (assets) within this vendor's attack surface that are impacted by this vulnerability.
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEObservations`
+        """
         article = {
             'cveId': self.article.id,
             'cwes': self.article.cwes,

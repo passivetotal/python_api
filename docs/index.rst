@@ -18,6 +18,7 @@ Contents:
    :maxdepth: 2
 
    getting-started
+   examples
    analyzer
    wrappers
    illuminate

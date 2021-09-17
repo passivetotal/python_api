@@ -134,7 +134,7 @@ class IntelProfile(Record, ForPandas):
     def load(profile_id):
         """Load an intel profile by the RiskIQ-assigned identifier string.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfile`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfile`
         """
         profile = IntelProfile(profile_id)
         if profile._has_details:
@@ -161,7 +161,7 @@ class IntelProfile(Record, ForPandas):
         :param sources: Sources of indicators [osint, riskiq] (optional).
         :param pagesize: Size of pages to return from the API (defaults to `INDICATOR_PAGE_SIZE`).
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfileIndicatorList`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList`
         """
         iocs = IntelProfileIndicatorList(
             profile_id=self._id,
@@ -215,7 +215,7 @@ class IntelProfile(Record, ForPandas):
         Calls `passivetotal.analyzer.illuminate.IntelProfile.get_indicators()'
         with default parameters. Use that method directly for more granular control.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfileIndicatorList`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList`
         """
         return self.get_indicators()
     
@@ -223,7 +223,7 @@ class IntelProfile(Record, ForPandas):
     def tags(self):
         """List of profile tags associated with this actor group.
         
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfile.ProfileTag`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfile.ProfileTag`
         """
         self._ensure_details()
         return [ self.ProfileTag(t['label'], t['countryCode']) for t in self._tags ]
@@ -295,7 +295,7 @@ class IntelProfileIndicatorList(RecordList, PagedRecordList, ForPandas):
     def only_osint(self):
         """Filtered list with only indicators from open sources.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfileIndicatorList`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList`
         """
         return self.filter(is_osint=True)
     
@@ -303,7 +303,7 @@ class IntelProfileIndicatorList(RecordList, PagedRecordList, ForPandas):
     def only_riskiq(self):
         """Filtered list with only indicators sourced by RiskIQ.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfileIndicatorList`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList`
         """
         return self.filter(is_osint=False)
 
@@ -373,7 +373,7 @@ class IntelProfileIndicator(Record, FirstLastSeen, ForPandas):
     def intel_profile(self):
         """RiskIQ threat intel profile associated with this indicator.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfile`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfile`
         """
         return IntelProfile(id=self._profile_id)
     
@@ -418,9 +418,9 @@ class HasIntelProfiles:
         """List of RiskIQ Threat Intel Profiles that reference this host.
 
         For more granular searches, call the 
-        `passivetotal.analyzer.illuminate.IntelProfiles.find_by_indicators()` method directly.
+        `passivetotal.analyzer.illuminate.cti.IntelProfiles.find_by_indicators()` method directly.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.IntelProfiles`
+        :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfiles`
         """
         if getattr(self, '_intel_profiles', None) is not None:
             return self._intel_profiles

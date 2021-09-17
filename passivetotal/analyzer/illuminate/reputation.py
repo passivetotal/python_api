@@ -104,7 +104,7 @@ class HasReputation:
     def reputation(self):
         """RiskIQ Illuminate Reputation profile for a hostname or IP.
 
-        :rtype: :class:`passivetotal.analyzer.illuminate.ReputationScore`
+        :rtype: :class:`passivetotal.analyzer.illuminate.reputation.ReputationScore`
         """
         if getattr(self, '_reputation', None) is not None:
             return self._reputation
