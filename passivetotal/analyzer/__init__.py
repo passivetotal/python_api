@@ -48,7 +48,6 @@ def init(**kwargs):
         (SslRequest, 'SSL'), 
         (WhoisRequest, 'Whois'),
         (IlluminateRequest, 'Illuminate'),
-        (ArticlesRequest, 'Articles'),
         (ProjectsRequest, 'Projects'),
         (ArtifactsRequest, 'Artifacts'),
         (MonitorRequest, 'Monitor'),
@@ -141,7 +140,7 @@ def set_date_range(days_back=DEFAULT_DAYS_BACK, start=None, start_date=None, end
         now = datetime.now(timezone.utc)
         past = now - timedelta(days=days_back)
         config['start_date'] = past.date().isoformat() + ' 00:00:00'
-        config['end_date'] = now.date().isoformat() + ' 00:00:00'
+        config['end_date'] = now.date().isoformat() + ' 23:59:59'
 
 def set_pdns_timeout(timeout):
     """Set a timeout on pDNS queries to third-party sources."""
