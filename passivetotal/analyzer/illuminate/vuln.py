@@ -627,7 +627,7 @@ class VulnArticle(Record, ForPandas):
         return self._components
     
     @property
-    @lru_cache
+    @lru_cache(maxsize=None)
     def attack_surfaces(self):
         """List of Illuminate Attack Surfaces (aka third-party vendors) with assets impacted by this vulnerability.
         

@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.5.6
+
+#### Bug fixes
+
+- Fixed issue that broke Illuminate ASI and Vuln Intel analyzer modules in Python 3.7 and 
+  earlier due to a missing param on the lru_cache decorator required in those versions.
+- Fixed default end date behavior in analyzer to include a full day rather than stopping at
+  midnight "today". Was causing records with a last-seen date equal to the current date
+  to be excluded from analyzer record list objects (including pDNS, certificates, and 
+  anything else that supported date-bounded queries).
+
+  
+
 ## v2.5.5
 
 #### Enhancements

@@ -62,7 +62,7 @@ class AttackSurfaces(RecordList, PagedRecordList, ForPandas):
             self._records.append(AttackSurface(api_response=result))
     
     @staticmethod
-    @lru_cache
+    @lru_cache(maxsize=None)
     def load(pagesize=INDICATOR_PAGE_SIZE):
         """Get a list of all third-party (vendor) attack surfaces authorized for this API account.
         
