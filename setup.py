@@ -25,7 +25,13 @@ setup(
     install_requires=['requests', 'python-dateutil', 'future', 'tldextract'],
     long_description=read('README.md'),
     long_description_content_type="text/markdown",
-    classifiers=[],
+    python_requires='>=3.7',
+    classifiers=[
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+    ],
     entry_points={
         'console_scripts': [
             'pt-info = passivetotal.cli.info:main',
