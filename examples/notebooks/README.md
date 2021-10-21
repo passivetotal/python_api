@@ -28,10 +28,19 @@ You can download notebooks by simply cloing this repo, or if you only need a spe
 ## Notebook Index
 
 ---
+### [Projects and Monitors](Projects%20and%20Monitors%20-%20RiskIQ%20API.ipynb)
+
+#### Features
+* Use the `analyzer` module to easily add hostnames & IPs to PassiveTotal projects
+* Retrieve artifacts added to existing projects
+* Fetch daily alerts for artifacts, enrich them with additional data, and filter for
+the most relevant alerts.
+
+---
 ### [Trackers](Trackers%20-%20RiskIQ%20API.ipynb)
 
 #### Features
-* Explore capabiliites of the RiskIQ PassiveTotal **Trackerss** dataset
+* Explore capabilities of the RiskIQ PassiveTotal **Trackers** dataset
 * Discover other sites where a client-side identifier is being used
 * Find other hosts impersonating a focus host by detecting tracker
 re-use on other sites.
@@ -40,14 +49,14 @@ re-use on other sites.
 ### [Host Pairs](Host%20Pairs%20-%20RiskIQ%20API.ipynb)
 
 #### Features
-* Explore capabiliites of the RiskIQ PassiveTotal **Hostpairs** dataset
+* Explore capabilities of the RiskIQ PassiveTotal **Hostpairs** dataset
 * Learn how to filter hostpairs to focus on foreign hosts
 * Find inbound redirects targeting a site
 * Find copycat sites using paired assets
 
 
 ---
-### [Attack Surface & Vulnerabilty Intelligence](Attack%20Surface%20%26%20Vulnerability%20Intelligence%20-%20RiskIQ%20API)
+### [Attack Surface & Vulnerabilty Intelligence](Attack%20Surface%20%26%20Vulnerability%20Intelligence%20-%20RiskIQ%20API.ipynb)
 
 #### Features
 * Access to the __RiskIQ Illuminate__ Attack Surface Intelligence (ASI) product offering

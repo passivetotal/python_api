@@ -1,5 +1,22 @@
 # Changelog
 
+
+## v2.5.7
+
+#### Enhancements
+
+- New example notebook explaining how to use projects, artifacts, and alerts.
+- New filter for lists of substrings on all RecordList objects.
+
+
+#### Bug Fixes
+
+- Add missing docstring for filter_date* functions on RecordList objects.
+- Resolved issue that blocked filtering of project alerts with filter* functions.
+- Fixed dataframe column names on vulnerability objects to match properties.
+
+
+
 ## v2.5.6
 
 #### Bug fixes
