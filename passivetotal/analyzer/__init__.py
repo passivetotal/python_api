@@ -51,6 +51,7 @@ def init(**kwargs):
         (ProjectsRequest, 'Projects'),
         (ArtifactsRequest, 'Artifacts'),
         (MonitorRequest, 'Monitor'),
+        (TrackerRequest, 'Trackers'),
     ]
     for c, name in api_classes:
         if 'username' in kwargs and 'api_key' in kwargs:

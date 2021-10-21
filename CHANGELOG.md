@@ -7,6 +7,11 @@
 
 - New example notebook explaining how to use projects, artifacts, and alerts.
 - New filter for lists of substrings on all RecordList objects.
+- New API library for Trackers to support recently-introduced endpoints that enable
+pagination. Ensured pagination for `analyzer.Tracker` objects works correctly with new
+API library. It is now possible to download hundreds of thousands of tracker search
+results by accessing the `observations_by_ip` or `observations_by_hostname` property of
+a Tracker.
 
 
 #### Bug Fixes
