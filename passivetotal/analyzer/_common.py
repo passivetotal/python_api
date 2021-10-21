@@ -225,21 +225,34 @@ class RecordList(AsDictionary):
         if not isinstance(self.all[0], FirstLastSeen):
             raise TypeError('Cannot filter on a record type without firstseen / lastseen fields')
     
-    def filter_dateseen_after(self, date_string):
+    def filter_dateseen_after(self, date_string: str):
+        """Filter only results where the `firstseen` date property is after a specified date.
+
+        The date should be parseable by `datetime.fromisoformat` i.e. '2021-01-01'
+        """
         self._ensure_firstlastseen()
         dateobj = datetime.fromisoformat(date_string)
         filtered_results = self._make_shallow_copy()
         filtered_results._records = filter(lambda r: r.firstseen > dateobj, self.all)
         return filtered_results
 
-    def filter_dateseen_before(self, date_string):
+    def filter_dateseen_before(self, date_string: str):
+        """Filter only results where the `lastseen` date property is before a specified date.
+
+        The date should be parseable by `datetime.fromisoformat` i.e. '2021-01-01'
+        """
         self._ensure_firstlastseen()
         dateobj = datetime.fromisoformat(date_string)
         filtered_results = self._make_shallow_copy()
         filtered_results._records = filter(lambda r: r.lastseen < dateobj, self.all)
         return filtered_results
     
-    def filter_dateseen_between(self, start_date_string, end_date_string):
+    def filter_dateseen_between(self, start_date_string: str, end_date_string: str):
+        """Filter only results where the `lastseen` date property is <= end_date_string and
+        `firstseen` date property is on or after start_date_string.
+
+        Date strings should be parseable by `datetime.fromisoformat` i.e. '2021-01-01'
+        """
         self._ensure_firstlastseen()
         dateobj_start = datetime.fromisoformat(start_date_string)
         dateobj_end = datetime.fromisoformat(end_date_string)
