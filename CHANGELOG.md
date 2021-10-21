@@ -1,5 +1,27 @@
 # Changelog
 
+
+## v2.5.7
+
+#### Enhancements
+
+- New example notebook explaining how to use projects, artifacts, and alerts.
+- New filter for lists of substrings on all RecordList objects.
+- New API library for Trackers to support recently-introduced endpoints that enable
+pagination. Ensured pagination for `analyzer.Tracker` objects works correctly with new
+API library. It is now possible to download hundreds of thousands of tracker search
+results by accessing the `observations_by_ip` or `observations_by_hostname` property of
+a Tracker.
+
+
+#### Bug Fixes
+
+- Add missing docstring for filter_date* functions on RecordList objects.
+- Resolved issue that blocked filtering of project alerts with filter* functions.
+- Fixed dataframe column names on vulnerability objects to match properties.
+
+
+
 ## v2.5.6
 
 #### Bug fixes

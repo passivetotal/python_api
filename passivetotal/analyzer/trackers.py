@@ -1,3 +1,4 @@
+from functools import partial
 from passivetotal.analyzer._common import (
     RecordList, Record, FirstLastSeen, PagedRecordList, ForPandas, AnalyzerError, AnalyzerAPIError,
     FilterDomains
@@ -123,19 +124,29 @@ class TrackerRecord(Record, FirstLastSeen, ForPandas):
 
 
 
-class TrackerSearchResults(RecordList, ForPandas, FilterDomains):
+class TrackerSearchResults(RecordList, PagedRecordList, ForPandas, FilterDomains):
 
     """Search results from a tracker query."""
 
-    def __init__(self, api_response=None, query=None, tracker_type=None, search_type=None):
+    def __init__(self, query=None, tracker_type=None, search_type=None):
         self._query = query
+        self._tracker_type = tracker_type
+        self._search_type = search_type
         self._records = []
-        self._totalrecords = 0
-        if api_response is not None:
-            self.parse(api_response, tracker_type, search_type)
+        self._totalrecords = None
+        self._pagination_current_page = 0
+        self._pagination_page_size = 2000 # API is fixed at this page size
+        self._pagination_has_more = True
+        self._pagination_callable = partial(
+            get_api('Trackers').search_trackers,
+            value=self._query, 
+            tracker_type=self._tracker_type, 
+            result_type=self._search_type
+        )
 
     def _get_shallow_copy_fields(self):
-        return ['_totalrecords','_query']
+        return ['_totalrecords','_query', '_pagination_current_page','_pagination_page_size',
+                '_pagination_callable','_pagination_has_more']
     
     def _get_sortable_fields(self):
         return ['firstseen','lastseen','searchtype','trackertype','query','host']
@@ -143,16 +154,17 @@ class TrackerSearchResults(RecordList, ForPandas, FilterDomains):
     def _get_dict_fields(self):
         return ['totalrecords']
     
+    def _pagination_parse_page(self, api_response):
+        self._totalrecords = api_response.get('totalRecords')
+        results = api_response['results']
+        self._records.extend([
+            TrackerSearchRecord(r, self._query, self._tracker_type, self._search_type) for r in results
+        ])
+    
     @property
     def as_dict(self):
         d = super().as_dict
         return d
-    
-    def parse(self, api_response, tracker_type, search_type):
-        """Parse an API response."""
-        self._totalrecords = self._totalrecords + api_response.get('totalRecords', 0)
-        for result in api_response.get('results', []):
-            self._records.append(TrackerSearchRecord(result, self._query, tracker_type, search_type))
     
     @property
     def query(self):
@@ -286,13 +298,9 @@ class Tracker:
             'hosts': '_hostnames',
             'addresses': '_ips'
         }
-        try:
-            response = (get_api('HostAttributes')
-                .search_trackers_by_type(query=self._value, type=self._type, searchType=searchtype)
-            )
-        except Exception:
-            raise AnalyzerError
-        setattr(self, attrs[searchtype], TrackerSearchResults(response, self._value, self._type, searchtype))
+        results = TrackerSearchResults(self._value, self._type, searchtype)
+        results.load_all_pages()
+        setattr(self, attrs[searchtype], results)
     
     @property
     def trackertype(self):
