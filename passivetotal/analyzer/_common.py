@@ -195,6 +195,19 @@ class RecordList(AsDictionary):
         field, value = kwargs.popitem()
         return self.filter_fn(lambda r: value.casefold() in getattr(r, field).casefold())
     
+    def filter_substring_in(self, **kwargs):
+        """Return only records where a case-insensitive match on any item in a list of substrings
+        returns true for a specific field.
+        
+        Usage:
+          filter_substring_in(fieldname=['substring','othersub']) or
+          filter_substring_in(fieldname='substring,othersub')
+        """
+        field, values = kwargs.popitem()
+        if isinstance(values, str):
+            values = values.split(',')
+        return self.filter_fn(lambda r: sum(map(lambda v: int(v.casefold() in getattr(r, field).casefold()), values)) > 0)
+    
     def sorted_by(self, field, reverse=False):
         """Return a sorted list.
         
