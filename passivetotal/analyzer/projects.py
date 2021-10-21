@@ -543,13 +543,14 @@ class ArtifactAlerts(RecordList, PagedRecordList, ForPandas):
         self._pagination_current_page = 0
         self._pagination_page_size = pagesize
         self._pagination_has_more = True
-        self._pagination_callable = partial(
-            get_api('Monitor').get_alerts,
-            artifact=self._artifact.guid,
-            start=self._date_start,
-            end=self._date_end,
-            size=pagesize
-        )
+        if artifact is not None:
+            self._pagination_callable = partial(
+                get_api('Monitor').get_alerts,
+                artifact=self._artifact.guid,
+                start=self._date_start,
+                end=self._date_end,
+                size=pagesize
+            )
 
     def _get_shallow_copy_fields(self):
         return ['_artifact','_pagination_current_page','_pagination_page_size',

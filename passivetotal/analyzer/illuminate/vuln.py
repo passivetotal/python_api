@@ -92,12 +92,12 @@ class AttackSurfaceCVE(Record, ForPandas):
         :rtype: :class:`pandas.DataFrame`
         """
         pd = self._get_pandas()
-        cols = ['attack_surface', 'cve_id','score','observations','cwes','first_cwe']
+        cols = ['attack_surface', 'cve_id','score','observation_count','cwes','first_cwe']
         as_d = {
             'attack_surface': self.attack_surface.name,
             'cve_id': self.id,
             'score': self.score,
-            'observations': self.observation_count,
+            'observation_count': self.observation_count,
             'cwes': len(self.cwes),
             'first_cwe': self.cwes[0]['cweId'],
         }
