@@ -6,7 +6,11 @@ from passivetotal.analyzer._common import RecordList, Record, FirstLastSeen, For
 
 class PdnsResolutions(RecordList, ForPandas):
 
-    """Historical passive DNS resolution records."""
+    """Historical passive DNS resolution records.
+    
+    Provides a list-like interface to a collection of
+    :class:`PdnsRecord` objects.
+    """
 
     def __init__(self, api_response = None, query=None):
         super().__init__(api_response, query)
@@ -260,7 +264,11 @@ class HasResolutions:
         Bounded by dates set in :meth:`passivetotal.analyzer.set_date_range`.
         `timeout` and `sources` params are also set by the analyzer configuration.
         
-        Provides list of :class:`passivetotal.analyzer.pdns.PdnsRecord` objects.
+        Provides a list of 
+        :class:`passivetotal.analyzer.pdns.PdnsRecord` objects contained in a
+        :class:`passivetotal.analyzer.pdns.PdnsResolutions` object.
+        
+        :rtype: :class:`passivetotal.analyzer.pdns.PdnsResolutions`
         """
         if getattr(self, '_resolutions', None) is not None:
             return self._resolutions

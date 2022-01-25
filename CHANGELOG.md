@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v2.5.8
+
+#### Enhancements
+
+- `certificates` property of `analyzer.Hostname` objects now returns same list of SSL
+certificates as the UI, enabled by a CertificateField search with the field set to
+`name`. This activates special-case functionality in the API that performs a
+substring search for a hostname across both subjectAlternativeNames and subjectCommonName fields 
+The previous version only looked at the `subjectAlternativeNames` field. A more narrow
+search across specific fields is still available by instantiating an
+`analyzer.CertificateField` object directly.
+- Docs now show current version number and link to this changelog hosted on GitHub.
+
+
+
 ## v2.5.7
 
 #### Enhancements

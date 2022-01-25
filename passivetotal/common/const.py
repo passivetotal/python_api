@@ -20,7 +20,8 @@ SSL_VALID_FIELDS = ["issuerSurname", "subjectOrganizationName",
                     "subjectLocalityName", "issuerStreetAddress",
                     "issuerLocalityName", "subjectGivenName",
                     "subjectProvince", "issuerSerialNumber",
-                    "issuerEmailAddress","subjectAlternativeName"]
+                    "issuerEmailAddress","subjectAlternativeName",
+                    "name"]
 
 
 ATTRIBUTE_APPROVED_FIELDS = [
