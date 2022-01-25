@@ -180,7 +180,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs,
 
         :rtype: :class:`passivetotal.analyzer.ssl.Certificates`
         """
-        return CertificateField('subjectAlternativeName', self._hostname).certificates
+        return CertificateField('name', self._hostname).certificates
    
     @property
     def whois(self):
