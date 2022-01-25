@@ -12,6 +12,11 @@ RiskIQ PassiveTotal API.
 
 Learn more at `community.riskiq.com <https://community.riskiq.com>`_
 
+Current Version: |release|
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`View the changelog <https://github.com/passivetotal/python_api/blob/master/CHANGELOG.md>`_
+on the GitHub project page.
+
 Contents:
 
 .. toctree::

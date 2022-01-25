@@ -266,9 +266,9 @@ class HasResolutions:
         
         Provides a list of 
         :class:`passivetotal.analyzer.pdns.PdnsRecord` objects contained in a
-        :class:`passivetotal.analyzer.pdns.PdnsRecords` object.
+        :class:`passivetotal.analyzer.pdns.PdnsResolutions` object.
         
-        :rtype:`passivetotal.analyzer.pdns.PdnsRecords`
+        :rtype: :class:`passivetotal.analyzer.pdns.PdnsResolutions`
         """
         if getattr(self, '_resolutions', None) is not None:
             return self._resolutions
