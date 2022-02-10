@@ -14,3 +14,4 @@ libpassivetotal.egg-info/
 pip-wheel-metadata
 docs/_build
 *.vscode
+!.readthedocs.yaml
