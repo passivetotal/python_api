@@ -44,7 +44,7 @@ class Certificates(RecordList, ForPandas):
     
     @property
     def not_expired(self):
-        """Filtered list of :class:`Certificates' that have not expired."""
+        """Filtered list of :class:`Certificates` that have not expired."""
         return self.filter(expired=False)
 
 

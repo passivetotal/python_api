@@ -31,10 +31,17 @@ sys.path.insert(0, os.path.abspath('..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.ifconfig',
+    'autoclasstoc',
+]
+
+autoclasstoc_sections = [
+    'public-attrs',
+    'public-methods',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

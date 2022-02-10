@@ -15,7 +15,8 @@ INDICATOR_PAGE_SIZE = 400
     
 class AttackSurfaceCVEs(RecordList, PagedRecordList, ForPandas):
 
-    """List of CVEs associated with an attack surface."""
+    """Collection of CVEs associated with an attack surface as a list-like object
+    containing :class:`AttackSurfaceCVE` objects."""
 
     def __init__(self, attack_surface=None, pagesize=400):
         self._totalrecords = None
@@ -107,6 +108,7 @@ class AttackSurfaceCVE(Record, ForPandas):
         """Get a list of observations(assets) vulnerable to this CVE in this attack surface.
         
         :param pagesize: Size of pages to retrieve from the API.
+        :rtype: :class:`AttackSurfaceCVEObservations`
         """
         self._observations = AttackSurfaceCVEObservations(self, pagesize)
         self._observations.load_all_pages()
@@ -185,7 +187,8 @@ class AttackSurfaceCVE(Record, ForPandas):
 
 class AttackSurfaceCVEObservations(RecordList, PagedRecordList, ForPandas):
 
-    """List of observations (assets) associated with a CVE in a specific attack surface."""
+    """Collection of observations (assets) associated with a CVE in a specific attack surface
+    as a list-like object containing :class:`AttackSurfaceCVEObservation` objects."""
 
     def __init__(self, cve=None, pagesize=400):
         self._totalrecords = None
@@ -309,7 +312,8 @@ class AttackSurfaceCVEObservation(Record, FirstLastSeen, ForPandas):
 
 class AttackSurfaceComponents(RecordList, PagedRecordList, ForPandas):
 
-    """List of vulnerable components (detections) associated with an attack surface."""
+    """Collection of vulnerable components (detections) associated with an attack surface
+    as a list-like object containing :class:`AttackSurfaceComponent` objects."""
 
     def __init__(self, attack_surface=None, pagesize=400):
         self._totalrecords = None
@@ -338,7 +342,7 @@ class AttackSurfaceComponents(RecordList, PagedRecordList, ForPandas):
     
     @property
     def attack_surface(self):
-        """Get the CVE associated with this list of observations.
+        """Get the attack surface associated with this list of observations.
         
         :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
@@ -642,7 +646,10 @@ class VulnArticle(Record, ForPandas):
     
     @property
     def observations(self):
-        """List of observations (assets) within the primary attack surface that are impacted by this vulnerability."""
+        """List of observations (assets) within the primary attack surface that are impacted by this vulnerability.
+        
+        :rtype: :class:`AttackSurfaceCVEObservations`
+        """
         from . import AttackSurface
         attack_surface = AttackSurface.load()
         article = {
@@ -659,7 +666,8 @@ class VulnArticle(Record, ForPandas):
 
 class VulnArticleImpacts(RecordList, ForPandas):
 
-    """List of Illuminate Attack Surfaces impacted by a vulnerability."""
+    """Collection of Illuminate Attack Surfaces impacted by a vulnerability as a list-like
+    object containing :class:`VulnArticleImpact` objects."""
 
     def __init__(self, article=None, impacts=[]):
         self._records = []
@@ -685,7 +693,10 @@ class VulnArticleImpacts(RecordList, ForPandas):
     
     @property
     def article(self):
-        """Article that describes the vulnerability impacting these attack surfaces."""
+        """Article that describes the vulnerability impacting these attack surfaces.
+        
+        :rtype: :class:`VulnArticle`
+        """
         return self._article
     
     @property
