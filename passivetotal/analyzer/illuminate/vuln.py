@@ -381,7 +381,7 @@ class AttackSurfaceComponent(Record, FirstLastSeen, ForPandas):
         return '<AttackSurfaceComponent {0.type}:{0.name}>'.format(self)
     
     def _get_dict_fields(self):
-        return ['vendor_id','type','name','severity','count']
+        return ['type','name','severity','count']
     
     def to_dataframe(self):
         """Render this object as a Pandas dataframe.

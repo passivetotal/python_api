@@ -218,12 +218,17 @@ class AttackSurface(Record, ForPandas):
         
         :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
-        insights = self.high_priority_insights._make_shallow_copy()
-        insights._level = 'ALL'
-        insights._records = []
-        for level in self._LEVELS:
-            insights._records.extend(self.get_insights(level)._records)
-        return insights
+        insights_all = self.high_priority_insights._make_shallow_copy()
+        count_fields = ['_count_active_insights','_count_total_insights','_count_total_observations']
+        for field in count_fields:
+            setattr(insights_all, field, 0)
+        insights_all._level = 'ALL'
+        insights_all._records = []
+        for level in [self.get_insights(level) for level in self._LEVELS]:
+            insights_all._records.extend(level._records)
+            for field in count_fields:
+                setattr(insights_all, field, getattr(insights_all, field) + getattr(level, field))
+        return insights_all
     
     @property
     def all_active_insights(self):
@@ -353,7 +358,7 @@ class AttackSurfaceInsights(RecordList, ForPandas):
     
     @property
     def attack_surface(self):
-        """Attach surface these insights are associated with.
+        """Attack surface these insights are associated with.
         
         :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
