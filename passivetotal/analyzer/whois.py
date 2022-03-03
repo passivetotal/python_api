@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from collections import namedtuple, OrderedDict
 import pprint
 from passivetotal.analyzer import get_api, get_object
-from passivetotal.analyzer._common import RecordList, ForPandas
+from passivetotal.analyzer._common import Record, RecordList, ForPandas
 
 
 
@@ -44,6 +44,14 @@ class WhoisField:
 
     def __repr__(self):
         return "WhoisField('{0.name}','{0.value}')".format(self)
+    
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self._value == other
+        return other is self
+    
+    def __hash__(self):
+        return self._value.__hash__()
 
     def _api_search(self):
         """Use the 'Whois' request wrapper to perform a keyword search by field."""
@@ -70,7 +78,7 @@ class WhoisField:
 
 
 
-class WhoisRecords(RecordList):
+class WhoisRecords(RecordList, ForPandas):
 
     """List of Whois records."""
 
@@ -103,10 +111,36 @@ class WhoisRecords(RecordList):
     def orgs(self):
         """Return a set of unique org names in this record list."""
         return set([r.organization for r in self if r.organization])
-    
 
 
-class WhoisRecord(ForPandas):
+
+class HistoricalDomainWhoisRecords(WhoisRecords):
+
+    """List of :class:`HistoricalDomainWhois` records."""
+
+    def _get_sortable_fields(self):
+        return ['domain','last_seen']
+
+    def parse(self, api_response):
+        """Parse an API response into a list of `HistoricalDomainWhois` records."""
+        self._records = list(map(HistoricalDomainWhois, api_response.get('results',[])))
+
+
+
+class HistoricalIPWhoisRecords(WhoisRecords):
+
+    """List of :class:`HistoricalIPWhois` records."""
+
+    def _get_sortable_fields(self):
+        return ['ip','last_seen']
+
+    def parse(self, api_response):
+        """Parse an API response into a list of `HistoricalIPWhois` records."""
+        self._records = list(map(HistoricalIPWhois, api_response.get('results',[])))
+       
+
+
+class WhoisRecord(Record, ForPandas):
     """Base type for IP and Domain Whois."""
 
     def _get_contacts(self, contact_type):
@@ -389,6 +423,38 @@ class DomainWhois(WhoisRecord):
 
 
 
+class HistoricalDomainWhois(DomainWhois):
+
+    """Historical Whois record for a domain name."""
+
+    def __new__(cls, record):
+        self = object.__new__(HistoricalDomainWhois)
+        self._domain = record['domain']
+        self._rawrecord = record
+        return self
+    
+    def __str__(self):
+        return '{0.last_seen} registrant: "{0.organization} | {0.registrant_name} | {0.registrant_email}"'.format(self)
+
+    def __repr__(self):
+        return "HistoricalDomainWhois<'{0.domain}' @ '{0.last_seen}'>".format(self)
+    
+    def _dict_for_df(self, **kwargs):
+        as_d = OrderedDict(last_seen=self.last_seen)
+        as_d.update(super()._dict_for_df(**kwargs))
+        return as_d
+    
+    @property
+    def last_seen(self):
+        """Date the historical record was last seen.
+        
+        Alias for `date_loaded`.
+        :rtype: datetime
+        """
+        return self.date_loaded
+
+
+
 class IPWhois(WhoisRecord):
     """Whois record for an IP Address."""
 
@@ -418,3 +484,34 @@ class IPWhois(WhoisRecord):
     def ip(self):
         return get_object(self._domain, type='IPAddress')
 
+
+
+class HistoricalIPWhois(IPWhois):
+
+    """Historical Whois record for a IP address."""
+
+    def __new__(cls, record):
+        self = object.__new__(HistoricalIPWhois)
+        self._domain = record['domain']
+        self._rawrecord = record
+        return self
+    
+    def __str__(self):
+        return '{0.last_seen} registrant: "{0.organization} | {0.registrant_name} | {0.registrant_email}"'.format(self)
+
+    def __repr__(self):
+        return "HistoricalIPWhois<'{0.ip}' @ '{0.last_seen}'>".format(self)
+    
+    def _dict_for_df(self, **kwargs):
+        as_d = OrderedDict(last_seen=self.last_seen)
+        as_d.update(super()._dict_for_df(**kwargs))
+        return as_d
+    
+    @property
+    def last_seen(self):
+        """Date the historical record was last seen.
+        
+        Alias for `date_loaded`.
+        :rtype: datetime
+        """
+        return self.date_loaded
