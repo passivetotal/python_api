@@ -1,5 +1,31 @@
 # Changelog
 
+## v2.5.9
+
+#### Enhancements
+
+- Significant improvements to the Attack Surface Intelligence (ASI) documentation. Added
+class references for ASI, CTI and vulnerability intelligence to ensure the docs and links
+generated properly. Introduced a new Sphinx module to help generate inline table-of-contents
+for complex classes. Corrected typos in docstrings and ensured consistent type references
+when methods returned RecordList-type objects.
+- Implemented new config files for readthedocs to align with current documentation practices.
+- New `whois_history` property of `Hostname` and `IPAddress` entities gives direct access
+to historical Whois (ownership) records. Includes more consistent implementation of
+RecordList functionality and better pandas dataframe support for both historical Whois and 
+field-level Whois searches. 
+
+
+#### Bug Fixes
+
+- Correctly sum insight and observation counts when accessing Attack Surface Insights
+(ASIs) across multiple severity levels. Previously the `active_insight_count`, 
+`total_insight_count`, and `total_observations` properties of the `all_active_insights`
+record list were only counting high-priority insights. 
+- Fixed issue that caused an exception when trying to generate a dictionary view of an
+AttackSurfaceComponent (detection). 
+
+
 
 ## v2.5.8
 
