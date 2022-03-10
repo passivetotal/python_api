@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from collections import namedtuple, OrderedDict
 import pprint
 from passivetotal.analyzer import get_api, get_object
-from passivetotal.analyzer._common import Record, RecordList, ForPandas
+from passivetotal.analyzer._common import is_ip, Record, RecordList, ForPandas
 
 
 
@@ -86,11 +86,13 @@ class WhoisRecords(RecordList, ForPandas):
         return []
     
     def _get_sortable_fields(self):
-        return ['domain']
+        return ['host']
     
     def parse(self, api_response):
         """Parse an API response into a list of `DomainWhois` records."""
-        self._records = list(map(DomainWhois, api_response.get('results',[])))
+        self._records = [
+            IPWhois(r) if is_ip(r['domain']) else DomainWhois(r) for r in api_response.get('results',[])
+        ]
     
     @property
     def domains(self):
@@ -114,29 +116,18 @@ class WhoisRecords(RecordList, ForPandas):
 
 
 
-class HistoricalDomainWhoisRecords(WhoisRecords):
+class HistoricalWhoisRecords(WhoisRecords):
 
-    """List of :class:`HistoricalDomainWhois` records."""
-
-    def _get_sortable_fields(self):
-        return ['domain','last_seen']
-
-    def parse(self, api_response):
-        """Parse an API response into a list of `HistoricalDomainWhois` records."""
-        self._records = list(map(HistoricalDomainWhois, api_response.get('results',[])))
-
-
-
-class HistoricalIPWhoisRecords(WhoisRecords):
-
-    """List of :class:`HistoricalIPWhois` records."""
+    """List of :class:`HistoricalDomainWhois` or :class:`HistoricalIPWhois` records."""
 
     def _get_sortable_fields(self):
-        return ['ip','last_seen']
+        return ['str:host','last_seen']
 
     def parse(self, api_response):
-        """Parse an API response into a list of `HistoricalIPWhois` records."""
-        self._records = list(map(HistoricalIPWhois, api_response.get('results',[])))
+        """Parse an API response into a list of `HistoricalDomainWhois` or `HistoricalIPWhois` records."""
+        self._records = [
+            HistoricalIPWhois(r) if is_ip(r['domain']) else HistoricalDomainWhois(r) for r in api_response.get('results',[])
+        ]
        
 
 
@@ -373,6 +364,12 @@ class WhoisRecord(Record, ForPandas):
         """Raw API response."""
         return self._rawrecord
 
+    @property
+    def host(self):
+        """Get the IP or domain name this record is associated with, as an
+        :class:`analyzer.IPAddress` or :class:`analyzer.Hostname` object."""
+        return get_object(self._domain, type = 'IPAddress' if self.is_ip else 'Hostname')
+
 
 
 class DomainWhois(WhoisRecord):
@@ -420,6 +417,14 @@ class DomainWhois(WhoisRecord):
         :rtype: datetime
         """
         return self._parsedate('expiresAt')
+    
+    @property
+    def is_domain(self):
+        return True
+    
+    @property
+    def is_ip(self):
+        return False
 
 
 
@@ -483,6 +488,14 @@ class IPWhois(WhoisRecord):
     @property
     def ip(self):
         return get_object(self._domain, type='IPAddress')
+
+    @property
+    def is_domain(self):
+        return False
+    
+    @property
+    def is_ip(self):
+        return True
 
 
 

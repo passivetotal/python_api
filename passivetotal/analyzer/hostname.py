@@ -6,7 +6,7 @@ from passivetotal.analyzer import get_api, get_object
 from passivetotal.analyzer._common import is_ip, refang, AnalyzerError
 from passivetotal.analyzer.pdns import HasResolutions
 from passivetotal.analyzer.summary import HostnameSummary, HasSummary
-from passivetotal.analyzer.whois import DomainWhois, HistoricalDomainWhoisRecords
+from passivetotal.analyzer.whois import DomainWhois, HistoricalWhoisRecords
 from passivetotal.analyzer.ssl import CertificateField
 from passivetotal.analyzer.hostpairs import HasHostpairs
 from passivetotal.analyzer.cookies import HasCookies
@@ -99,7 +99,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs,
     def _api_get_whois_history(self):
         """Query the Whois API for historical records on this hostname."""
         response = get_api('Whois').get_whois_details(query=self._hostname, compact_record=False, history=True)
-        self._whois_history = HistoricalDomainWhoisRecords()
+        self._whois_history = HistoricalWhoisRecords()
         self._whois_history.parse(response)
         return self._whois_history
     
@@ -205,7 +205,7 @@ class Hostname(HasComponents, HasCookies, HasTrackers, HasHostpairs,
     def whois_history(self):
         """Historical Whois records for this hostname.
         
-        :rtype: :class:`passivetotal.analyzer.whois.HistoricalDomainWhoisRecords`
+        :rtype: :class:`passivetotal.analyzer.whois.HistoricalWhoisRecords`
         """
         if getattr(self, '_whois_history', None) is not None:
             return self._whois_history
