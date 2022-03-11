@@ -212,8 +212,11 @@ class AttackSurfaceCVEObservations(RecordList, PagedRecordList, ForPandas):
         self._totalrecords = api_response.get('totalCount')
         if self._pagination_current_page == 0:
             self._records = []
-        for result in api_response.get('assets',[]):
-            self._records.append(AttackSurfaceCVEObservation(self._cve, result))
+        try:
+            for result in api_response.get('assets',[]):
+                self._records.append(AttackSurfaceCVEObservation(self._cve, result))
+        except TypeError:
+            pass # assets may be blank instead of an empty list 
     
     @property
     def cve(self):
@@ -481,7 +484,7 @@ class VulnArticle(Record, ForPandas):
     
     def _get_dict_fields(self):
         return ['id','description','cwes','score','cvss2score','cvss3score','str:date_published',
-                'str:date_updated','str:date_publisher_updated','references','components',
+                'str:date_publisher_updated','references','components',
                 'observation_count']
     
     def to_dataframe(self, view='info'):
@@ -515,7 +518,7 @@ class VulnArticle(Record, ForPandas):
                 'observations': self.observation_count,
                 'references': len(self.references),
                 'components': len(self.components),
-                'impacts': len(self._impacted3p)
+                'impacts': len(self.impacted_attack_surfaces)
             }],
             'references': [{
                     'cve_id': self.id,
@@ -640,6 +643,16 @@ class VulnArticle(Record, ForPandas):
         return VulnArticleImpacts(self, self._impacted3p)
     
     @property
+    @lru_cache(maxsize=None)
+    def impacted_attack_surfaces(self):
+        """List of all attack surfaces associated with your API account that are impacted
+        by this vulnerability (they have at least one observation of an impacted asset).
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticleImpacts`
+        """
+        return self.attack_surfaces.only_impacted
+    
+    @property
     def observation_count(self):
         """Number of observations (assets) within the primary attack surface that are impacted by this vulnerability."""
         return self._observation_count
@@ -666,8 +679,8 @@ class VulnArticle(Record, ForPandas):
 
 class VulnArticleImpacts(RecordList, ForPandas):
 
-    """Collection of Illuminate Attack Surfaces impacted by a vulnerability as a list-like
-    object containing :class:`VulnArticleImpact` objects."""
+    """Collection of Illuminate Attack Surfaces potentially impacted by a vulnerability 
+    as a list-like object containing :class:`VulnArticleImpact` objects."""
 
     def __init__(self, article=None, impacts=[]):
         self._records = []
@@ -680,7 +693,7 @@ class VulnArticleImpacts(RecordList, ForPandas):
         return '<VulnArticleImpacts {0.article.id}>'.format(self)
     
     def __str__(self):
-        return '{0.article.id} impacts {0.impact_count:,} attack surfaces(s)'.format(self)
+        return '{0.article.id} impacts {0.impact_count:,} of {0.length:,} attack surfaces(s)'.format(self)
 
     def _get_dict_fields(self):
         return ['cve_id', 'impact_count']
@@ -701,9 +714,16 @@ class VulnArticleImpacts(RecordList, ForPandas):
     
     @property
     def attack_surfaces(self):
-        """List of impacted attack surfaces.
+        """Unfiltered list of all attack surfaces associated with your API account.
+
+        This is the same list you would get if you iterated through an instance of this
+        object. Each record will include a count of assets impacted by a vulnerability, in the
+        "observation_count" property. The count may be zero.
+
+        If you need a list of only impacted attack surfaces, use the `only_impacted`
+        property instead.
         
-        :rtypte: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticleImpact`
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.VulnArticleImpacts`
         """
         return self._records
     
@@ -713,9 +733,20 @@ class VulnArticleImpacts(RecordList, ForPandas):
         return self.article.id
     
     @property
+    def only_impacted(self):
+        """Filter the list to include only articles with at least one observation (asset).
+        
+        :rtype: :class:`VulnArticleImpacts`
+        """
+        return self.filter_fn(lambda asi: asi.observation_count > 0)
+    
+    @property
     def impact_count(self):
-        """Number of attack surfaces impacted by this vulnerability."""
-        return len(self._records)
+        """Number of attack surfaces with assets impacted by this vulnerability.
+        
+        Counts the number of records that have more than zero observations.
+        """
+        return len(self.only_impacted)
         
     
 
