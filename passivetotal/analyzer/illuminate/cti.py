@@ -212,7 +212,7 @@ class IntelProfile(Record, ForPandas):
     def indicators(self):
         """Unfiltered indicator list associated with this intel profile.
 
-        Calls `passivetotal.analyzer.illuminate.IntelProfile.get_indicators()'
+        Calls `passivetotal.analyzer.illuminate.IntelProfile.get_indicators()`
         with default parameters. Use that method directly for more granular control.
 
         :rtype: :class:`passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList`
@@ -245,7 +245,8 @@ class IntelProfile(Record, ForPandas):
 class IntelProfileIndicatorList(RecordList, PagedRecordList, ForPandas):
 
     def __init__(self, profile_id=None, query=None, types=None, categories=None, sources=None, pagesize=INDICATOR_PAGE_SIZE):
-        """List of indicators associated with a RiskIQ Intel Profile.
+        """Collection of indicators associated with a RiskIQ Intel Profile as a list-like object
+        containing :class:`IntelProfileIndicator` objects.
         
         :param profile_id: Threat intel profile ID to search for.
         :param query: Indicator value to query for.

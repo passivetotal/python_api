@@ -1,5 +1,40 @@
 # Changelog
 
+## v2.5.9
+
+#### Enhancements
+
+- Significant improvements to the Attack Surface Intelligence (ASI) documentation. Added
+class references for ASI, CTI and vulnerability intelligence to ensure the docs and links
+generated properly. Introduced a new Sphinx module to help generate inline table-of-contents
+for complex classes. Corrected typos in docstrings and ensured consistent type references
+when methods returned RecordList-type objects.
+- Implemented new config files for readthedocs to align with current documentation practices.
+- New `whois_history` property of `Hostname` and `IPAddress` entities gives direct access
+to historical Whois (ownership) records. Includes more consistent implementation of
+RecordList functionality and better pandas dataframe support for both historical Whois and 
+field-level Whois searches. 
+- New `impacted_attack_surfaces` property of vulnerability articles (`VulnArticle`) filters 
+the list of third-party vendors to only those with at least one observation. The Illuminate 
+API returns all attack surfaces associated with an API key regardless of whether they are 
+impacted; the complete list is still available in the `attack_surfaces` property. Also updated
+the `info` view of the Pandas dataframe on a vulnerability article so the `impacts` column
+shows the count of impacted attack surfaces.
+
+
+#### Bug Fixes
+
+- Correctly sum insight and observation counts when accessing Attack Surface Insights
+(ASIs) across multiple severity levels. Previously the `active_insight_count`, 
+`total_insight_count`, and `total_observations` properties of the `all_active_insights`
+record list were only counting high-priority insights. 
+- Fixed issue that caused an exception when trying to generate a dictionary view of an
+AttackSurfaceComponent (detection). 
+- Removed reference to non-existant field in `VulnArticle` that was causing an exception when
+rendering a vulnerability article as a dictionary with the `as_dict` property.
+- Handle vuln articles with no impacted assets without raising an exception.
+
+
 
 ## v2.5.8
 

@@ -17,7 +17,8 @@ INDICATOR_PAGE_SIZE = 400
 
 class AttackSurfaces(RecordList, PagedRecordList, ForPandas):
 
-    """List of RiskIQ Illuminate Attack Surfaces.
+    """Collection of RiskIQ Illuminate Attack Surfaces in a list-like object
+    containing :class:`AttackSurface` objects.
     
     Primarily used for enumerating a set of third-party vendors.
     """
@@ -157,7 +158,7 @@ class AttackSurface(Record, ForPandas):
         """Get insights at a level (high, medium or low).
         
         :param level: Priority level (high, medium, or low).
-        :returns: List of :class:`AttackSurfaceInsights`
+        :returns: :class:`AttackSurfaceInsights`
         """
         self._ensure_valid_level(level)
         if self._insights[level] is not None:
@@ -178,6 +179,7 @@ class AttackSurface(Record, ForPandas):
         """Get a list of CVEs impacting assets in this attack surface.
         
         :param pagesize: Size of pages to retrieve from the API.
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEs`
         """
         from passivetotal.analyzer.illuminate import AttackSurfaceCVEs
         self._cves = AttackSurfaceCVEs(self, pagesize)
@@ -188,6 +190,8 @@ class AttackSurface(Record, ForPandas):
         """Get a list of vulnerable components (detections) in this attack surface.
         
         :param pagesize: Size of pages to retrieve from the API.
+
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceComponents`
         """
         from passivetotal.analyzer.illuminate import AttackSurfaceComponents
         self._components = AttackSurfaceComponents(self, pagesize)
@@ -214,12 +218,17 @@ class AttackSurface(Record, ForPandas):
         
         :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
-        insights = self.high_priority_insights._make_shallow_copy()
-        insights._level = 'ALL'
-        insights._records = []
-        for level in self._LEVELS:
-            insights._records.extend(self.get_insights(level)._records)
-        return insights
+        insights_all = self.high_priority_insights._make_shallow_copy()
+        count_fields = ['_count_active_insights','_count_total_insights','_count_total_observations']
+        for field in count_fields:
+            setattr(insights_all, field, 0)
+        insights_all._level = 'ALL'
+        insights_all._records = []
+        for level in [self.get_insights(level) for level in self._LEVELS]:
+            insights_all._records.extend(level._records)
+            for field in count_fields:
+                setattr(insights_all, field, getattr(insights_all, field) + getattr(level, field))
+        return insights_all
     
     @property
     def all_active_insights(self):
@@ -266,7 +275,7 @@ class AttackSurface(Record, ForPandas):
     def high_priority_insights(self):
         """Get high priority insights.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.get_insights('high')
     
@@ -274,7 +283,7 @@ class AttackSurface(Record, ForPandas):
     def medium_priority_insights(self):
         """Get medium priority insights.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.get_insights('medium')
     
@@ -282,7 +291,7 @@ class AttackSurface(Record, ForPandas):
     def low_priority_insights(self):
         """Get low priority insights.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
+        :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights`
         """
         return self.get_insights('low')
     
@@ -290,7 +299,7 @@ class AttackSurface(Record, ForPandas):
     def cves(self):
         """Get a list of CVEs associated with this attack surface.
         
-        :rtype: List of :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVE`
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEs`
         """
         if getattr(self, '_cves', None) is not None:
             return self._cves
@@ -298,7 +307,10 @@ class AttackSurface(Record, ForPandas):
 
     @property
     def components(self):
-        """List of components (detections) vulnerable to this CVE in this attack surface."""
+        """List of components (detections) vulnerable to this CVE in this attack surface.
+        
+        :rtype: :class:`passivetotal.analyzer.illuminate.vuln.AttackSurfaceComponents`
+        """
         if getattr(self, '_components', None) is not None:
             return self._components
         return self.get_components()
@@ -306,7 +318,8 @@ class AttackSurface(Record, ForPandas):
 
 class AttackSurfaceInsights(RecordList, ForPandas):
 
-    """List of insights associated with an attack surface."""
+    """Collection of insights associated with an attack surface in a list-like object
+    containing :class:`AttackSurfaceInsight` objects."""
 
     def __init__(self, attack_surface=None, level=None, api_response=None):
         self._attack_surface = attack_surface
@@ -345,7 +358,7 @@ class AttackSurfaceInsights(RecordList, ForPandas):
     
     @property
     def attack_surface(self):
-        """Attach surface these insights are associated with.
+        """Attack surface these insights are associated with.
         
         :rtype: :class:`passivetotal.analyzer.illuminate.asi.AttackSurface`
         """
@@ -363,7 +376,7 @@ class AttackSurfaceInsights(RecordList, ForPandas):
     def only_active_insights(self):
         """Filter to only active insights (insights with active observations).
         
-        :rtype: bool
+        :rtype: :class:`AttackSurfaceInsights`
         """
         return self.filter(has_observations=True)
     
@@ -466,6 +479,7 @@ class AttackSurfaceInsight(Record, ForPandas):
         """Get a list of impacted assets (observations).
         
         :param pagesize: Size of pages to retrieve from the API.
+        :rtype: :class:`AttackSurfaceObservations`
         """
         self._observations = AttackSurfaceObservations(self, self._group_by, self._segment_by)
         self._observations.load_all_pages()
@@ -473,7 +487,10 @@ class AttackSurfaceInsight(Record, ForPandas):
 
     @property
     def observations(self):
-        """List of impacted assets."""
+        """List of impacted assets.
+        
+        :rtype: :class:`AttackSurfaceObservations`
+        """
         if getattr(self, '_observations', None) is not None:
             return self._observations
         return self.get_observations()
@@ -482,7 +499,8 @@ class AttackSurfaceInsight(Record, ForPandas):
 
 class AttackSurfaceObservations(RecordList, PagedRecordList, ForPandas):
 
-    """List of observations (assets) associated with an attack surface insight."""
+    """Collection of observations (assets) associated with an attack surface insight
+    in a list-like object containing :class:`AttackSurfaceObservation` objects."""
 
     def __init__(self, insight, group_by, segment_by, pagesize=400):
         self._totalrecords = None
@@ -548,6 +566,8 @@ class AttackSurfaceObservations(RecordList, PagedRecordList, ForPandas):
 
 
 class AttackSurfaceObservation(Record, FirstLastSeen, ForPandas):
+    """An attack surface asset (typically identified by an IP address or hostname) that
+    is impacted by an observation."""
     
     def __init__(self, insight, api_response):
         self._insight = insight
@@ -579,18 +599,29 @@ class AttackSurfaceObservation(Record, FirstLastSeen, ForPandas):
 
     @property
     def type(self):
+        """Type of impacted asset (i.e. HOST or IP_ADDRESS)."""
         return self._type
     
     @property
     def name(self):
+        """Name of impacted asset (i.e. the IP address or hostname)."""
         return self._name
     
     @property
     def insight(self):
+        """Attack surface insight associated with this observation.
+        
+        :rtype: :class:`AttackSurfaceInsight`
+        """
         return self._insight
     
     @property
     def hostname(self):
+        """Shortcut property to access an `analyzer.Hostname` object from this
+        observation, if the observation type is HOST, else returns `None`.
+        
+        :rtype: :class:`passivetotal.analyzer.Hostname`
+        """
         if self._type != 'HOST':
             return None
         try:
@@ -600,6 +631,11 @@ class AttackSurfaceObservation(Record, FirstLastSeen, ForPandas):
     
     @property
     def ip(self):
+        """Shortcut property to access an `analyzer.IPAddress` object from this
+        observation, if the observation type is IP_ADDRESS, else returns `None`.
+        
+        :rtype: :class:`passivetotal.analyzer.IPAddress`
+        """
         if self._type != 'IP_ADDRESS':
             return None
         try:

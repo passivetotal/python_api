@@ -3,7 +3,7 @@
 
 from passivetotal.analyzer import get_api, get_config
 from passivetotal.analyzer._common import is_ip, refang, AnalyzerError
-from passivetotal.analyzer.whois import IPWhois
+from passivetotal.analyzer.whois import IPWhois, HistoricalWhoisRecords
 from passivetotal.analyzer.pdns import HasResolutions
 from passivetotal.analyzer.services import Services
 from passivetotal.analyzer.ssl import Certificates
@@ -103,10 +103,17 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
         return self._ssl_history
 
     def _api_get_whois(self):
-        """Query the pDNS API for resolution history."""
+        """Query the whois API."""
         response = get_api('Whois').get_whois_details(query=self._ip)
         self._whois = IPWhois(response)
         return self._whois
+    
+    def _api_get_whois_history(self):
+        """Query the whois API for ownership history."""
+        response = get_api('Whois').get_whois_details(query=self._ip, history=True)
+        self._whois_history = HistoricalWhoisRecords()
+        self._whois_history.parse(response)
+        return self._whois_history
     
     @property
     def ip(self):
@@ -143,6 +150,16 @@ class IPAddress(HasComponents, HasCookies, HasHostpairs, HasTrackers,
         if getattr(self, '_whois', None) is not None:
             return self._whois
         return self._api_get_whois()
+    
+    @property
+    def whois_history(self):
+        """Historical Whois (ownership) records for this IP.
+
+        :rtype: :class:`passivetotal.analyzer.whois.HistoricalWhoisRecords`
+        """
+        if getattr(self, '_whois_history', None) is not None:
+            return self._whois_history
+        return self._api_get_whois_history()
     
     @property
     def is_ip(self):

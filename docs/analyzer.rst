@@ -72,8 +72,8 @@ IP Analysis
    :inherited-members:
 
 
-Module Reference
-----------------
+Analyzer Module Reference
+-------------------------
 .. automodule:: passivetotal.analyzer
     :members:
    
@@ -98,6 +98,8 @@ directly inform security research and may guide subsequent searches.
 
 Whois Records
 -------------
+Domain Name Whois
+^^^^^^^^^^^^^^^^^
 The `whois` property for host names returns the DomainWhois record for
 the registered domain name portion of the host name. 
 
@@ -113,7 +115,50 @@ the API tries to normalize and parse the data into fields, your code should alwa
 prepared for missing or malformed data. Access the `raw` record for the API response 
 directly as a Python dict or use the `record` property to get the raw Whois response.
 
-The RiskIQ PassiveTotal API can  search Whois records by field to find related
+IP Whois Records
+^^^^^^^^^^^^^^^^
+The `whois` property is also available for IP addresses. Some of the fields are different
+than domain whois records, but most are the same.
+
+.. code-block:: python
+
+   >>> from passivetotal import analyzer
+   >>> analyzer.init()
+   >>> print(analyzer.IPAddress('160.69.1.37').whois.organization)
+   PACCAR, Inc.
+
+
+Using Whois Fields
+^^^^^^^^^^^^^^^^^^
+Fields in the IP and Hostname Whois record are returned as `WhoisField` objects to faciliate
+field-level searching. Cast the field as a string if you need to get the actual value:
+
+.. code-block:: python
+ 
+   >>> org = analyzer.IPAddress('160.69.1.37').whois.organization
+   >>> org
+   WhoisField('organization','PACCAR, Inc.')
+   >>> print(org)
+   Paccar, Inc.
+   >>> org_str = str(org)
+   >>> org_str
+   Paccar, Inc.
+
+You can also start with a field name and a string and search for it directly to find domains
+or IPs associated with a name, email address, or other supported field type. 
+
+.. code-block:: python
+
+   >>> from passivetotal.analyzer.whois import WhoisField
+   >>> WhoisField('email','domains@riskiq.com').records.domains
+   
+
+
+
+
+Search Whois Records
+^^^^^^^^^^^^^^^^^^^^
+The RiskIQ PassiveTotal API can search Whois records by field to find related
 domain names with the same contact information. Use the `records` property of
 supported fields (any property that returns type `WhoisField`).
 
@@ -123,8 +168,62 @@ supported fields (any property that returns type `WhoisField`).
    >>> analyzer.Hostname('riskiq.net').whois.organization.records.domains
    {Hostname('riskiq.com'), Hostname('riskiq.net'), Hostname('riskiqeg.com')}
 
+The `records` property returns the same type of list-like object that other analyzer
+objects return, so you can filter, sort, and convert to pandas DataFrames as needed.
+See below for reference.
+
+
+Historical Whois Records
+^^^^^^^^^^^^^^^^^^^^^^^^
+Historical whois records may be available for domain names and IP addresses. Access the
+`whois_history` property of an `IPAddress` or `Hostname` object to obtain a list of historically
+observed records as a standard analyzer `RecordList`.
+
+
+.. code-block:: python
+
+    >>> from passivetotal import analyzer
+    >>> for record in analyzer.Hostname('passivetotal.org').whois_history:
+            print(record.last_seen, record.registrant_email)
+    2022-02-11 19:16:29.334000-08:00 passivetotal.org-registrant@anonymised.email
+    2021-04-05 09:13:10.330000-07:00 passivetotal.org-registrant@anonymised.email
+    2021-04-04 08:40:41.295000-07:00 passivetotal.org-registrant@anonymised.email
+    2021-04-03 16:25:42.455000-07:00 passivetotal.org-registrant@anonymised.email
+    2021-04-06 08:42:07.273000-07:00 passivetotal.org-registrant@anonymised.email
+    2021-03-04 15:45:41.026000-08:00 passivetotal.org-Registrant@anonymised.email
+    2021-03-03 13:56:05.605000-08:00 passivetotal.org-registrant@anonymised.email
+    2020-10-06 02:41:38.359000-07:00 passivetotal.org-registrant@anonymised.email
+    2020-10-06 14:01:33.575000-07:00 passivetotal.org-registrant@anonymised.email
+    2020-08-21 04:20:43.757000-07:00 passivetotal.org-Registrant@anonymised.email
+    2020-06-20 03:57:01.411000-07:00 abuse@comlaude.com
+    2020-03-16 15:22:46.043000-07:00 abuse@comlaude.com
+    2020-03-17 06:57:02.899000-07:00 abuse@comlaude.com
+    2019-09-29 07:45:02.096000-07:00 domains@riskiq.com
+
+In this example, we accessed only two fields of each record, but the complete Whois record
+remains available. Consider using the `as_dict` or `as_df` properties of the `whois_history`
+object to get the complete list as a Python dictionary or a Pandas dataframe.
+
+.. code-block:: python
+
+    >>> analyzer.Hostname('passivetotal.org').whois_history.as_dict
+    {'records': [{'admin': {'email': 'passivetotal.org-admin@anonymised.email'},
+    'billing': {},
+    'registrant': {'country': 'US',
+        'email': 'passivetotal.org-registrant@anonymised.email',
+    ...
+
+
+
+Whois Object Reference
+^^^^^^^^^^^^^^^^^^^^^^
+
 
 .. autoclass:: passivetotal.analyzer.whois.DomainWhois
+   :members:
+   :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.whois.IPWhois
    :members:
    :inherited-members:
 
@@ -135,6 +234,18 @@ supported fields (any property that returns type `WhoisField`).
 .. autoclass:: passivetotal.analyzer.whois.WhoisContact
    :members:
    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.whois.HistoricalWhoisRecords
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.whois.HistoricalDomainWhois
+    :members:
+    :inherited-members:
+
+.. autoclass:: passivetotal.analyzer.whois.HistoricalIPWhois
+    :members:
+    :inherited-members:
 
 
 

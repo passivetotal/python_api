@@ -96,7 +96,7 @@ class ForPandas:
     def as_df(self):
         """Get this object as a Pandas DataFrame.
 
-        Use `to_dataframe()' instead if you need to control how the dataframe is built.
+        Use `to_dataframe()` instead if you need to control how the dataframe is built.
 
         Requires the pandas Python library. Throws `AnalyzerError` if it is missing.
         :rtype: :class:`pandas.DataFrame`

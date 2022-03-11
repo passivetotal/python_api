@@ -31,10 +31,17 @@ sys.path.insert(0, os.path.abspath('..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.ifconfig',
+    'autoclasstoc',
+]
+
+autoclasstoc_sections = [
+    'public-attrs',
+    'public-methods',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -294,7 +301,9 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 import os
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-if not on_rtd:  # only import and set the theme if we're building docs locally
+if on_rtd:
+    html_theme = 'default'
+else:
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

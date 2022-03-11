@@ -189,7 +189,7 @@ Observations are available in the `observations` property of an AttackSurfaceIns
 
     >>> insights = my_asi.medium_priority_insights.only_active_insights
     >>> first_insight = insights[0]
-    >>> for observation in first_insight:
+    >>> for observation in first_insight.observations:
             print(observation.type)
             print(observation.name)
     HOST
@@ -289,31 +289,52 @@ Examples & Notebooks
 ASI Reference
 ^^^^^^^^^^^^^
 
+.. autosummary::
+    :nosignatures:
+
+    passivetotal.analyzer.illuminate.asi.AttackSurfaces
+    passivetotal.analyzer.illuminate.asi.AttackSurface
+    passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights
+    passivetotal.analyzer.illuminate.asi.AttackSurfaceInsight
+    passivetotal.analyzer.illuminate.asi.AttackSurfaceObservations
+    passivetotal.analyzer.illuminate.asi.AttackSurfaceObservation
+
 .. autoclass:: passivetotal.analyzer.illuminate.asi.AttackSurfaces
     :members:
     :inherited-members:
 
+    .. autoclasstoc::
+
 .. autoclass:: passivetotal.analyzer.illuminate.asi.AttackSurface
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.asi.AttackSurfaceInsights
     :members:
     :inherited-members:
 
     .. automethod:: __init__
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.asi.AttackSurfaceInsight
     :members:
     :inherited-members:
 
+    .. autoclasstoc::
+
 .. autoclass:: passivetotal.analyzer.illuminate.asi.AttackSurfaceObservations
     :members:
     :inherited-members:
 
+    .. autoclasstoc::
+
 .. autoclass:: passivetotal.analyzer.illuminate.asi.AttackSurfaceObservation
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
 
 
 
@@ -477,23 +498,39 @@ Examples & Notebooks
 CTI Reference
 ^^^^^^^^^^^^^
 
+.. autosummary::
+    :nosignatures:
+
+    passivetotal.analyzer.illuminate.cti.IntelProfiles
+    passivetotal.analyzer.illuminate.cti.IntelProfile
+    passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList
+    passivetotal.analyzer.illuminate.cti.IntelProfileIndicator
+
+
 .. autoclass:: passivetotal.analyzer.illuminate.cti.IntelProfiles
     :members:
     :inherited-members:
 
+    .. autoclasstoc::
+
 .. autoclass:: passivetotal.analyzer.illuminate.cti.IntelProfile
     :members:
     :inherited-members: tuple
+
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.cti.IntelProfileIndicatorList
     :members:
     :inherited-members:
 
     .. automethod:: __init__
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.cti.IntelProfileIndicator
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
 
 
 
@@ -614,30 +651,69 @@ and third-party attack surfaces.
 Vuln Reference
 ^^^^^^^^^^^^^^
 
+.. autosummary::
+    :nosignatures:
+
+    passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEs
+    passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVE
+    passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEObservations
+    passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEObservation
+    passivetotal.analyzer.illuminate.vuln.AttackSurfaceComponents
+    passivetotal.analyzer.illuminate.vuln.AttackSurfaceComponent
+    passivetotal.analyzer.illuminate.vuln.VulnArticle
+    passivetotal.analyzer.illuminate.vuln.VulnArticleImpacts
+    passivetotal.analyzer.illuminate.vuln.VulnArticleImpact
+
 .. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEs
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVE
     :members:
     :inherited-members:
 
+    .. autoclasstoc::
+
 .. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEObservations
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEObservation
     :members:
     :inherited-members:
 
-.. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEComponents
+    .. autoclasstoc::
+
+.. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceComponents
     :members:
     :inherited-members:
 
-.. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceCVEComponent
+    .. autoclasstoc::
+
+.. autoclass:: passivetotal.analyzer.illuminate.vuln.AttackSurfaceComponent
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
 
 .. autoclass:: passivetotal.analyzer.illuminate.vuln.VulnArticle
     :members:
     :inherited-members:
+
+    .. autoclasstoc::
+
+.. autoclass:: passivetotal.analyzer.illuminate.vuln.VulnArticleImpacts
+    :members:
+    :inherited-members:
+
+    .. autoclasstoc::
+
+.. autoclass:: passivetotal.analyzer.illuminate.vuln.VulnArticleImpact
+    :members:
+    :inherited-members:
+
+    .. autoclasstoc::
