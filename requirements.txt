@@ -1,6 +1,6 @@
 ez-setup==0.9
 passivetotal
 python-dateutil==2.4.2
-requests==2.20.0
+requests==2.31.0
 future
 tldextract==3.1.0
